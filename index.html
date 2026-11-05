@@ -5,140 +5,506 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE turns your top sets into a personal strength index that starts at 100. Log one set per exercise, watch your ticker climb, and see who's up.">
-<meta property="og:title" content="GYSE · Your strength, as an index">
+<meta property="og:title" content="GYSE: your strength, as an index">
 <meta property="og:description" content="Log one top set per exercise. Watch your own ticker climb from 100.">
 <meta property="og:url" content="https://gyse.app">
 <meta property="og:image" content="https://gyse.app/assets/hero-end.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#111114">
 <link rel="preload" as="image" href="/assets/hero-start.jpg">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
 <style>
-  :root { --canvas:#111114; --surface:#1B191F; --raised:#25212B; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979;
-          --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; }
-  * { box-sizing: border-box; }
-  body { margin:0; background: var(--canvas); color:var(--text);
-         font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
-  a { color: var(--violet); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
-
-  /* Film hero: the render plays once and holds on the new high. */
-  .film { position: relative; min-height: min(92vh, 860px); display: flex; flex-direction: column; overflow: hidden; isolation: isolate; }
-  .film video, .film .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; z-index: -2; }
-  .film::after { content: ""; position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(90deg, rgba(17,17,20,.92) 0%, rgba(17,17,20,.72) 34%, rgba(17,17,20,.12) 64%, rgba(17,17,20,0) 100%),
-                linear-gradient(180deg, rgba(17,17,20,.55) 0%, rgba(17,17,20,0) 22%, rgba(17,17,20,0) 72%, var(--canvas) 100%); }
-  nav { display:flex; align-items:center; justify-content:space-between; padding-top: 24px; }
-  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
-  .brand svg { width:28px; height:28px; }
-  nav .links a { color: var(--text); opacity: .8; margin-left: 18px; font-size: 15px; }
-  .hero { flex: 1; display: flex; align-items: center; padding-top: 48px; padding-bottom: 96px; }
-  .hero > div { max-width: 30rem; }
-  h1 { font-size: clamp(42px, 6.2vw, 72px); line-height: 1.0; letter-spacing: -.035em; margin: 0; text-shadow: 0 2px 30px rgba(0,0,0,.5); }
-  .lead { color: #D6D1DE; font-size: 19px; margin: 22px 0 30px; text-shadow: 0 1px 20px rgba(0,0,0,.6); }
-  .cta { display:flex; gap: 12px; flex-wrap: wrap; align-items:center; }
-  .btn { display:inline-block; padding: 15px 22px; border-radius: 16px; font-weight: 600; }
-  .primary { background: var(--purple); color: #fff; box-shadow: 0 10px 40px rgba(139,92,246,.35); }
-  .primary:hover { text-decoration:none; filter: brightness(1.08); }
-  .soon { color: var(--muted); font-size: 14px; }
-
-  /* The ticker card, now its own section. */
-  .ticker-row { display:grid; grid-template-columns: .95fr 1.05fr; gap: 48px; align-items:center; padding: 24px 0 8px; }
-  .ticker-row h2 { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -.03em; line-height: 1.08; margin: 0 0 14px; }
-  .ticker-row p { color: var(--muted); margin: 0; }
-  .card { background: var(--surface); border-radius: 24px; padding: 24px 24px 18px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
-  .row { display:flex; justify-content:space-between; align-items:baseline; }
-  .ticker { font-weight: 800; color: var(--lilac); font-size: 20px; letter-spacing: -.01em; }
-  .pill { font-size: 12px; font-weight: 700; color: var(--lilac); background: rgba(139,92,246,.18); padding: 5px 10px; border-radius: 99px; }
-  .value { font-size: 54px; font-weight: 650; letter-spacing: -.04em; margin-top: 10px; font-variant-numeric: tabular-nums; }
-  .change { color: var(--up); font-weight: 650; }
-  .muted { color: var(--muted); }
-  .card svg { width: 100%; height: 170px; display:block; margin-top: 14px; }
-  .chips { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
-  .chip { background: var(--raised); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
-  .chip b { color: var(--up); font-weight: 650; margin-left: 4px; }
-  .features { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 64px; }
-  .feature { background: var(--surface); border-radius: 20px; padding: 22px; }
-  .feature h3 { margin: 0 0 6px; font-size: 18px; }
-  .feature p { margin: 0; color: var(--muted); font-size: 15px; }
-  footer { margin: 72px auto 0; padding-bottom: 56px; color: var(--faint); font-size: 14px; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 12px; }
-  footer a { color: var(--muted); margin-left: 16px; }
-  footer a:first-child { margin-left: 0; }
-
-  @media (max-width: 820px) {
-    .film { min-height: 86vh; }
-    .film video, .film .poster { object-position: 70% 50%; }
-    .film::after { background: linear-gradient(180deg, rgba(17,17,20,.7) 0%, rgba(17,17,20,.15) 26%, rgba(17,17,20,.55) 50%, rgba(17,17,20,.95) 78%, var(--canvas) 100%); }
-    .hero { align-items: flex-end; padding-top: 32px; padding-bottom: 40px; }
-    .ticker-row { grid-template-columns: 1fr; gap: 28px; }
-    .features { grid-template-columns: 1fr; }
-    nav .links { display:none; }
+  /* Archivo (SIL Open Font License), variable weight 100–900 and width 62–125, served from gyse.app. */
+  @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
+               font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+  :root {
+    --ink:#111114; --plate:#1B191F; --raised:#25212B; --line:rgba(255,255,255,.08);
+    --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979;
+    --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; --down:#E6A2B4;
+    --gutter: clamp(20px, 4vw, 56px);
   }
-  @media (prefers-reduced-motion: reduce) { .film video { display: none; } }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin:0; background: var(--ink); color: var(--text);
+         font-family: "Archivo", -apple-system, system-ui, sans-serif; font-stretch: 100%;
+         font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; border-radius: 6px; }
+  .wide { font-stretch: 125%; }
+  .num { font-stretch: 125%; font-variant-numeric: tabular-nums; }
+  .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- Hero: the render, and the index it draws ---------- */
+  .film { position: relative; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; isolation: isolate; }
+  .film video, .film .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 64% 50%; z-index: -2; }
+  .film::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(17,17,20,.94) 0%, rgba(17,17,20,.74) 30%, rgba(17,17,20,.1) 62%, rgba(17,17,20,0) 100%),
+      linear-gradient(180deg, rgba(17,17,20,.6) 0%, rgba(17,17,20,0) 18%, rgba(17,17,20,0) 70%, var(--ink) 100%); }
+  nav { display: flex; align-items: center; justify-content: space-between; padding-top: 26px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--lilac);
+           font-stretch: 125%; font-weight: 800; letter-spacing: .02em; font-size: 17px; }
+  .brand svg { width: 26px; height: 26px; }
+  nav .links a { text-decoration: none; color: var(--text); opacity: .78; margin-left: 22px; font-size: 15px; }
+  nav .links a:hover { opacity: 1; }
+  .hero { align-self: center; padding-block: 6vh 4vh; }
+  .hero h1 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.045em; line-height: .95;
+             font-size: clamp(42px, 6.4vw, 92px); max-width: 9.5em; text-wrap: balance; }
+  .hero p { max-width: 30em; margin: 26px 0 32px; font-size: clamp(17px, 1.4vw, 20px); color: #D9D4E2; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 14px; font-weight: 650;
+         text-decoration: none; background: var(--purple); color: #fff; box-shadow: 0 12px 40px rgba(139,92,246,.35);
+         transition: transform .15s ease, filter .15s ease; }
+  .btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .soon { color: var(--muted); font-size: 15px; }
+
+  /* Live readout: the number the line is drawing. */
+  .readout { justify-self: end; text-align: right; padding-bottom: 8vh; }
+  .readout .sym { color: var(--lilac); font-weight: 800; font-size: 18px; }
+  .readout .val { display: block; font-weight: 700; font-size: clamp(56px, 7.2vw, 112px); line-height: .9; letter-spacing: -.05em; margin-top: 4px; }
+  .readout .chg { display: inline-block; margin-top: 10px; color: var(--up); font-weight: 700; font-size: 18px;
+                  opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease; }
+  .readout.closed .chg { opacity: 1; transform: none; }
+  .readout .ath { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; opacity: 0; transition: opacity .5s ease .25s; }
+  .readout.closed .ath { opacity: 1; }
+
+  /* ---------- Tape ---------- */
+  .tape { border-block: 1px solid var(--line); overflow: hidden; background: #141318; }
+  .tape-track { display: flex; width: max-content; animation: tape 48s linear infinite; }
+  .tape:hover .tape-track { animation-play-state: paused; }
+  .tape ul { display: flex; margin: 0; padding: 0; list-style: none; }
+  .tape li { display: flex; align-items: baseline; gap: 10px; padding: 16px 30px; white-space: nowrap; border-right: 1px solid var(--line); font-size: 15px; }
+  .tape b { color: var(--text); font-stretch: 125%; font-weight: 800; }
+  .tape .px { color: var(--muted); font-stretch: 125%; font-variant-numeric: tabular-nums; }
+  .tape .u { color: var(--up); font-variant-numeric: tabular-nums; font-weight: 650; }
+  .tape .d { color: var(--down); font-variant-numeric: tabular-nums; font-weight: 650; }
+  @keyframes tape { to { transform: translateX(-50%); } }
+
+  /* ---------- Shared section type ---------- */
+  section.block { padding: clamp(88px, 12vw, 160px) 0; }
+  .block h2 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.04em; line-height: 1;
+              font-size: clamp(34px, 4.6vw, 64px); text-wrap: balance; }
+  .block .intro { color: var(--muted); max-width: 34em; margin: 22px 0 0; font-size: 18px; }
+
+  /* ---------- Demo: log a set ---------- */
+  .demo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 80px); align-items: start; margin-top: 56px; }
+  .setform { display: grid; gap: 18px; }
+  .field label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { font: inherit; font-size: 15px; color: var(--text); background: var(--plate); border: 1px solid var(--line);
+                border-radius: 99px; padding: 10px 16px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: rgba(139,92,246,.2); border-color: rgba(167,139,250,.6); color: var(--lilac); }
+  .stepper { display: flex; align-items: center; background: var(--plate); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .stepper button { font: inherit; width: 56px; height: 64px; border: 0; background: transparent; color: var(--lilac); font-size: 26px; cursor: pointer; }
+  .stepper button:hover { background: var(--raised); }
+  .stepper output { flex: 1; text-align: center; font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 30px; }
+  .stepper small { color: var(--muted); font-size: 15px; font-weight: 500; margin-left: 6px; font-stretch: 100%; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .last { color: var(--faint); font-size: 14px; margin: 0; }
+
+  .board { background: var(--plate); border-radius: 28px; padding: clamp(22px, 3vw, 36px); position: relative; overflow: hidden; }
+  .board .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .board .tk { color: var(--lilac); font-stretch: 125%; font-weight: 800; font-size: 20px; }
+  .board .ex { color: var(--muted); font-size: 15px; }
+  .board .big { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: -.05em;
+                font-size: clamp(56px, 7vw, 96px); line-height: 1; margin-top: 18px; }
+  .board .delta { font-weight: 700; font-size: 18px; margin-top: 10px; }
+  .board .delta.up { color: var(--up); } .board .delta.down { color: var(--down); } .board .delta.flat { color: var(--muted); }
+  .board svg { display: block; width: 100%; height: auto; margin-top: 18px; overflow: visible; }
+  .board .facts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+  .board .fact { background: var(--raised); border-radius: 14px; padding: 12px 14px; }
+  .board .fact span { display: block; color: var(--muted); font-size: 13px; }
+  .board .fact b { font-stretch: 125%; font-variant-numeric: tabular-nums; font-size: 18px; }
+  .board .note { color: var(--muted); font-size: 14px; margin: 16px 0 0; min-height: 1.5em; }
+  .board .note.warn { color: var(--down); }
+
+  /* ---------- How it works: a pinned phone ---------- */
+  .how { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); margin-top: 24px; }
+  .phone-rail { position: relative; }
+  .phone { position: sticky; top: 9vh; margin: 0 auto; width: min(100%, 340px); aspect-ratio: 9 / 19.2; border-radius: 52px;
+           background: #0B0A0E; padding: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,.09), 0 40px 120px rgba(0,0,0,.6), 0 0 120px rgba(139,92,246,.12); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 41px; overflow: hidden; background: var(--ink); }
+  .screen .island { position: absolute; top: 11px; left: 50%; width: 31%; height: 26px; transform: translateX(-50%); background: #000; border-radius: 99px; z-index: 5; }
+  .scr { position: absolute; inset: 0; padding: 52px 18px 18px; opacity: 0; transform: scale(.985); transition: opacity .45s ease, transform .45s ease; font-size: 12.5px; }
+  .phone[data-step="1"] .s1, .phone[data-step="2"] .s2, .phone[data-step="3"] .s3, .phone[data-step="4"] .s4 { opacity: 1; transform: none; }
+  .scr h4 { margin: 4px 0 2px; font-stretch: 125%; font-weight: 800; font-size: 21px; letter-spacing: -.03em; }
+  .scr .sub { color: var(--muted); margin: 0 0 14px; }
+  .scr .row { display: flex; justify-content: space-between; align-items: center; background: var(--plate); border-radius: 14px; padding: 11px 12px; margin-bottom: 8px; }
+  .scr .row .nm { font-weight: 650; }
+  .scr .row .nm small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
+  .scr .pill2 { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; background: var(--raised); border-radius: 10px; padding: 6px 9px; }
+  .scr .cta { margin-top: 14px; background: var(--purple); color: #fff; text-align: center; font-weight: 700; border-radius: 14px; padding: 13px; }
+  .scr .tk2 { color: var(--lilac); font-stretch: 125%; font-weight: 800; font-size: 14px; }
+  .scr .bignum { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 40px; letter-spacing: -.05em; line-height: 1; margin-top: 6px; }
+  .scr .up { color: var(--up); font-weight: 700; }
+  .scr .down { color: var(--down); font-weight: 700; }
+  .scr .chips2 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .scr .chips2 span { background: var(--raised); border-radius: 99px; padding: 5px 9px; font-weight: 600; }
+  .scr .rank { display: grid; grid-template-columns: 22px 1fr 58px auto; align-items: center; gap: 8px; background: var(--plate); border-radius: 14px; padding: 10px 12px; margin-bottom: 8px; }
+  .scr .rank .pos { color: var(--faint); font-stretch: 125%; font-weight: 800; }
+  .scr .rank.me { box-shadow: inset 0 0 0 1px rgba(167,139,250,.55); }
+  .scr .rank svg { width: 58px; height: 22px; }
+  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; display: grid; grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid var(--line); background: rgba(17,17,20,.92); padding: 8px 6px 14px; }
+  .tabs span { display: grid; justify-items: center; gap: 3px; color: var(--faint); font-size: 10px; font-weight: 600; }
+  .tabs span::before { content: ""; width: 18px; height: 18px; border-radius: 6px; background: currentColor; opacity: .55; }
+  .tabs .on { color: var(--lilac); } .tabs .on::before { opacity: 1; }
+  .s4 { padding: 0; }
+  .s4 .story { position: absolute; inset: 0; background: url(/assets/hero-end.jpg) 58% 50% / cover; }
+  .s4 .story::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0) 40%, rgba(0,0,0,.35)); }
+  .sticker { position: absolute; left: 14px; right: 14px; bottom: 64px; z-index: 2; color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,.55); }
+  .sticker .tk2 { color: #fff; }
+  .sticker .bignum { font-size: 46px; }
+  .sticker ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+  .sticker li { display: flex; justify-content: space-between; font-weight: 600; }
+  .sticker li span:last-child { color: var(--up); font-variant-numeric: tabular-nums; }
+  .sticker .mark { margin-top: 10px; font-stretch: 125%; font-weight: 800; letter-spacing: .02em; opacity: .85; font-size: 11px; }
+  .igbar { position: absolute; left: 12px; right: 12px; top: 50px; height: 3px; background: rgba(255,255,255,.35); border-radius: 3px; z-index: 2; }
+  .igbar::before { content: ""; position: absolute; inset: 0 40% 0 0; background: #fff; border-radius: 3px; }
+
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps li { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; counter-increment: step; }
+  .steps li:first-child { min-height: 58vh; justify-content: flex-start; padding-top: 12vh; }
+  .steps li:last-child { min-height: 70vh; }
+  .steps .n { font-stretch: 125%; font-weight: 800; color: var(--faint); font-size: 15px; font-variant-numeric: tabular-nums; }
+  .steps .n::before { content: counter(step) " of 4"; }
+  .steps h3 { margin: 10px 0 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(30px, 3.4vw, 46px); }
+  .steps p { color: var(--muted); max-width: 26em; margin: 16px 0 0; font-size: 18px; }
+  .steps li.on .n { color: var(--violet); }
+
+  /* ---------- Closer ---------- */
+  .closer { padding: clamp(96px, 14vw, 200px) 0 clamp(56px, 8vw, 96px); position: relative; overflow: hidden; }
+  .closer .giant { font-stretch: 125%; font-weight: 900; letter-spacing: -.06em; line-height: .82; margin: 0;
+                   font-size: clamp(96px, 23vw, 360px); color: transparent; -webkit-text-stroke: 1.5px rgba(203,181,255,.55);
+                   background: linear-gradient(180deg, rgba(167,139,250,.28), rgba(167,139,250,0) 85%); -webkit-background-clip: text; background-clip: text; }
+  .closer .claim { display: flex; flex-wrap: wrap; gap: 24px 48px; justify-content: space-between; align-items: end; margin-top: 28px; }
+  .closer h2 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-size: clamp(30px, 3.6vw, 48px); }
+  .closer p { color: var(--muted); margin: 12px 0 0; max-width: 28em; }
+  footer { border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 26px; padding-bottom: 40px; }
+  footer a { color: var(--muted); text-decoration: none; margin-left: 20px; }
+  footer a:first-child { margin-left: 0; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .demo { grid-template-columns: 1fr; }
+    .how { grid-template-columns: 1fr; }
+    .phone-rail { position: sticky; top: 0; z-index: 2; height: 0; }
+    .phone { position: absolute; top: 0; right: 0; width: 132px; border-radius: 26px; padding: 6px; }
+    .screen { border-radius: 21px; }
+    .scr { transform: scale(.42); transform-origin: top left; width: 238%; height: 238%; }
+    .phone[data-step] .scr { transform: scale(.42); }
+    .screen .island { top: 6px; height: 11px; }
+    .steps { padding-right: 148px; }
+    .steps li, .steps li:first-child, .steps li:last-child { min-height: 64vh; padding-top: 0; justify-content: center; }
+  }
+  @media (max-width: 720px) {
+    .film { grid-template-rows: auto 1fr auto; }
+    .film video, .film .poster { object-position: 70% 50%; }
+    .film::after { background: linear-gradient(180deg, rgba(17,17,20,.72) 0%, rgba(17,17,20,.1) 24%, rgba(17,17,20,.5) 52%, rgba(17,17,20,.96) 80%, var(--ink) 100%); }
+    .hero { align-self: end; padding-block: 0 18px; }
+    .readout { justify-self: start; text-align: left; padding-bottom: 36px; }
+    .readout .val { font-size: 64px; }
+    nav .links a { margin-left: 16px; font-size: 14px; }
+    .pair { grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .film video { display: none; }
+    .tape-track { animation: none; }
+    .scr, .readout .chg, .readout .ath { transition: none; }
+  }
 </style>
 </head>
 <body>
-<header class="film">
+
+<header class="film" aria-label="GYSE">
   <img class="poster" src="/assets/hero-end.jpg" alt="">
-  <video src="/assets/hero.mp4" poster="/assets/hero-start.jpg" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
-  <div class="wrap" style="width:100%">
+  <video id="film" src="/assets/hero.mp4" poster="/assets/hero-start.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
+  <div class="wrap">
     <nav>
       <a class="brand" href="/" aria-label="GYSE home">
-        <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
-        </svg>
+        <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
         GYSE
       </a>
       <div class="links"><a href="/support">Support</a><a href="/privacy">Privacy</a></div>
     </nav>
   </div>
-  <div class="wrap hero" style="width:100%">
-    <div>
-      <h1>Your strength,<br>as an index.</h1>
-      <p class="lead">Log one top set per exercise. GYSE turns it into your own ticker that starts at 100 and climbs as you get stronger. Then see who's up.</p>
-      <div class="cta">
-        <a class="btn primary" href="/support">How it works</a>
-        <span class="soon">Coming soon to the App Store for iPhone</span>
-      </div>
+  <div class="wrap hero">
+    <h1>Your strength, as&nbsp;an&nbsp;index.</h1>
+    <p>Log one top set per exercise. GYSE turns it into your own ticker that starts at 100 and climbs as you get stronger. Then see who's up.</p>
+    <div class="actions">
+      <a class="btn" href="#try">Try a set</a>
+      <span class="soon">Coming soon to the App Store for iPhone</span>
+    </div>
+  </div>
+  <div class="wrap" style="display:grid">
+    <div class="readout num" id="readout" aria-label="Example index: $YOU at 112.40, up 12.4 percent since day one">
+      <span class="sym">$YOU</span>
+      <span class="val" id="readval">100.00</span>
+      <span class="chg">▲ 12.4% since day one</span>
+      <span class="ath">All-time high</span>
     </div>
   </div>
 </header>
 
-<main class="wrap">
-  <section class="ticker-row">
-    <div>
-      <h2>Every top set<br>moves your line.</h2>
-      <p>Your index starts at 100 on day one. Each 3–10 rep set updates your estimated max for that exercise, and your sectors blend into one line, so getting stronger shows up as a new high.</p>
-    </div>
-    <div class="card" aria-label="Example GYSE index card">
-      <div class="row"><span class="ticker">$YOU</span><span class="pill">✦ All-time high</span></div>
-      <div class="muted" style="margin-top:6px;font-size:14px">Strength index</div>
-      <div class="value">112.40</div>
-      <div><span class="change">▲ +12.4%</span> <span class="muted">since you started</span></div>
-      <svg viewBox="0 0 400 170" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#A78BFA" stop-opacity=".28"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <line x1="0" y1="140" x2="400" y2="140" stroke="#6F6979" stroke-opacity=".6" stroke-dasharray="2 5"/>
-        <path d="M4 140 L34 133 L64 137 L94 121 L124 113 L154 117 L184 101 L214 88 L244 94 L274 70 L304 58 L334 63 L364 39 L396 28 L396 170 L4 170 Z" fill="url(#fill)"/>
-        <path d="M4 140 L34 133 L64 137 L94 121 L124 113 L154 117 L184 101 L214 88 L244 94 L274 70 L304 58 L334 63 L364 39 L396 28" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="396" cy="28" r="5" fill="#A78BFA"/>
-      </svg>
-      <div class="chips"><span class="chip">Chest<b>+8.1%</b></span><span class="chip">Back<b>+11.6%</b></span><span class="chip">Legs<b>+15.2%</b></span></div>
+<div class="tape" aria-label="Example tickers">
+  <div class="tape-track">
+    <ul id="tape"></ul>
+  </div>
+</div>
+
+<main>
+  <section class="block" id="try">
+    <div class="wrap">
+      <h2>Log a set. Watch&nbsp;it&nbsp;move.</h2>
+      <p class="intro">This is the math the app runs. Your estimated max for a set is weight × (1 + reps ÷ 30), and your index compares it with day one. Sets of 3–10 reps count.</p>
+
+      <div class="demo">
+        <div class="setform">
+          <div class="field">
+            <label id="exl">Exercise</label>
+            <div class="seg" role="group" aria-labelledby="exl" id="ex"></div>
+          </div>
+          <div class="pair">
+            <div class="field">
+              <label id="wl">Weight</label>
+              <div class="stepper" role="group" aria-labelledby="wl">
+                <button type="button" data-k="w" data-d="-1" aria-label="Less weight">−</button>
+                <output id="w" aria-live="polite">0</output>
+                <button type="button" data-k="w" data-d="1" aria-label="More weight">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label id="rl">Reps</label>
+              <div class="stepper" role="group" aria-labelledby="rl">
+                <button type="button" data-k="r" data-d="-1" aria-label="Fewer reps">−</button>
+                <output id="r" aria-live="polite">0</output>
+                <button type="button" data-k="r" data-d="1" aria-label="More reps">+</button>
+              </div>
+            </div>
+          </div>
+          <p class="last" id="last"></p>
+        </div>
+
+        <div class="board" aria-live="polite">
+          <div class="top"><span class="tk">$YOU</span><span class="ex" id="bex"></span></div>
+          <div class="big" id="bidx">100.00</div>
+          <div class="delta" id="bdelta"></div>
+          <svg id="chart" viewBox="0 0 600 220" role="img" aria-label="Index line for this exercise"></svg>
+          <div class="facts">
+            <div class="fact"><span>Estimated max</span><b id="be1">0</b></div>
+            <div class="fact"><span>Next target</span><b id="bnext">0</b></div>
+          </div>
+          <p class="note" id="bnote"></p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="features">
-    <div class="feature"><h3>One set, one number</h3><p>Log your heaviest set per exercise. Every 3–10 rep set moves your index, chain-linked like a stock.</p></div>
-    <div class="feature"><h3>Claim your ticker</h3><p>1–8 letters, all yours. Friends follow your index and you see who's up this week.</p></div>
-    <div class="feature"><h3>Made to share</h3><p>Story cards and a transparent sticker of your top sets and their moves, ready for Instagram.</p></div>
+  <section class="block" style="padding-top:0">
+    <div class="wrap">
+      <h2>From one set to a&nbsp;ticker&nbsp;people&nbsp;follow.</h2>
+      <div class="how">
+        <div class="phone-rail">
+          <div class="phone" id="phone" data-step="1" aria-hidden="true">
+            <div class="screen">
+              <div class="island"></div>
+
+              <div class="scr s1">
+                <h4>Make today count.</h4>
+                <p class="sub">One top set per exercise.</p>
+                <div class="row"><span class="nm">Bench press<small>Last: 85 kg × 5</small></span><span class="pill2">87.5 × 5</span></div>
+                <div class="row"><span class="nm">Back squat<small>Last: 120 kg × 5</small></span><span class="pill2">122.5 × 5</span></div>
+                <div class="row"><span class="nm">Lat pulldown<small>Last: 70 kg × 8</small></span><span class="pill2">70 × 9</span></div>
+                <div class="row"><span class="nm">Lateral raise<small>Last: 12 kg × 10 per hand</small></span><span class="pill2">12 × 12</span></div>
+                <div class="cta">Save 4 top sets</div>
+                <div class="tabs"><span>Index</span><span class="on">Log</span><span>Watchlist</span><span>You</span></div>
+              </div>
+
+              <div class="scr s2">
+                <span class="tk2">$YOU</span>
+                <div class="bignum">112.40</div>
+                <div><span class="up">▲ 2.9%</span> <span style="color:var(--muted)">vs last close</span></div>
+                <svg viewBox="0 0 300 150" style="width:100%;margin-top:14px" aria-hidden="true">
+                  <defs><linearGradient id="pf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".3"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0 128 L25 122 L50 125 L75 110 L100 104 L125 107 L150 92 L175 80 L200 85 L225 64 L250 54 L275 46 L300 22 L300 150 L0 150Z" fill="url(#pf)"/>
+                  <path d="M0 128 L25 122 L50 125 L75 110 L100 104 L125 107 L150 92 L175 80 L200 85 L225 64 L250 54 L275 46 L300 22" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+                  <circle cx="300" cy="22" r="5" fill="#A78BFA"/>
+                </svg>
+                <div class="chips2"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span><span>Arms <b class="down">−0.6%</b></span></div>
+                <div class="row" style="margin-top:12px"><span class="nm">5-week run<small>Log by Sunday to extend it</small></span><span class="pill2">5</span></div>
+                <div class="row"><span class="nm">Today<small>3 top sets, 1 new record</small></span><span class="pill2 up">+2.9%</span></div>
+                <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
+              </div>
+
+              <div class="scr s3">
+                <h4>Watchlist</h4>
+                <p class="sub">Friends, ranked by index.</p>
+                <div class="rank"><span class="pos">1</span><span class="nm"><b>$MINA</b><br><small style="color:var(--muted)">Mina</small></span><svg viewBox="0 0 58 22"><path d="M0 18 L10 16 L20 17 L30 11 L40 9 L50 6 L58 3" fill="none" stroke="#4ED5AD" stroke-width="2"/></svg><span class="num" style="font-weight:700">118.2</span></div>
+                <div class="rank me"><span class="pos">2</span><span class="nm"><b>$YOU</b><br><small style="color:var(--muted)">You</small></span><svg viewBox="0 0 58 22"><path d="M0 19 L10 17 L20 18 L30 13 L40 12 L50 7 L58 4" fill="none" stroke="#A78BFA" stroke-width="2"/></svg><span class="num" style="font-weight:700">112.4</span></div>
+                <div class="rank"><span class="pos">3</span><span class="nm"><b>$TOMS</b><br><small style="color:var(--muted)">Tomás</small></span><svg viewBox="0 0 58 22"><path d="M0 12 L10 13 L20 10 L30 12 L40 11 L50 13 L58 12" fill="none" stroke="#E6A2B4" stroke-width="2"/></svg><span class="num" style="font-weight:700">104.9</span></div>
+                <div class="rank"><span class="pos">4</span><span class="nm"><b>$ELLE</b><br><small style="color:var(--muted)">Elle</small></span><svg viewBox="0 0 58 22"><path d="M0 16 L10 15 L20 14 L30 15 L40 12 L50 12 L58 10" fill="none" stroke="#4ED5AD" stroke-width="2"/></svg><span class="num" style="font-weight:700">101.3</span></div>
+                <div class="row" style="margin-top:12px"><span class="nm">Head to head<small>$YOU vs $MINA this month</small></span><span class="pill2">−5.8</span></div>
+                <div class="tabs"><span>Index</span><span>Log</span><span class="on">Watchlist</span><span>You</span></div>
+              </div>
+
+              <div class="scr s4">
+                <div class="story"></div>
+                <div class="igbar"></div>
+                <div class="sticker">
+                  <span class="tk2">$YOU</span>
+                  <div class="bignum num">112.40</div>
+                  <div class="up">▲ 2.9% today</div>
+                  <ul>
+                    <li><span>Bench press 87.5 × 5</span><span>+2.9%</span></li>
+                    <li><span>Back squat 122.5 × 5</span><span>+2.1%</span></li>
+                    <li><span>Lat pulldown 70 × 9</span><span>+2.8%</span></li>
+                  </ul>
+                  <div class="mark">GYSE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ol class="steps" id="steps">
+          <li data-step="1"><span class="n"></span><h3>Log your heaviest set.</h3><p>One top set per exercise is all it takes. GYSE remembers last time, fills the weight in for you and shows the next target to beat.</p></li>
+          <li data-step="2"><span class="n"></span><h3>Your index closes the day.</h3><p>Every exercise feeds its sector, and the sectors blend into one line that started at 100. Train every week and your run grows. Miss one and a market holiday covers it.</p></li>
+          <li data-step="3"><span class="n"></span><h3>Claim a ticker. See who's&nbsp;up.</h3><p>Pick 1–8 letters that are yours alone. Friends add you to their watchlist, and you can go head to head on any month.</p></li>
+          <li data-step="4"><span class="n"></span><h3>Post the close.</h3><p>Every session makes a story card and a transparent sticker of your top sets and their moves, sized for Instagram.</p></li>
+        </ol>
+      </div>
+    </div>
   </section>
 
-  <footer>
-    <span>© 2026 GYSE · Strength, as an index.</span>
-    <span><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="mailto:support@gyse.app">Contact</a></span>
-  </footer>
+  <section class="closer">
+    <div class="wrap">
+      <p class="giant" aria-hidden="true">$YOU</p>
+      <div class="claim">
+        <div>
+          <h2>Claim your ticker.</h2>
+          <p>Free on iPhone, coming soon to the App Store. Questions or press: <a href="mailto:support@gyse.app">support@gyse.app</a></p>
+        </div>
+        <a class="btn" href="/support">How GYSE works</a>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 GYSE</span>
+    <span><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="mailto:support@gyse.app">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Hero: the readout follows the line the render draws (100.00 → 112.40). */
+  const film = document.getElementById('film'), readout = document.getElementById('readout'), val = document.getElementById('readval');
+  const START = 100, END = 112.4, T0 = 0.9, T1 = 6.6;
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const show = v => { val.textContent = v.toFixed(2); };
+  const finish = () => { show(END); readout.classList.add('closed'); };
+  if (reduce) { finish(); } else {
+    let raf = 0;
+    const tick = () => {
+      const p = Math.min(1, Math.max(0, (film.currentTime - T0) / (T1 - T0)));
+      show(START + (END - START) * ease(p));
+      if (p >= 1) { finish(); return; }
+      raf = requestAnimationFrame(tick);
+    };
+    film.addEventListener('play', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
+    film.addEventListener('ended', finish);
+    const go = () => film.play().catch(() => { film.style.display = 'none'; finish(); });
+    if (film.readyState >= 2) go(); else film.addEventListener('canplay', go, { once: true });
+    setTimeout(() => { if (film.paused && !readout.classList.contains('closed')) { film.style.display = 'none'; finish(); } }, 4000);
+  }
+
+  /* Tape: example tickers, listed twice for a seamless loop. */
+  const tape = [['MINA',118.21,1.4],['TOMS',104.92,-0.3],['ELLE',101.30,0.9],['JRLA',109.84,2.1],['KAI',121.07,0.6],['NOOR',97.66,-1.1],['BENJI',113.45,3.2],['SORA',106.18,0.4],['LUCA',99.02,-0.2],['IVY',115.73,1.8],['DREW',108.40,0.0],['HANA',111.59,2.6]];
+  const li = ([t,p,c]) => `<li><b>$${t}</b><span class="px">${p.toFixed(2)}</span><span class="${c < 0 ? 'd' : 'u'}">${c < 0 ? '▼' : '▲'} ${Math.abs(c).toFixed(1)}%</span></li>`;
+  const ul = document.getElementById('tape'); ul.innerHTML = tape.map(li).join('');
+  ul.parentElement.appendChild(ul.cloneNode(true)).setAttribute('aria-hidden', 'true');
+
+  /* Demo: the app's math. e1RM = w × (1 + r/30); index = 100 × e1RM / day-one e1RM. */
+  const lifts = {
+    bench: { name: 'Bench press', step: 2.5, history: [[80,5],[80,6],[82.5,5],[82.5,6],[85,5]], start: [87.5,5] },
+    squat: { name: 'Back squat', step: 2.5, history: [[110,5],[112.5,5],[115,5],[117.5,5],[120,5]], start: [122.5,5] },
+    ohp:   { name: 'Overhead press', step: 2.5, history: [[50,6],[50,7],[52.5,6],[52.5,7],[55,5]], start: [55,6] },
+  };
+  const e1 = (w, r) => w * (1 + r / 30);
+  let key = 'bench', w = lifts.bench.start[0], r = lifts.bench.start[1];
+  const $ = id => document.getElementById(id);
+  const exBox = $('ex');
+  exBox.innerHTML = Object.entries(lifts).map(([k, l]) => `<button type="button" data-ex="${k}" aria-pressed="${k === key}">${l.name}</button>`).join('');
+  exBox.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    key = b.dataset.ex; [w, r] = lifts[key].start;
+    exBox.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    render();
+  });
+  document.querySelectorAll('.stepper button').forEach(b => b.addEventListener('click', () => {
+    const d = +b.dataset.d;
+    if (b.dataset.k === 'w') w = Math.max(lifts[key].step, Math.round((w + d * lifts[key].step) * 10) / 10);
+    else r = Math.min(15, Math.max(1, r + d));
+    render();
+  }));
+  const fmt = v => (Math.round(v * 10) / 10).toString();
+
+  function render() {
+    const L = lifts[key], base = e1(...L.history[0]);
+    const closes = L.history.map(([hw, hr]) => 100 * e1(hw, hr) / base);
+    const last = closes[closes.length - 1], counts = r >= 3 && r <= 10;
+    const now = counts ? 100 * e1(w, r) / base : last;
+    const ch = (now / last - 1) * 100;
+    $('w').innerHTML = `${fmt(w)}<small>kg</small>`;
+    $('r').textContent = r;
+    $('last').textContent = `Last time: ${fmt(L.history.at(-1)[0])} kg × ${L.history.at(-1)[1]}. Day one: ${fmt(L.history[0][0])} kg × ${L.history[0][1]}.`;
+    $('bex').textContent = L.name;
+    $('bidx').textContent = now.toFixed(2);
+    const d = $('bdelta');
+    d.className = 'delta ' + (Math.abs(ch) < .005 ? 'flat' : ch > 0 ? 'up' : 'down');
+    d.textContent = Math.abs(ch) < .005 ? 'Unchanged vs last close' : `${ch > 0 ? '▲' : '▼'} ${Math.abs(ch).toFixed(1)}% vs last close`;
+    $('be1').textContent = `${fmt(e1(w, r))} kg`;
+    const oneRep = e1(w, r + 1), onePlate = e1(w + L.step, r);
+    $('bnext').textContent = oneRep <= onePlate ? `${fmt(w)} × ${r + 1}` : `${fmt(w + L.step)} × ${r}`;
+    const n = $('bnote');
+    n.className = 'note' + (counts ? '' : ' warn');
+    n.textContent = counts ? (now > Math.max(...closes) ? 'New all-time high for this lift.' : 'Example numbers. In the app every exercise feeds its sector, and sectors feed $YOU.')
+                           : 'Saved, but only sets of 3–10 reps move your index.';
+    drawChart([...closes, now], counts);
+  }
+
+  function drawChart(pts, counts) {
+    const W = 600, H = 220, pad = 18, lo = Math.min(...pts, 100) - 2, hi = Math.max(...pts) + 2;
+    const x = i => pad + i * (W - pad * 2) / (pts.length - 1), y = v => H - pad - (v - lo) / (hi - lo) * (H - pad * 2);
+    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+    const lastX = x(pts.length - 1), lastY = y(pts.at(-1)), prevX = x(pts.length - 2), prevY = y(pts.at(-2));
+    const color = pts.at(-1) >= pts.at(-2) ? '#4ED5AD' : '#E6A2B4';
+    $('chart').innerHTML = `
+      <defs><linearGradient id="df" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".28"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
+      <line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#6F6979" stroke-opacity=".5" stroke-dasharray="2 6"/>
+      <text x="${W}" y="${y(100) - 8}" fill="#6F6979" font-size="13" text-anchor="end">100</text>
+      <path d="${line} L${lastX} ${H} L${pad} ${H} Z" fill="url(#df)"/>
+      <path d="${pts.slice(0, -1).map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M${prevX} ${prevY} L${lastX} ${lastY}" fill="none" stroke="${counts ? color : '#6F6979'}" stroke-width="3" stroke-linecap="round" ${counts ? '' : 'stroke-dasharray="4 6"'}/>
+      ${pts.slice(0, -1).map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#1B191F" stroke="#A78BFA" stroke-width="2"/>`).join('')}
+      <circle cx="${lastX}" cy="${lastY}" r="7" fill="${counts ? color : '#6F6979'}"/>`;
+  }
+  render();
+
+  /* How it works: the phone shows the step in the middle of the screen. */
+  const phone = document.getElementById('phone'), steps = [...document.querySelectorAll('#steps li')];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    phone.dataset.step = e.target.dataset.step;
+    steps.forEach(s => s.classList.toggle('on', s === e.target));
+  }), { rootMargin: '-45% 0px -45% 0px' });
+  steps.forEach(s => io.observe(s));
+})();
+</script>
 </body>
 </html>
