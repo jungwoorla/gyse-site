@@ -3,39 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GYSE · Follow on GYSE</title>
+<title>Follow on GYSE</title>
 <meta name="description" content="Strength, as an index. Follow a friend's GYSE ticker.">
 <meta property="og:title" content="Follow me on GYSE">
-<meta property="og:description" content="I track my strength like a stock. Let's see who's up.">
+<meta property="og:description" content="I track my strength as an index. Follow my line on GYSE.">
+<meta property="og:image" content="https://gyse.app/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0C0C0E">
 <style>
-  :root { --canvas:#111114; --surface:#1B191F; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979; --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; }
+  @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
+               font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+  :root { --iron:#0C0C0E; --text:#F3F2F6; --ash:#A6A3AE; --rule:rgba(255,255,255,.14); --violet:#6C47F0; --lilac:#B9A4FF; }
   * { box-sizing: border-box; }
-  body { margin:0; min-height:100vh; background: radial-gradient(600px 420px at 10% 0%, rgba(139,92,246,.26), transparent), var(--canvas);
-         color:var(--text); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
-  main { max-width: 480px; margin: 0 auto; padding: 56px 22px 64px; }
-  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
-  .brand svg { width:26px; height:26px; }
-  .ticker { font-size: 56px; font-weight: 800; letter-spacing: -.02em; color: var(--lilac); margin: 40px 0 0; word-break: break-all; }
-  p { color: var(--muted); margin: 10px 0 0; }
-  .btn { display:block; text-align:center; text-decoration:none; font-weight:600; border-radius: 16px; padding: 16px; margin-top: 14px; }
-  .primary { background: var(--purple); color: #fff; margin-top: 36px; }
-  .secondary { background: var(--surface); color: var(--text); }
-  .note { font-size: 14px; color: var(--faint); margin-top: 28px; }
+  body { margin: 0; min-height: 100svh; background: var(--iron); color: var(--text);
+         font: 17px/1.6 "Archivo", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; border-radius: 4px; }
+  .photo { height: 42svh; min-height: 260px; background: url(/assets/hero-mono-1200.jpg) 64% 40% / cover; position: relative; }
+  .photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,12,14,.45), rgba(12,12,14,0) 35%, var(--iron) 100%); }
+  .brand { position: absolute; z-index: 1; top: 24px; left: 22px; display: inline-flex; align-items: center; gap: 10px; color: var(--text);
+           text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
+  .brand svg { width: 24px; height: 24px; }
+  main { max-width: 480px; margin: -40px auto 0; padding: 0 22px 56px; position: relative; }
+  .ticker { font-stretch: 72%; font-weight: 500; font-size: clamp(56px, 17vw, 84px); line-height: 1; letter-spacing: -.01em; margin: 0; word-break: break-all; }
+  p { color: var(--ash); margin: 14px 0 0; }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 54px; border-radius: 999px; text-decoration: none; font-weight: 600; margin-top: 12px; }
+  .primary { background: var(--violet); color: #fff; margin-top: 32px; }
+  .secondary { border: 1px solid var(--rule); color: var(--text); }
+  .note { font-size: 14px; margin-top: 28px; }
 </style>
 </head>
 <body>
-<main>
-  <a class="brand" href="/" style="text-decoration:none">
-    <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
-    </svg>
+<div class="photo">
+  <a class="brand" href="/" aria-label="GYSE home">
+    <svg viewBox="0 0 1024 1024" fill="none" stroke="#B9A4FF" stroke-width="84" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
     GYSE
   </a>
-  <div class="ticker" id="ticker">$GYSE</div>
-  <p id="lead">Strength, as an index. Every top set you log moves your own ticker.</p>
+</div>
+<main>
+  <h1 class="ticker" id="ticker">GYSE</h1>
+  <p id="lead">Strength, as an index. Every top set you log moves your own line.</p>
   <a class="btn primary" id="open" href="gyse://">Open in GYSE</a>
-  <a class="btn secondary" href="/support">What is GYSE?</a>
-  <p class="note">GYSE is coming to the App Store. If the button does nothing, the app isn't on this iPhone yet.</p>
+  <a class="btn secondary" href="/">What is GYSE?</a>
+  <p class="note">GYSE is coming soon to the App Store. If the button does nothing, the app isn't on this iPhone yet.</p>
 </main>
 <script>
   // Only A–Z, 0–9 and _ survive, so nothing from the URL is ever injected as markup.
@@ -43,7 +52,7 @@
   const ticker = raw.replace(/[^A-Za-z0-9_]/g, "").slice(0, 20).toUpperCase();
   if (ticker) {
     document.getElementById("ticker").textContent = "$" + ticker;
-    document.getElementById("lead").textContent = "Follow $" + ticker + "'s strength index on GYSE and see who's up.";
+    document.getElementById("lead").textContent = "Follow $" + ticker + "'s strength index on GYSE.";
     document.getElementById("open").href = "gyse://profile/" + ticker.toLowerCase();
     document.title = "$" + ticker + " on GYSE";
   }

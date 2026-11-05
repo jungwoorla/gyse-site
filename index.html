@@ -4,431 +4,367 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GYSE · Your strength, as an index</title>
-<meta name="description" content="GYSE turns your top sets into a personal strength index that starts at 100. Log one set per exercise, watch your ticker climb, and see who's up.">
+<meta name="description" content="GYSE turns the top sets you log into one personal strength index that starts at 100 and rises as you get stronger. For iPhone.">
 <meta property="og:title" content="GYSE: your strength, as an index">
-<meta property="og:description" content="Log one top set per exercise. Watch your own ticker climb from 100.">
+<meta property="og:description" content="Log one top set per exercise. GYSE turns your lifts into a single line that starts at 100.">
 <meta property="og:url" content="https://gyse.app">
-<meta property="og:image" content="https://gyse.app/assets/hero-end.jpg">
+<meta property="og:image" content="https://gyse.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#111114">
-<link rel="preload" as="image" href="/assets/hero-start.jpg">
+<meta name="theme-color" content="#0C0C0E">
+<link rel="preload" as="image" href="/assets/hero-mono.jpg" imagesrcset="/assets/hero-mono-1200.jpg 1200w, /assets/hero-mono.jpg 1920w" imagesizes="100vw">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
 <style>
   /* Archivo (SIL Open Font License), variable weight 100–900 and width 62–125, served from gyse.app. */
   @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
                font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
   :root {
-    --ink:#111114; --plate:#1B191F; --raised:#25212B; --line:rgba(255,255,255,.08);
-    --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979;
-    --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; --down:#E6A2B4;
-    --gutter: clamp(20px, 4vw, 56px);
+    --iron:#0C0C0E; --iron-2:#17161A; --chalk:#F1F1F3; --paper:#FFFFFF;
+    --ink:#141317; --slate:#5F5C68; --ash:#A6A3AE; --rule:rgba(20,19,23,.12); --rule-dark:rgba(255,255,255,.12);
+    --violet:#6C47F0; --violet-ink:#5734D9; --lilac:#B9A4FF; --gain:#127A5C; --loss:#B4384A;
+    --gutter: clamp(20px, 4.4vw, 64px);
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin:0; background: var(--ink); color: var(--text);
-         font-family: "Archivo", -apple-system, system-ui, sans-serif; font-stretch: 100%;
-         font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; }
+  body { margin: 0; background: var(--chalk); color: var(--ink);
+         font-family: "Archivo", -apple-system, system-ui, sans-serif; font-size: 18px; line-height: 1.6;
+         -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   a { color: inherit; }
-  :focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; border-radius: 6px; }
-  .wide { font-stretch: 125%; }
-  .num { font-stretch: 125%; font-variant-numeric: tabular-nums; }
-  .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+  /* Figures: Archivo narrowed, lining and tabular, the way index tables are set. */
+  .fig { font-stretch: 72%; font-variant-numeric: lining-nums tabular-nums; font-weight: 500; letter-spacing: -.01em; }
+  h1, h2, h3 { font-weight: 560; letter-spacing: -.035em; text-wrap: balance; margin: 0; }
 
-  /* ---------- Hero: the render, and the index it draws ---------- */
-  .film { position: relative; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; isolation: isolate; }
-  .film video, .film .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 64% 50%; z-index: -2; }
-  .film::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      linear-gradient(90deg, rgba(17,17,20,.94) 0%, rgba(17,17,20,.74) 30%, rgba(17,17,20,.1) 62%, rgba(17,17,20,0) 100%),
-      linear-gradient(180deg, rgba(17,17,20,.6) 0%, rgba(17,17,20,0) 18%, rgba(17,17,20,0) 70%, var(--ink) 100%); }
-  nav { display: flex; align-items: center; justify-content: space-between; padding-top: 26px; }
-  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--lilac);
-           font-stretch: 125%; font-weight: 800; letter-spacing: .02em; font-size: 17px; }
-  .brand svg { width: 26px; height: 26px; }
-  nav .links a { text-decoration: none; color: var(--text); opacity: .78; margin-left: 22px; font-size: 15px; }
-  nav .links a:hover { opacity: 1; }
-  .hero { align-self: center; padding-block: 6vh 4vh; }
-  .hero h1 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.045em; line-height: .95;
-             font-size: clamp(42px, 6.4vw, 92px); max-width: 9.5em; text-wrap: balance; }
-  .hero p { max-width: 30em; margin: 26px 0 32px; font-size: clamp(17px, 1.4vw, 20px); color: #D9D4E2; }
-  .actions { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 14px; font-weight: 650;
-         text-decoration: none; background: var(--purple); color: #fff; box-shadow: 0 12px 40px rgba(139,92,246,.35);
-         transition: transform .15s ease, filter .15s ease; }
-  .btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
-  .soon { color: var(--muted); font-size: 15px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px; border-radius: 999px;
+         background: var(--violet); color: #fff; font-weight: 600; font-size: 16px; text-decoration: none; transition: background .15s ease; }
+  .btn:hover { background: var(--violet-ink); }
+  .quiet { color: var(--ash); font-size: 15px; }
 
-  /* Live readout: the number the line is drawing. */
-  .readout { justify-self: end; text-align: right; padding-bottom: 8vh; }
-  .readout .sym { color: var(--lilac); font-weight: 800; font-size: 18px; }
-  .readout .val { display: block; font-weight: 700; font-size: clamp(56px, 7.2vw, 112px); line-height: .9; letter-spacing: -.05em; margin-top: 4px; }
-  .readout .chg { display: inline-block; margin-top: 10px; color: var(--up); font-weight: 700; font-size: 18px;
-                  opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease; }
-  .readout.closed .chg { opacity: 1; transform: none; }
-  .readout .ath { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; opacity: 0; transition: opacity .5s ease .25s; }
-  .readout.closed .ath { opacity: 1; }
+  /* ---------- Hero ---------- */
+  .hero { position: relative; height: clamp(640px, 100svh, 940px); background: var(--iron); color: #F3F2F6;
+          overflow: hidden; isolation: isolate; container-type: size; --fx: 50%; }
+  /* The photo and the line share one box sized like object-fit: cover, so the line stays on the lifter at any size. */
+  .stage { position: absolute; z-index: -2; top: 50%; left: var(--fx); aspect-ratio: 16 / 9;
+           width: max(100cqw, calc(100cqh * 16 / 9)); transform: translate(calc(var(--fx) * -1), -50%); }
+  .stage img, .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(90deg, rgba(12,12,14,.92) 0%, rgba(12,12,14,.7) 34%, rgba(12,12,14,0) 62%),
+                linear-gradient(180deg, rgba(12,12,14,.55) 0%, rgba(12,12,14,0) 20%); }
+  .index-line { fill: none; stroke: var(--lilac); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke;
+                stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.8s cubic-bezier(.45,.05,.2,1) .35s forwards; }
+  .tick { fill: var(--iron); stroke: var(--lilac); stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .label { font-family: "Archivo", system-ui, sans-serif; opacity: 0; animation: show .6s ease forwards; }
+  .label .v { font-stretch: 72%; font-variant-numeric: lining-nums tabular-nums; font-weight: 500; fill: #F3F2F6; }
+  .label .k { font-weight: 450; fill: #A6A3AE; }
+  .label.start { animation-delay: .25s; }
+  .label.end { animation-delay: 3s; }
+  .end-dot { opacity: 0; animation: show .4s ease 2.95s forwards; }
+  .portrait { display: none; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes show { to { opacity: 1; } }
 
-  /* ---------- Tape ---------- */
-  .tape { border-block: 1px solid var(--line); overflow: hidden; background: #141318; }
-  .tape-track { display: flex; width: max-content; animation: tape 48s linear infinite; }
-  .tape:hover .tape-track { animation-play-state: paused; }
-  .tape ul { display: flex; margin: 0; padding: 0; list-style: none; }
-  .tape li { display: flex; align-items: baseline; gap: 10px; padding: 16px 30px; white-space: nowrap; border-right: 1px solid var(--line); font-size: 15px; }
-  .tape b { color: var(--text); font-stretch: 125%; font-weight: 800; }
-  .tape .px { color: var(--muted); font-stretch: 125%; font-variant-numeric: tabular-nums; }
-  .tape .u { color: var(--up); font-variant-numeric: tabular-nums; font-weight: 650; }
-  .tape .d { color: var(--down); font-variant-numeric: tabular-nums; font-weight: 650; }
-  @keyframes tape { to { transform: translateX(-50%); } }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
+  .brand svg { width: 24px; height: 24px; }
+  .bar nav a { text-decoration: none; color: #F3F2F6; opacity: .72; margin-left: 28px; font-size: 15px; }
+  .bar nav a:hover { opacity: 1; }
+  .lead { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-56%); }
+  .lead h1 { font-size: clamp(46px, 6vw, 88px); line-height: .98; max-width: 7.6em; }
+  .lead p { max-width: 27em; margin: 28px 0 36px; color: #C9C6D0; font-size: clamp(17px, 1.35vw, 19px); }
+  .lead .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
 
-  /* ---------- Shared section type ---------- */
-  section.block { padding: clamp(88px, 12vw, 160px) 0; }
-  .block h2 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.04em; line-height: 1;
-              font-size: clamp(34px, 4.6vw, 64px); text-wrap: balance; }
-  .block .intro { color: var(--muted); max-width: 34em; margin: 22px 0 0; font-size: 18px; }
+  /* ---------- Sections on chalk ---------- */
+  section { padding: clamp(96px, 12vw, 168px) 0; }
+  section + section { border-top: 1px solid var(--rule); }
+  .head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(32px, 6vw, 96px); align-items: end; }
+  .head h2 { font-size: clamp(36px, 4.4vw, 60px); line-height: 1.02; }
+  .head p { margin: 0; color: var(--slate); max-width: 34em; }
 
-  /* ---------- Demo: log a set ---------- */
-  .demo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 80px); align-items: start; margin-top: 56px; }
-  .setform { display: grid; gap: 18px; }
-  .field label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  /* ---------- Try a set ---------- */
+  .demo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); margin-top: clamp(48px, 6vw, 80px); align-items: start; }
+  .controls { display: grid; gap: 30px; }
+  .field > span { display: block; font-size: 14px; font-weight: 550; color: var(--slate); margin-bottom: 10px; }
   .seg { display: flex; flex-wrap: wrap; gap: 8px; }
-  .seg button { font: inherit; font-size: 15px; color: var(--text); background: var(--plate); border: 1px solid var(--line);
-                border-radius: 99px; padding: 10px 16px; cursor: pointer; }
-  .seg button[aria-pressed="true"] { background: rgba(139,92,246,.2); border-color: rgba(167,139,250,.6); color: var(--lilac); }
-  .stepper { display: flex; align-items: center; background: var(--plate); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
-  .stepper button { font: inherit; width: 56px; height: 64px; border: 0; background: transparent; color: var(--lilac); font-size: 26px; cursor: pointer; }
-  .stepper button:hover { background: var(--raised); }
-  .stepper output { flex: 1; text-align: center; font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 30px; }
-  .stepper small { color: var(--muted); font-size: 15px; font-weight: 500; margin-left: 6px; font-stretch: 100%; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .last { color: var(--faint); font-size: 14px; margin: 0; }
+  .seg button { font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--rule);
+                border-radius: 999px; padding: 9px 16px; cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+  .seg button:hover { border-color: rgba(20,19,23,.3); }
+  .seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stepper { display: flex; align-items: center; border: 1px solid var(--rule); border-radius: 16px; background: var(--paper); }
+  .stepper button { font: inherit; width: 52px; height: 64px; border: 0; background: transparent; color: var(--ink); font-size: 22px; cursor: pointer; border-radius: 16px; }
+  .stepper button:hover { color: var(--violet); }
+  .stepper output { flex: 1; text-align: center; font-size: 30px; }
+  .stepper small { font-size: 14px; color: var(--slate); margin-left: 5px; font-stretch: 100%; font-weight: 450; }
+  .controls .hint { margin: 0; color: var(--slate); font-size: 15px; }
 
-  .board { background: var(--plate); border-radius: 28px; padding: clamp(22px, 3vw, 36px); position: relative; overflow: hidden; }
-  .board .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
-  .board .tk { color: var(--lilac); font-stretch: 125%; font-weight: 800; font-size: 20px; }
-  .board .ex { color: var(--muted); font-size: 15px; }
-  .board .big { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: -.05em;
-                font-size: clamp(56px, 7vw, 96px); line-height: 1; margin-top: 18px; }
-  .board .delta { font-weight: 700; font-size: 18px; margin-top: 10px; }
-  .board .delta.up { color: var(--up); } .board .delta.down { color: var(--down); } .board .delta.flat { color: var(--muted); }
-  .board svg { display: block; width: 100%; height: auto; margin-top: 18px; overflow: visible; }
-  .board .facts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 18px; }
-  .board .fact { background: var(--raised); border-radius: 14px; padding: 12px 14px; }
-  .board .fact span { display: block; color: var(--muted); font-size: 13px; }
-  .board .fact b { font-stretch: 125%; font-variant-numeric: tabular-nums; font-size: 18px; }
-  .board .note { color: var(--muted); font-size: 14px; margin: 16px 0 0; min-height: 1.5em; }
-  .board .note.warn { color: var(--down); }
+  .sheet { background: var(--paper); border-radius: 24px; padding: clamp(24px, 3vw, 40px); box-shadow: 0 1px 0 var(--rule), 0 24px 60px -36px rgba(20,19,23,.35); }
+  .sheet .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: 15px; }
+  .sheet .who { font-weight: 650; }
+  .sheet .ex { color: var(--slate); }
+  .sheet .big { font-size: clamp(64px, 7.4vw, 104px); line-height: 1; margin-top: 20px; letter-spacing: -.02em; }
+  .sheet .delta { margin-top: 8px; font-size: 16px; font-weight: 550; }
+  .delta.up { color: var(--gain); } .delta.down { color: var(--loss); } .delta.flat { color: var(--slate); }
+  .sheet svg { display: block; width: 100%; height: auto; margin-top: 24px; overflow: visible; }
+  .sheet dl { margin: 22px 0 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); }
+  .sheet dl div { padding: 14px 0 0; }
+  .sheet dl div + div { padding-left: 20px; border-left: 1px solid var(--rule); }
+  .sheet dt { font-size: 14px; color: var(--slate); }
+  .sheet dd { margin: 2px 0 0; font-size: 22px; }
+  .sheet .note { margin: 20px 0 0; font-size: 15px; color: var(--slate); min-height: 1.6em; }
+  .sheet .note.warn { color: var(--loss); }
 
-  /* ---------- How it works: a pinned phone ---------- */
-  .how { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); margin-top: 24px; }
-  .phone-rail { position: relative; }
-  .phone { position: sticky; top: 9vh; margin: 0 auto; width: min(100%, 340px); aspect-ratio: 9 / 19.2; border-radius: 52px;
-           background: #0B0A0E; padding: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,.09), 0 40px 120px rgba(0,0,0,.6), 0 0 120px rgba(139,92,246,.12); }
-  .screen { position: relative; width: 100%; height: 100%; border-radius: 41px; overflow: hidden; background: var(--ink); }
-  .screen .island { position: absolute; top: 11px; left: 50%; width: 31%; height: 26px; transform: translateX(-50%); background: #000; border-radius: 99px; z-index: 5; }
-  .scr { position: absolute; inset: 0; padding: 52px 18px 18px; opacity: 0; transform: scale(.985); transition: opacity .45s ease, transform .45s ease; font-size: 12.5px; }
-  .phone[data-step="1"] .s1, .phone[data-step="2"] .s2, .phone[data-step="3"] .s3, .phone[data-step="4"] .s4 { opacity: 1; transform: none; }
-  .scr h4 { margin: 4px 0 2px; font-stretch: 125%; font-weight: 800; font-size: 21px; letter-spacing: -.03em; }
-  .scr .sub { color: var(--muted); margin: 0 0 14px; }
-  .scr .row { display: flex; justify-content: space-between; align-items: center; background: var(--plate); border-radius: 14px; padding: 11px 12px; margin-bottom: 8px; }
-  .scr .row .nm { font-weight: 650; }
-  .scr .row .nm small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
-  .scr .pill2 { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; background: var(--raised); border-radius: 10px; padding: 6px 9px; }
-  .scr .cta { margin-top: 14px; background: var(--purple); color: #fff; text-align: center; font-weight: 700; border-radius: 14px; padding: 13px; }
-  .scr .tk2 { color: var(--lilac); font-stretch: 125%; font-weight: 800; font-size: 14px; }
-  .scr .bignum { font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 40px; letter-spacing: -.05em; line-height: 1; margin-top: 6px; }
-  .scr .up { color: var(--up); font-weight: 700; }
-  .scr .down { color: var(--down); font-weight: 700; }
-  .scr .chips2 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
-  .scr .chips2 span { background: var(--raised); border-radius: 99px; padding: 5px 9px; font-weight: 600; }
-  .scr .rank { display: grid; grid-template-columns: 22px 1fr 58px auto; align-items: center; gap: 8px; background: var(--plate); border-radius: 14px; padding: 10px 12px; margin-bottom: 8px; }
-  .scr .rank .pos { color: var(--faint); font-stretch: 125%; font-weight: 800; }
-  .scr .rank.me { box-shadow: inset 0 0 0 1px rgba(167,139,250,.55); }
-  .scr .rank svg { width: 58px; height: 22px; }
-  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; display: grid; grid-template-columns: repeat(4, 1fr);
-          border-top: 1px solid var(--line); background: rgba(17,17,20,.92); padding: 8px 6px 14px; }
-  .tabs span { display: grid; justify-items: center; gap: 3px; color: var(--faint); font-size: 10px; font-weight: 600; }
-  .tabs span::before { content: ""; width: 18px; height: 18px; border-radius: 6px; background: currentColor; opacity: .55; }
-  .tabs .on { color: var(--lilac); } .tabs .on::before { opacity: 1; }
-  .s4 { padding: 0; }
-  .s4 .story { position: absolute; inset: 0; background: url(/assets/hero-end.jpg) 58% 50% / cover; }
-  .s4 .story::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0) 40%, rgba(0,0,0,.35)); }
-  .sticker { position: absolute; left: 14px; right: 14px; bottom: 64px; z-index: 2; color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,.55); }
-  .sticker .tk2 { color: #fff; }
-  .sticker .bignum { font-size: 46px; }
-  .sticker ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
-  .sticker li { display: flex; justify-content: space-between; font-weight: 600; }
-  .sticker li span:last-child { color: var(--up); font-variant-numeric: tabular-nums; }
-  .sticker .mark { margin-top: 10px; font-stretch: 125%; font-weight: 800; letter-spacing: .02em; opacity: .85; font-size: 11px; }
-  .igbar { position: absolute; left: 12px; right: 12px; top: 50px; height: 3px; background: rgba(255,255,255,.35); border-radius: 3px; z-index: 2; }
-  .igbar::before { content: ""; position: absolute; inset: 0 40% 0 0; background: #fff; border-radius: 3px; }
+  /* ---------- How it works ---------- */
+  .steps { list-style: none; margin: clamp(56px, 7vw, 96px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 64px); }
+  .steps li { display: flex; flex-direction: column; }
+  .steps h3 { font-size: clamp(22px, 1.9vw, 27px); line-height: 1.15; margin-top: 32px; letter-spacing: -.025em; }
+  .steps h3 .n { color: var(--slate); margin-right: .45em; font-weight: 450; }
+  .steps p { margin: 10px 0 0; color: var(--slate); font-size: 17px; max-width: 24em; }
 
-  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
-  .steps li { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; counter-increment: step; }
-  .steps li:first-child { min-height: 58vh; justify-content: flex-start; padding-top: 12vh; }
-  .steps li:last-child { min-height: 70vh; }
-  .steps .n { font-stretch: 125%; font-weight: 800; color: var(--faint); font-size: 15px; font-variant-numeric: tabular-nums; }
-  .steps .n::before { content: counter(step) " of 4"; }
-  .steps h3 { margin: 10px 0 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(30px, 3.4vw, 46px); }
-  .steps p { color: var(--muted); max-width: 26em; margin: 16px 0 0; font-size: 18px; }
-  .steps li.on .n { color: var(--violet); }
+  .phone { width: 100%; max-width: 300px; aspect-ratio: 9 / 19.3; border-radius: 46px; background: #050506; padding: 9px;
+           box-shadow: 0 0 0 1px rgba(20,19,23,.14), 0 50px 70px -50px rgba(20,19,23,.55); }
+  .screen { position: relative; height: 100%; border-radius: 38px; overflow: hidden; background: #111114; color: #F4F3F7;
+            font-size: 11.5px; line-height: 1.4; padding: 46px 15px 15px; }
+  .screen::before { content: ""; position: absolute; top: 10px; left: 50%; width: 30%; height: 22px; transform: translateX(-50%); background: #000; border-radius: 99px; }
+  .screen h4 { margin: 4px 0 2px; font-size: 19px; font-weight: 750; font-stretch: 118%; letter-spacing: -.03em; }
+  .screen .sub { color: #A19AAE; margin: 0 0 12px; }
+  .screen .row { display: flex; justify-content: space-between; align-items: center; background: #1B191F; border-radius: 13px; padding: 10px 11px; margin-bottom: 7px; }
+  .screen .row b { font-weight: 650; }
+  .screen .row small { display: block; color: #A19AAE; font-size: 10px; }
+  .screen .pill { font-stretch: 112%; font-variant-numeric: tabular-nums; font-weight: 700; background: #25212B; border-radius: 9px; padding: 5px 8px; }
+  .screen .cta { margin-top: 12px; background: #8B5CF6; color: #fff; text-align: center; font-weight: 700; border-radius: 13px; padding: 11px; }
+  .screen .tk { color: #CBB5FF; font-weight: 800; font-stretch: 118%; font-size: 13px; }
+  .screen .num { font-stretch: 118%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 36px; letter-spacing: -.04em; line-height: 1; margin-top: 4px; }
+  .screen .up { color: #4ED5AD; font-weight: 700; } .screen .down { color: #E6A2B4; font-weight: 700; }
+  .screen .chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+  .screen .chips span { background: #25212B; border-radius: 99px; padding: 4px 8px; font-weight: 600; }
+  .screen .rank { display: grid; grid-template-columns: 16px 1fr 50px auto; align-items: center; gap: 7px; background: #1B191F; border-radius: 13px; padding: 9px 11px; margin-bottom: 7px; }
+  .screen .rank .pos { color: #6F6979; font-weight: 800; }
+  .screen .rank.me { box-shadow: inset 0 0 0 1px rgba(167,139,250,.55); }
+  .screen .rank svg { width: 50px; height: 20px; }
+  .screen .rank .v { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; display: grid; grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid rgba(255,255,255,.07); background: #111114; padding: 8px 6px 12px; }
+  .tabs span { display: grid; justify-items: center; gap: 3px; color: #6F6979; font-size: 9px; font-weight: 600; }
+  .tabs span::before { content: ""; width: 16px; height: 16px; border-radius: 5px; background: currentColor; opacity: .5; }
+  .tabs .on { color: #CBB5FF; } .tabs .on::before { opacity: 1; }
+
+  /* ---------- Principles ---------- */
+  .principles { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(32px, 6vw, 96px); }
+  .principles h2 { font-size: clamp(36px, 4.4vw, 60px); line-height: 1.02; }
+  .principles p { margin: 0 0 18px; color: var(--slate); max-width: 34em; }
+  .principles p strong { color: var(--ink); font-weight: 600; }
+  .principles .links a { color: var(--ink); text-underline-offset: 3px; margin-right: 18px; font-size: 16px; }
 
   /* ---------- Closer ---------- */
-  .closer { padding: clamp(96px, 14vw, 200px) 0 clamp(56px, 8vw, 96px); position: relative; overflow: hidden; }
-  .closer .giant { font-stretch: 125%; font-weight: 900; letter-spacing: -.06em; line-height: .82; margin: 0;
-                   font-size: clamp(96px, 23vw, 360px); color: transparent; -webkit-text-stroke: 1.5px rgba(203,181,255,.55);
-                   background: linear-gradient(180deg, rgba(167,139,250,.28), rgba(167,139,250,0) 85%); -webkit-background-clip: text; background-clip: text; }
-  .closer .claim { display: flex; flex-wrap: wrap; gap: 24px 48px; justify-content: space-between; align-items: end; margin-top: 28px; }
-  .closer h2 { margin: 0; font-stretch: 125%; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-size: clamp(30px, 3.6vw, 48px); }
-  .closer p { color: var(--muted); margin: 12px 0 0; max-width: 28em; }
-  footer { border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
-  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 26px; padding-bottom: 40px; }
-  footer a { color: var(--muted); text-decoration: none; margin-left: 20px; }
+  .closer { background: var(--iron); color: #F3F2F6; padding: clamp(96px, 12vw, 160px) 0 0; border-top: 0; }
+  .closer .wrap.row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 32px 64px; }
+  .closer h2 { font-size: clamp(48px, 7vw, 104px); line-height: .95; }
+  .closer h2 .fig { font-weight: 450; font-stretch: 72%; letter-spacing: -.02em; }
+  .closer p { margin: 0 0 6px; color: var(--ash); max-width: 26em; }
+  .closer p a { color: #F3F2F6; text-underline-offset: 3px; }
+  footer { margin-top: clamp(80px, 10vw, 128px); border-top: 1px solid var(--rule-dark); color: #7F7C88; font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 24px; padding-bottom: 36px; }
+  footer a { color: #A6A3AE; text-decoration: none; margin-left: 22px; }
   footer a:first-child { margin-left: 0; }
-  footer a:hover { color: var(--text); }
+  footer a:hover { color: #F3F2F6; }
 
-  @media (max-width: 900px) {
-    .demo { grid-template-columns: 1fr; }
-    .how { grid-template-columns: 1fr; }
-    .phone-rail { position: sticky; top: 0; z-index: 2; height: 0; }
-    .phone { position: absolute; top: 0; right: 0; width: 132px; border-radius: 26px; padding: 6px; }
-    .screen { border-radius: 21px; }
-    .scr { transform: scale(.42); transform-origin: top left; width: 238%; height: 238%; }
-    .phone[data-step] .scr { transform: scale(.42); }
-    .screen .island { top: 6px; height: 11px; }
-    .steps { padding-right: 148px; }
-    .steps li, .steps li:first-child, .steps li:last-child { min-height: 64vh; padding-top: 0; justify-content: center; }
+  @media (max-width: 960px) {
+    .head, .demo, .principles { grid-template-columns: 1fr; }
+    .head { align-items: start; }
+    /* Phones: a row you swipe, so each screen keeps a readable size. */
+    .steps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 20px; margin-inline: calc(var(--gutter) * -1); padding: 0 var(--gutter) 8px;
+             scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .steps::-webkit-scrollbar { display: none; }
+    .steps li { flex: 0 0 min(76vw, 300px); scroll-snap-align: start; }
   }
   @media (max-width: 720px) {
-    .film { grid-template-rows: auto 1fr auto; }
-    .film video, .film .poster { object-position: 70% 50%; }
-    .film::after { background: linear-gradient(180deg, rgba(17,17,20,.72) 0%, rgba(17,17,20,.1) 24%, rgba(17,17,20,.5) 52%, rgba(17,17,20,.96) 80%, var(--ink) 100%); }
-    .hero { align-self: end; padding-block: 0 18px; }
-    .readout { justify-self: start; text-align: left; padding-bottom: 36px; }
-    .readout .val { font-size: 64px; }
-    nav .links a { margin-left: 16px; font-size: 14px; }
-    .pair { grid-template-columns: 1fr 1fr; }
+    .hero { --fx: 70%; height: clamp(640px, 100svh, 820px); }
+    .hero::after { background: linear-gradient(180deg, rgba(12,12,14,.6) 0%, rgba(12,12,14,0) 22%, rgba(12,12,14,.35) 46%, rgba(12,12,14,.94) 72%, var(--iron) 100%); }
+    .stage svg { display: none; }
+    .portrait { display: block; position: absolute; z-index: -1; left: 0; top: 84px; width: 100%; height: auto; }
+    .lead { top: auto; bottom: 36px; transform: none; }
+    .lead p { margin: 18px 0 26px; }
+    .bar nav a { margin-left: 18px; font-size: 14px; }
+    .bar nav a.wide-only { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .film video { display: none; }
-    .tape-track { animation: none; }
-    .scr, .readout .chg, .readout .ath { transition: none; }
+    .index-line { animation: none; stroke-dashoffset: 0; }
+    .label, .end-dot { animation: none; opacity: 1; }
   }
 </style>
 </head>
 <body>
 
-<header class="film" aria-label="GYSE">
-  <img class="poster" src="/assets/hero-end.jpg" alt="">
-  <video id="film" src="/assets/hero.mp4" poster="/assets/hero-start.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
-  <div class="wrap">
-    <nav>
-      <a class="brand" href="/" aria-label="GYSE home">
-        <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
-        GYSE
-      </a>
-      <div class="links"><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
-    </nav>
+<header class="hero">
+  <div class="stage" aria-hidden="true">
+    <img src="/assets/hero-mono.jpg" srcset="/assets/hero-mono-1200.jpg 1200w, /assets/hero-mono.jpg 1920w" sizes="(max-width: 720px) 220vw, 110vw" alt="">
+    <svg viewBox="0 0 1920 1080">
+      <path class="index-line" pathLength="1" d="M820 868 L880 860 L940 846 L990 852 L1050 818 L1110 808 L1170 790 L1230 797 L1290 748 L1350 732 L1410 700 L1470 708 L1530 640 L1590 604 L1640 560 L1690 538 L1735 452 L1784 300"/>
+      <circle class="tick" cx="820" cy="868" r="5"/>
+      <g class="end-dot"><circle cx="1784" cy="300" r="15" fill="none" stroke="#B9A4FF" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="1784" cy="300" r="6" fill="#B9A4FF"/></g>
+      <g class="label start"><text class="v" x="820" y="926" font-size="34">100.00</text><text class="k" x="820" y="958" font-size="20">Day one</text></g>
+      <g class="label end" text-anchor="end"><text class="v" x="1756" y="236" font-size="46">112.40</text><text class="k" x="1756" y="268" font-size="20">New high, week 14</text></g>
+    </svg>
   </div>
-  <div class="wrap hero">
-    <h1>Your strength, as&nbsp;an&nbsp;index.</h1>
-    <p>Log one top set per exercise. GYSE turns it into your own ticker that starts at 100 and climbs as you get stronger. Then see who's up.</p>
+  <svg class="portrait" viewBox="0 0 390 360" aria-hidden="true">
+    <path class="index-line" pathLength="1" d="M20 330 L48 324 L74 316 L98 320 L124 296 L152 290 L178 276 L204 281 L230 246 L258 236 L284 214 L308 219 L330 170 L352 140 L370 60"/>
+    <g class="end-dot"><circle cx="370" cy="60" r="11" fill="none" stroke="#B9A4FF" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="370" cy="60" r="4.5" fill="#B9A4FF"/></g>
+    <g class="label end" text-anchor="end"><text class="v" x="352" y="40" font-size="26">112.40</text><text class="k" x="352" y="60" font-size="12">New high, week 14</text></g>
+  </svg>
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label="GYSE home">
+      <svg viewBox="0 0 1024 1024" fill="none" stroke="#B9A4FF" stroke-width="84" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
+      GYSE
+    </a>
+    <nav aria-label="Site"><a class="wide-only" href="#how">How it works</a><a href="/support">Support</a></nav>
+  </div>
+  <div class="wrap lead">
+    <h1>Your strength, as an index.</h1>
+    <p>Log one top set per exercise. GYSE turns your lifts into a single line that starts at 100 and rises as you get stronger.</p>
     <div class="actions">
-      <a class="btn" href="#try">Try a set</a>
-      <span class="soon">Coming soon to the App Store for iPhone</span>
-    </div>
-  </div>
-  <div class="wrap" style="display:grid">
-    <div class="readout num" id="readout" aria-label="Example index: $YOU at 112.40, up 12.4 percent since day one">
-      <span class="sym">$YOU</span>
-      <span class="val" id="readval">100.00</span>
-      <span class="chg">▲ 12.4% since day one</span>
-      <span class="ath">All-time high</span>
+      <a class="btn" href="#try">Try it with a set</a>
+      <span class="quiet">Coming soon to iPhone</span>
     </div>
   </div>
 </header>
 
-<div class="tape" aria-label="Example tickers">
-  <div class="tape-track">
-    <ul id="tape"></ul>
-  </div>
-</div>
-
 <main>
-  <section class="block" id="try">
+  <section id="try">
     <div class="wrap">
-      <h2>Log a set. Watch&nbsp;it&nbsp;move.</h2>
-      <p class="intro">This is the math the app runs. Your estimated max for a set is weight × (1 + reps ÷ 30), and your index compares it with day one. Sets of 3–10 reps count.</p>
+      <div class="head">
+        <h2>One set moves the line.</h2>
+        <p>Change the weight or the reps and watch the index answer. It's the same math the app runs: each set's estimated max, compared with your first day. Sets of 3 to 10 reps count.</p>
+      </div>
 
       <div class="demo">
-        <div class="setform">
+        <div class="controls">
           <div class="field">
-            <label id="exl">Exercise</label>
+            <span id="exl">Exercise</span>
             <div class="seg" role="group" aria-labelledby="exl" id="ex"></div>
           </div>
           <div class="pair">
             <div class="field">
-              <label id="wl">Weight</label>
+              <span id="wl">Weight</span>
               <div class="stepper" role="group" aria-labelledby="wl">
                 <button type="button" data-k="w" data-d="-1" aria-label="Less weight">−</button>
-                <output id="w" aria-live="polite">0</output>
+                <output id="w" class="fig" aria-live="polite">0</output>
                 <button type="button" data-k="w" data-d="1" aria-label="More weight">+</button>
               </div>
             </div>
             <div class="field">
-              <label id="rl">Reps</label>
+              <span id="rl">Reps</span>
               <div class="stepper" role="group" aria-labelledby="rl">
                 <button type="button" data-k="r" data-d="-1" aria-label="Fewer reps">−</button>
-                <output id="r" aria-live="polite">0</output>
+                <output id="r" class="fig" aria-live="polite">0</output>
                 <button type="button" data-k="r" data-d="1" aria-label="More reps">+</button>
               </div>
             </div>
           </div>
-          <p class="last" id="last"></p>
+          <p class="hint" id="last"></p>
         </div>
 
-        <div class="board" aria-live="polite">
-          <div class="top"><span class="tk">$YOU</span><span class="ex" id="bex"></span></div>
-          <div class="big" id="bidx">100.00</div>
+        <div class="sheet" aria-live="polite">
+          <div class="top"><span class="who">Your index</span><span class="ex" id="bex"></span></div>
+          <div class="big fig" id="bidx">100.00</div>
           <div class="delta" id="bdelta"></div>
-          <svg id="chart" viewBox="0 0 600 220" role="img" aria-label="Index line for this exercise"></svg>
-          <div class="facts">
-            <div class="fact"><span>Estimated max</span><b id="be1">0</b></div>
-            <div class="fact"><span>Next target</span><b id="bnext">0</b></div>
-          </div>
+          <svg id="chart" viewBox="0 0 600 200" role="img" aria-label="Index line for this exercise"></svg>
+          <dl>
+            <div><dt>Estimated max</dt><dd class="fig" id="be1">0</dd></div>
+            <div><dt>Next target</dt><dd class="fig" id="bnext">0</dd></div>
+          </dl>
           <p class="note" id="bnote"></p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="block" style="padding-top:0">
+  <section id="how">
     <div class="wrap">
-      <h2>From one set to a&nbsp;ticker&nbsp;people&nbsp;follow.</h2>
-      <div class="how">
-        <div class="phone-rail">
-          <div class="phone" id="phone" data-step="1" aria-hidden="true">
-            <div class="screen">
-              <div class="island"></div>
+      <div class="head">
+        <h2>How GYSE works</h2>
+        <p>Logging takes seconds after your heaviest set. The rest happens on its own.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <div class="phone" aria-hidden="true"><div class="screen">
+            <h4>Make today count.</h4>
+            <p class="sub">One top set per exercise.</p>
+            <div class="row"><span><b>Bench press</b><small>Last: 85 kg × 5</small></span><span class="pill">87.5 × 5</span></div>
+            <div class="row"><span><b>Back squat</b><small>Last: 120 kg × 5</small></span><span class="pill">122.5 × 5</span></div>
+            <div class="row"><span><b>Lat pulldown</b><small>Last: 70 kg × 8</small></span><span class="pill">70 × 9</span></div>
+            <div class="row"><span><b>Lateral raise</b><small>Last: 12 kg × 10 per hand</small></span><span class="pill">12 × 12</span></div>
+            <div class="cta">Save 4 top sets</div>
+            <div class="tabs"><span>Index</span><span class="on">Log</span><span>Watchlist</span><span>You</span></div>
+          </div></div>
+          <h3><span class="n fig">1</span>Log your top set</h3>
+          <p>One heaviest set per exercise. GYSE remembers last time and suggests the next target to beat.</p>
+        </li>
+        <li>
+          <div class="phone" aria-hidden="true"><div class="screen">
+            <span class="tk">$ALEX</span>
+            <div class="num">112.40</div>
+            <div><span class="up">▲ 2.9%</span> <span style="color:#A19AAE">vs last close</span></div>
+            <svg viewBox="0 0 300 140" style="width:100%;margin-top:12px;display:block" aria-hidden="true">
+              <path d="M0 120 L25 114 L50 117 L75 103 L100 97 L125 100 L150 86 L175 75 L200 80 L225 60 L250 51 L275 43 L300 20" fill="none" stroke="#A78BFA" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="300" cy="20" r="4.5" fill="#A78BFA"/>
+            </svg>
+            <div class="chips"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span><span>Arms <b class="down">−0.6%</b></span></div>
+            <div class="row" style="margin-top:10px"><span><b>5-week run</b><small>Log by Sunday to extend it</small></span><span class="pill">5</span></div>
+            <div class="row"><span><b>Today</b><small>3 top sets, 1 new record</small></span><span class="pill up">+2.9%</span></div>
+            <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
+          </div></div>
+          <h3><span class="n fig">2</span>Your index closes the day</h3>
+          <p>Each exercise feeds its sector, and the sectors blend into one line that began at 100. Miss a week and a market holiday keeps your run alive.</p>
+        </li>
+        <li>
+          <div class="phone" aria-hidden="true"><div class="screen">
+            <h4>Watchlist</h4>
+            <p class="sub">Friends, ranked by index.</p>
+            <div class="rank"><span class="pos">1</span><span><b>$MINA</b><br><small style="color:#A19AAE">Mina</small></span><svg viewBox="0 0 50 20"><path d="M0 16 L9 14 L18 15 L27 10 L36 8 L44 5 L50 3" fill="none" stroke="#4ED5AD" stroke-width="1.8"/></svg><span class="v">118.2</span></div>
+            <div class="rank me"><span class="pos">2</span><span><b>$ALEX</b><br><small style="color:#A19AAE">You</small></span><svg viewBox="0 0 50 20"><path d="M0 17 L9 15 L18 16 L27 12 L36 11 L44 6 L50 4" fill="none" stroke="#A78BFA" stroke-width="1.8"/></svg><span class="v">112.4</span></div>
+            <div class="rank"><span class="pos">3</span><span><b>$TOMS</b><br><small style="color:#A19AAE">Tomás</small></span><svg viewBox="0 0 50 20"><path d="M0 11 L9 12 L18 9 L27 11 L36 10 L44 12 L50 11" fill="none" stroke="#E6A2B4" stroke-width="1.8"/></svg><span class="v">104.9</span></div>
+            <div class="rank"><span class="pos">4</span><span><b>$ELLE</b><br><small style="color:#A19AAE">Elle</small></span><svg viewBox="0 0 50 20"><path d="M0 15 L9 14 L18 13 L27 14 L36 11 L44 11 L50 9" fill="none" stroke="#4ED5AD" stroke-width="1.8"/></svg><span class="v">101.3</span></div>
+            <div class="row" style="margin-top:10px"><span><b>Head to head</b><small>$ALEX vs $MINA this month</small></span><span class="pill">−5.8</span></div>
+            <div class="tabs"><span>Index</span><span>Log</span><span class="on">Watchlist</span><span>You</span></div>
+          </div></div>
+          <h3><span class="n fig">3</span>Follow friends by ticker</h3>
+          <p>Claim a ticker of 1 to 8 letters. Friends add you to their watchlist, and you can go head to head on any month.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-              <div class="scr s1">
-                <h4>Make today count.</h4>
-                <p class="sub">One top set per exercise.</p>
-                <div class="row"><span class="nm">Bench press<small>Last: 85 kg × 5</small></span><span class="pill2">87.5 × 5</span></div>
-                <div class="row"><span class="nm">Back squat<small>Last: 120 kg × 5</small></span><span class="pill2">122.5 × 5</span></div>
-                <div class="row"><span class="nm">Lat pulldown<small>Last: 70 kg × 8</small></span><span class="pill2">70 × 9</span></div>
-                <div class="row"><span class="nm">Lateral raise<small>Last: 12 kg × 10 per hand</small></span><span class="pill2">12 × 12</span></div>
-                <div class="cta">Save 4 top sets</div>
-                <div class="tabs"><span>Index</span><span class="on">Log</span><span>Watchlist</span><span>You</span></div>
-              </div>
-
-              <div class="scr s2">
-                <span class="tk2">$YOU</span>
-                <div class="bignum">112.40</div>
-                <div><span class="up">▲ 2.9%</span> <span style="color:var(--muted)">vs last close</span></div>
-                <svg viewBox="0 0 300 150" style="width:100%;margin-top:14px" aria-hidden="true">
-                  <defs><linearGradient id="pf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".3"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
-                  <path d="M0 128 L25 122 L50 125 L75 110 L100 104 L125 107 L150 92 L175 80 L200 85 L225 64 L250 54 L275 46 L300 22 L300 150 L0 150Z" fill="url(#pf)"/>
-                  <path d="M0 128 L25 122 L50 125 L75 110 L100 104 L125 107 L150 92 L175 80 L200 85 L225 64 L250 54 L275 46 L300 22" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-                  <circle cx="300" cy="22" r="5" fill="#A78BFA"/>
-                </svg>
-                <div class="chips2"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span><span>Arms <b class="down">−0.6%</b></span></div>
-                <div class="row" style="margin-top:12px"><span class="nm">5-week run<small>Log by Sunday to extend it</small></span><span class="pill2">5</span></div>
-                <div class="row"><span class="nm">Today<small>3 top sets, 1 new record</small></span><span class="pill2 up">+2.9%</span></div>
-                <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
-              </div>
-
-              <div class="scr s3">
-                <h4>Watchlist</h4>
-                <p class="sub">Friends, ranked by index.</p>
-                <div class="rank"><span class="pos">1</span><span class="nm"><b>$MINA</b><br><small style="color:var(--muted)">Mina</small></span><svg viewBox="0 0 58 22"><path d="M0 18 L10 16 L20 17 L30 11 L40 9 L50 6 L58 3" fill="none" stroke="#4ED5AD" stroke-width="2"/></svg><span class="num" style="font-weight:700">118.2</span></div>
-                <div class="rank me"><span class="pos">2</span><span class="nm"><b>$YOU</b><br><small style="color:var(--muted)">You</small></span><svg viewBox="0 0 58 22"><path d="M0 19 L10 17 L20 18 L30 13 L40 12 L50 7 L58 4" fill="none" stroke="#A78BFA" stroke-width="2"/></svg><span class="num" style="font-weight:700">112.4</span></div>
-                <div class="rank"><span class="pos">3</span><span class="nm"><b>$TOMS</b><br><small style="color:var(--muted)">Tomás</small></span><svg viewBox="0 0 58 22"><path d="M0 12 L10 13 L20 10 L30 12 L40 11 L50 13 L58 12" fill="none" stroke="#E6A2B4" stroke-width="2"/></svg><span class="num" style="font-weight:700">104.9</span></div>
-                <div class="rank"><span class="pos">4</span><span class="nm"><b>$ELLE</b><br><small style="color:var(--muted)">Elle</small></span><svg viewBox="0 0 58 22"><path d="M0 16 L10 15 L20 14 L30 15 L40 12 L50 12 L58 10" fill="none" stroke="#4ED5AD" stroke-width="2"/></svg><span class="num" style="font-weight:700">101.3</span></div>
-                <div class="row" style="margin-top:12px"><span class="nm">Head to head<small>$YOU vs $MINA this month</small></span><span class="pill2">−5.8</span></div>
-                <div class="tabs"><span>Index</span><span>Log</span><span class="on">Watchlist</span><span>You</span></div>
-              </div>
-
-              <div class="scr s4">
-                <div class="story"></div>
-                <div class="igbar"></div>
-                <div class="sticker">
-                  <span class="tk2">$YOU</span>
-                  <div class="bignum num">112.40</div>
-                  <div class="up">▲ 2.9% today</div>
-                  <ul>
-                    <li><span>Bench press 87.5 × 5</span><span>+2.9%</span></li>
-                    <li><span>Back squat 122.5 × 5</span><span>+2.1%</span></li>
-                    <li><span>Lat pulldown 70 × 9</span><span>+2.8%</span></li>
-                  </ul>
-                  <div class="mark">GYSE</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <ol class="steps" id="steps">
-          <li data-step="1"><span class="n"></span><h3>Log your heaviest set.</h3><p>One top set per exercise is all it takes. GYSE remembers last time, fills the weight in for you and shows the next target to beat.</p></li>
-          <li data-step="2"><span class="n"></span><h3>Your index closes the day.</h3><p>Every exercise feeds its sector, and the sectors blend into one line that started at 100. Train every week and your run grows. Miss one and a market holiday covers it.</p></li>
-          <li data-step="3"><span class="n"></span><h3>Claim a ticker. See who's&nbsp;up.</h3><p>Pick 1–8 letters that are yours alone. Friends add you to their watchlist, and you can go head to head on any month.</p></li>
-          <li data-step="4"><span class="n"></span><h3>Post the close.</h3><p>Every session makes a story card and a transparent sticker of your top sets and their moves, sized for Instagram.</p></li>
-        </ol>
+  <section>
+    <div class="wrap principles">
+      <h2>Quiet by design.</h2>
+      <div>
+        <p><strong>Free to use.</strong> GYSE Plus adds pro charts and unlimited custom exercises, and it's what keeps the app independent.</p>
+        <p><strong>No ads, and your data is never sold.</strong> Export your log as a CSV or delete your account from inside the app at any time.</p>
+        <p><strong>Your choice who sees it.</strong> Make your profile private and only friends see your exercises and sessions.</p>
+        <p class="links"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Use</a></p>
       </div>
     </div>
   </section>
 
   <section class="closer">
-    <div class="wrap">
-      <p class="giant" aria-hidden="true">$YOU</p>
-      <div class="claim">
-        <div>
-          <h2>Claim your ticker.</h2>
-          <p>Free on iPhone, coming soon to the App Store. Questions or press: <a href="mailto:support@gyse.app">support@gyse.app</a></p>
-        </div>
-        <a class="btn" href="/support">How GYSE works</a>
+    <div class="wrap row">
+      <h2>Start at <span class="fig">100</span>.</h2>
+      <div>
+        <p>GYSE is coming soon to the App Store for iPhone.</p>
+        <p>Questions or press: <a href="mailto:support@gyse.app">support@gyse.app</a></p>
       </div>
     </div>
+    <footer>
+      <div class="wrap">
+        <span>© 2026 GYSE</span>
+        <span><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></span>
+      </div>
+    </footer>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 GYSE</span>
-    <span><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:support@gyse.app">Contact</a></span>
-  </div>
-</footer>
-
 <script>
 (() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* Hero: the readout follows the line the render draws (100.00 → 112.40). */
-  const film = document.getElementById('film'), readout = document.getElementById('readout'), val = document.getElementById('readval');
-  const START = 100, END = 112.4, T0 = 0.9, T1 = 6.6;
-  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
-  const show = v => { val.textContent = v.toFixed(2); };
-  const finish = () => { show(END); readout.classList.add('closed'); };
-  if (reduce) { finish(); } else {
-    let raf = 0;
-    const tick = () => {
-      const p = Math.min(1, Math.max(0, (film.currentTime - T0) / (T1 - T0)));
-      show(START + (END - START) * ease(p));
-      if (p >= 1) { finish(); return; }
-      raf = requestAnimationFrame(tick);
-    };
-    film.addEventListener('play', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); });
-    film.addEventListener('ended', finish);
-    const go = () => film.play().catch(() => { film.style.display = 'none'; finish(); });
-    if (film.readyState >= 2) go(); else film.addEventListener('canplay', go, { once: true });
-    setTimeout(() => { if (film.paused && !readout.classList.contains('closed')) { film.style.display = 'none'; finish(); } }, 4000);
-  }
-
-  /* Tape: example tickers, listed twice for a seamless loop. */
-  const tape = [['MINA',118.21,1.4],['TOMS',104.92,-0.3],['ELLE',101.30,0.9],['JRLA',109.84,2.1],['KAI',121.07,0.6],['NOOR',97.66,-1.1],['BENJI',113.45,3.2],['SORA',106.18,0.4],['LUCA',99.02,-0.2],['IVY',115.73,1.8],['DREW',108.40,0.0],['HANA',111.59,2.6]];
-  const li = ([t,p,c]) => `<li><b>$${t}</b><span class="px">${p.toFixed(2)}</span><span class="${c < 0 ? 'd' : 'u'}">${c < 0 ? '▼' : '▲'} ${Math.abs(c).toFixed(1)}%</span></li>`;
-  const ul = document.getElementById('tape'); ul.innerHTML = tape.map(li).join('');
-  ul.parentElement.appendChild(ul.cloneNode(true)).setAttribute('aria-hidden', 'true');
-
   /* Demo: the app's math. e1RM = w × (1 + r/30); index = 100 × e1RM / day-one e1RM. */
   const lifts = {
     bench: { name: 'Bench press', step: 2.5, history: [[80,5],[80,6],[82.5,5],[82.5,6],[85,5]], start: [87.5,5] },
@@ -462,48 +398,38 @@
     const ch = (now / last - 1) * 100;
     $('w').innerHTML = `${fmt(w)}<small>kg</small>`;
     $('r').textContent = r;
-    $('last').textContent = `Last time: ${fmt(L.history.at(-1)[0])} kg × ${L.history.at(-1)[1]}. Day one: ${fmt(L.history[0][0])} kg × ${L.history[0][1]}.`;
+    $('last').textContent = `Last time ${fmt(L.history.at(-1)[0])} kg × ${L.history.at(-1)[1]}. Day one ${fmt(L.history[0][0])} kg × ${L.history[0][1]}.`;
     $('bex').textContent = L.name;
     $('bidx').textContent = now.toFixed(2);
     const d = $('bdelta');
     d.className = 'delta ' + (Math.abs(ch) < .005 ? 'flat' : ch > 0 ? 'up' : 'down');
-    d.textContent = Math.abs(ch) < .005 ? 'Unchanged vs last close' : `${ch > 0 ? '▲' : '▼'} ${Math.abs(ch).toFixed(1)}% vs last close`;
+    d.textContent = Math.abs(ch) < .005 ? 'Unchanged since the last close' : `${ch > 0 ? '+' : '−'}${Math.abs(ch).toFixed(1)}% since the last close`;
     $('be1').textContent = `${fmt(e1(w, r))} kg`;
     const oneRep = e1(w, r + 1), onePlate = e1(w + L.step, r);
-    $('bnext').textContent = oneRep <= onePlate ? `${fmt(w)} × ${r + 1}` : `${fmt(w + L.step)} × ${r}`;
+    $('bnext').textContent = oneRep <= onePlate ? `${fmt(w)} kg × ${r + 1}` : `${fmt(w + L.step)} kg × ${r}`;
     const n = $('bnote');
     n.className = 'note' + (counts ? '' : ' warn');
-    n.textContent = counts ? (now > Math.max(...closes) ? 'New all-time high for this lift.' : 'Example numbers. In the app every exercise feeds its sector, and sectors feed $YOU.')
-                           : 'Saved, but only sets of 3–10 reps move your index.';
+    n.textContent = counts ? (now > Math.max(...closes) ? 'A new high for this lift.' : 'Example numbers. In the app, every exercise feeds one index.')
+                           : 'Saved, but only sets of 3 to 10 reps move the index.';
     drawChart([...closes, now], counts);
   }
 
   function drawChart(pts, counts) {
-    const W = 600, H = 220, pad = 18, lo = Math.min(...pts, 100) - 2, hi = Math.max(...pts) + 2;
+    const W = 600, H = 200, pad = 10, lo = Math.min(...pts, 100) - 2, hi = Math.max(...pts) + 2;
     const x = i => pad + i * (W - pad * 2) / (pts.length - 1), y = v => H - pad - (v - lo) / (hi - lo) * (H - pad * 2);
-    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+    const path = a => a.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
     const lastX = x(pts.length - 1), lastY = y(pts.at(-1)), prevX = x(pts.length - 2), prevY = y(pts.at(-2));
-    const color = pts.at(-1) >= pts.at(-2) ? '#4ED5AD' : '#E6A2B4';
-    $('chart').innerHTML = `
-      <defs><linearGradient id="df" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".28"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
-      <line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="#6F6979" stroke-opacity=".5" stroke-dasharray="2 6"/>
-      <text x="${W}" y="${y(100) - 8}" fill="#6F6979" font-size="13" text-anchor="end">100</text>
-      <path d="${line} L${lastX} ${H} L${pad} ${H} Z" fill="url(#df)"/>
-      <path d="${pts.slice(0, -1).map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-      <path d="M${prevX} ${prevY} L${lastX} ${lastY}" fill="none" stroke="${counts ? color : '#6F6979'}" stroke-width="3" stroke-linecap="round" ${counts ? '' : 'stroke-dasharray="4 6"'}/>
-      ${pts.slice(0, -1).map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#1B191F" stroke="#A78BFA" stroke-width="2"/>`).join('')}
-      <circle cx="${lastX}" cy="${lastY}" r="7" fill="${counts ? color : '#6F6979'}"/>`;
+    const color = !counts ? '#A6A3AE' : pts.at(-1) >= pts.at(-2) ? '#6C47F0' : '#B4384A';
+    const grid = [0, .5, 1].map(f => `<line x1="0" x2="${W}" y1="${pad + f * (H - pad * 2)}" y2="${pad + f * (H - pad * 2)}" stroke="rgba(20,19,23,.08)"/>`).join('');
+    $('chart').innerHTML = `${grid}
+      <line x1="0" x2="${W}" y1="${y(100)}" y2="${y(100)}" stroke="rgba(20,19,23,.35)" stroke-dasharray="2 5"/>
+      <text x="${W}" y="${y(100) - 8}" fill="#5F5C68" font-size="13" text-anchor="end" style="font-stretch:72%">100</text>
+      <path d="${path(pts.slice(0, -1))}" fill="none" stroke="#141317" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M${prevX} ${prevY} L${lastX} ${lastY}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" ${counts ? '' : 'stroke-dasharray="4 6"'}/>
+      ${pts.slice(0, -1).map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#fff" stroke="#141317" stroke-width="1.5"/>`).join('')}
+      <circle cx="${lastX}" cy="${lastY}" r="6" fill="${color}"/>`;
   }
   render();
-
-  /* How it works: the phone shows the step in the middle of the screen. */
-  const phone = document.getElementById('phone'), steps = [...document.querySelectorAll('#steps li')];
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    phone.dataset.step = e.target.dataset.step;
-    steps.forEach(s => s.classList.toggle('on', s === e.target));
-  }), { rootMargin: '-45% 0px -45% 0px' });
-  steps.forEach(s => io.observe(s));
 })();
 </script>
 </body>
