@@ -8,28 +8,43 @@
 <meta property="og:title" content="GYSE · Your strength, as an index">
 <meta property="og:description" content="Log one top set per exercise. Watch your own ticker climb from 100.">
 <meta property="og:url" content="https://gyse.app">
+<meta property="og:image" content="https://gyse.app/assets/hero-end.jpg">
 <meta name="theme-color" content="#111114">
+<link rel="preload" as="image" href="/assets/hero-start.jpg">
 <style>
   :root { --canvas:#111114; --surface:#1B191F; --raised:#25212B; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979;
           --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; }
   * { box-sizing: border-box; }
-  body { margin:0; background: radial-gradient(760px 520px at 8% -4%, rgba(139,92,246,.28), transparent), var(--canvas);
-         color:var(--text); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
+  body { margin:0; background: var(--canvas); color:var(--text);
+         font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
   a { color: var(--violet); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  main { max-width: 1040px; margin: 0 auto; padding: 28px 22px 72px; }
-  nav { display:flex; align-items:center; justify-content:space-between; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+
+  /* Film hero: the render plays once and holds on the new high. */
+  .film { position: relative; min-height: min(92vh, 860px); display: flex; flex-direction: column; overflow: hidden; isolation: isolate; }
+  .film video, .film .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; z-index: -2; }
+  .film::after { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(90deg, rgba(17,17,20,.92) 0%, rgba(17,17,20,.72) 34%, rgba(17,17,20,.12) 64%, rgba(17,17,20,0) 100%),
+                linear-gradient(180deg, rgba(17,17,20,.55) 0%, rgba(17,17,20,0) 22%, rgba(17,17,20,0) 72%, var(--canvas) 100%); }
+  nav { display:flex; align-items:center; justify-content:space-between; padding-top: 24px; }
   .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
   .brand svg { width:28px; height:28px; }
-  nav .links a { color: var(--muted); margin-left: 18px; font-size: 15px; }
-  .hero { display:grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items:center; padding: 72px 0 40px; }
-  h1 { font-size: clamp(40px, 6vw, 64px); line-height: 1.02; letter-spacing: -.035em; margin: 0; }
-  .lead { color: var(--muted); font-size: 19px; max-width: 30em; margin: 20px 0 30px; }
+  nav .links a { color: var(--text); opacity: .8; margin-left: 18px; font-size: 15px; }
+  .hero { flex: 1; display: flex; align-items: center; padding: 48px 0 96px; }
+  .hero > div { max-width: 30rem; }
+  h1 { font-size: clamp(42px, 6.2vw, 72px); line-height: 1.0; letter-spacing: -.035em; margin: 0; text-shadow: 0 2px 30px rgba(0,0,0,.5); }
+  .lead { color: #D6D1DE; font-size: 19px; margin: 22px 0 30px; text-shadow: 0 1px 20px rgba(0,0,0,.6); }
   .cta { display:flex; gap: 12px; flex-wrap: wrap; align-items:center; }
   .btn { display:inline-block; padding: 15px 22px; border-radius: 16px; font-weight: 600; }
-  .primary { background: var(--purple); color: #fff; }
+  .primary { background: var(--purple); color: #fff; box-shadow: 0 10px 40px rgba(139,92,246,.35); }
   .primary:hover { text-decoration:none; filter: brightness(1.08); }
-  .soon { color: var(--faint); font-size: 14px; }
+  .soon { color: var(--muted); font-size: 14px; }
+
+  /* The ticker card, now its own section. */
+  .ticker-row { display:grid; grid-template-columns: .95fr 1.05fr; gap: 48px; align-items:center; padding: 24px 0 8px; }
+  .ticker-row h2 { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -.03em; line-height: 1.08; margin: 0 0 14px; }
+  .ticker-row p { color: var(--muted); margin: 0; }
   .card { background: var(--surface); border-radius: 24px; padding: 24px 24px 18px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
   .row { display:flex; justify-content:space-between; align-items:baseline; }
   .ticker { font-weight: 800; color: var(--lilac); font-size: 20px; letter-spacing: -.01em; }
@@ -41,32 +56,42 @@
   .chips { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
   .chip { background: var(--raised); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
   .chip b { color: var(--up); font-weight: 650; margin-left: 4px; }
-  .features { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px; }
+  .features { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 64px; }
   .feature { background: var(--surface); border-radius: 20px; padding: 22px; }
   .feature h3 { margin: 0 0 6px; font-size: 18px; }
   .feature p { margin: 0; color: var(--muted); font-size: 15px; }
-  footer { margin-top: 72px; color: var(--faint); font-size: 14px; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 12px; }
+  footer { margin: 72px auto 0; padding-bottom: 56px; color: var(--faint); font-size: 14px; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 12px; }
   footer a { color: var(--muted); margin-left: 16px; }
+  footer a:first-child { margin-left: 0; }
+
   @media (max-width: 820px) {
-    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 44px; }
+    .film { min-height: 86vh; }
+    .film video, .film .poster { object-position: 70% 50%; }
+    .film::after { background: linear-gradient(180deg, rgba(17,17,20,.7) 0%, rgba(17,17,20,.2) 30%, rgba(17,17,20,.35) 55%, rgba(17,17,20,.94) 82%, var(--canvas) 100%); }
+    .hero { align-items: flex-end; padding: 32px 0 40px; }
+    .ticker-row { grid-template-columns: 1fr; gap: 28px; }
     .features { grid-template-columns: 1fr; }
     nav .links { display:none; }
   }
+  @media (prefers-reduced-motion: reduce) { .film video { display: none; } }
 </style>
 </head>
 <body>
-<main>
-  <nav>
-    <a class="brand" href="/" aria-label="GYSE home">
-      <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
-      </svg>
-      GYSE
-    </a>
-    <div class="links"><a href="/support">Support</a><a href="/privacy">Privacy</a></div>
-  </nav>
-
-  <section class="hero">
+<header class="film">
+  <img class="poster" src="/assets/hero-end.jpg" alt="">
+  <video src="/assets/hero.mp4" poster="/assets/hero-start.jpg" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
+  <div class="wrap" style="width:100%">
+    <nav>
+      <a class="brand" href="/" aria-label="GYSE home">
+        <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
+        </svg>
+        GYSE
+      </a>
+      <div class="links"><a href="/support">Support</a><a href="/privacy">Privacy</a></div>
+    </nav>
+  </div>
+  <div class="wrap hero" style="width:100%">
     <div>
       <h1>Your strength,<br>as an index.</h1>
       <p class="lead">Log one top set per exercise. GYSE turns it into your own ticker that starts at 100 and climbs as you get stronger. Then see who's up.</p>
@@ -75,7 +100,15 @@
         <span class="soon">Coming soon to the App Store for iPhone</span>
       </div>
     </div>
+  </div>
+</header>
 
+<main class="wrap">
+  <section class="ticker-row">
+    <div>
+      <h2>Every top set<br>moves your line.</h2>
+      <p>Your index starts at 100 on day one. Each 3–10 rep set updates your estimated max for that exercise, and your sectors blend into one line, so getting stronger shows up as a new high.</p>
+    </div>
     <div class="card" aria-label="Example GYSE index card">
       <div class="row"><span class="ticker">$YOU</span><span class="pill">✦ All-time high</span></div>
       <div class="muted" style="margin-top:6px;font-size:14px">Strength index</div>
