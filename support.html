@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GYSE · Support</title>
+<meta name="description" content="How GYSE scores your strength, and how to get help.">
+<style>
+  :root { --canvas:#111114; --surface:#1B191F; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979; --violet:#A78BFA; --lilac:#CBB5FF; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--canvas); color:var(--text); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 56px 22px 80px; }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
+  .brand svg { width:26px; height:26px; }
+  h1 { font-size: 34px; line-height:1.15; letter-spacing:-.02em; margin: 28px 0 6px; }
+  .lead { color: var(--muted); margin-bottom: 36px; }
+  h2 { font-size: 20px; margin: 36px 0 10px; letter-spacing:-.01em; }
+  h3 { font-size: 17px; margin: 22px 0 6px; }
+  p, li { color: var(--muted); }
+  strong { color: var(--text); font-weight: 600; }
+  ul { padding-left: 20px; }
+  a { color: var(--violet); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .card { background: var(--surface); border-radius: 18px; padding: 18px 20px; margin: 18px 0; }
+  code { background: var(--surface); padding: 2px 6px; border-radius: 6px; font-size: 15px; }
+  footer { margin-top: 56px; color: var(--faint); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/" style="text-decoration:none">
+    <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
+    </svg>
+    GYSE
+  </a>
+  <h1>Support</h1>
+  <p class="lead">Your strength, as an index. Log one top set per exercise and watch your line climb from 100.</p>
+
+  <h2>How the index works</h2>
+  <div class="card">
+    <p style="margin:0 0 10px"><strong>Your index starts at 100</strong> on the first day you log a qualifying set, and moves with the weighted average of your exercises' day-to-day returns — like a stock index made of your lifts.</p>
+    <ul style="margin:0">
+      <li>Each exercise's level is its <strong>estimated 1RM</strong> (Epley: weight × (1 + reps ÷ 30)) relative to its own first day.</li>
+      <li>Only sets of <strong>3–10 reps</strong> count. Heavier singles and high-rep sets are saved but don't move the line.</li>
+      <li>Sectors (Chest, Back, Legs, Shoulders, Arms) carry the allocation you set in <strong>You → Exercises</strong>; exercises inside a sector share it equally.</li>
+      <li>An exercise joins the index the day after its first set, so adding a new lift never jolts your line.</li>
+    </ul>
+  </div>
+
+  <h2>Common questions</h2>
+
+  <h3>Why didn't my index move?</h3>
+  <p>Either the set was outside 3–10 reps, it was the very first set for that exercise (that day sets its baseline), or the exercise isn't one of your chosen exercises.</p>
+
+  <h3>Can I change my ticker?</h3>
+  <p>Yes — once every 7 days, in <strong>You → Ticker</strong>. Tickers are 1–8 English letters (A–Z) and must be unique. Your display name can be in any language.</p>
+
+  <h3>How do friends see me?</h3>
+  <p>Anyone can find you by your exact ticker and see your name and index. With a public profile they also see your exercises and sets; with <em>Private profile</em> on (in You), only friends do. Your email is never shown. To remove, block or report someone, open their profile and tap ⋯.</p>
+
+  <h3>I logged the wrong number.</h3>
+  <p>Open the exercise from the Index screen and tap the set in <strong>History</strong> to edit or delete it. Your index recalculates instantly.</p>
+
+  <h3>Does it work offline?</h3>
+  <p>Yes. Everything is saved on your phone first and synced when you're back online. The cloud icon on the Index screen shows what's waiting.</p>
+
+  <h3>Deleting my account</h3>
+  <p><strong>You → Delete account</strong> removes everything, on the server and on your phone, immediately.</p>
+
+  <h2>Get in touch</h2>
+  <p>Bugs, ideas, or anything else: <a href="mailto:jungwookimjwk@gmail.com">jungwookimjwk@gmail.com</a>. Please include your ticker and your iOS version.</p>
+
+  <p><a href="/privacy">Privacy policy</a></p>
+
+  <footer>GYSE · Some days build the base for the next breakout.</footer>
+</main>
+</body>
+</html>

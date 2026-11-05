@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GYSE · Your strength, as an index</title>
+<meta name="description" content="GYSE turns your top sets into a personal strength index that starts at 100. Log one set per exercise, watch your ticker climb, and see who's up.">
+<meta property="og:title" content="GYSE · Your strength, as an index">
+<meta property="og:description" content="Log one top set per exercise. Watch your own ticker climb from 100.">
+<meta property="og:url" content="https://gyse.app">
+<meta name="theme-color" content="#111114">
+<style>
+  :root { --canvas:#111114; --surface:#1B191F; --raised:#25212B; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979;
+          --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; }
+  * { box-sizing: border-box; }
+  body { margin:0; background: radial-gradient(760px 520px at 8% -4%, rgba(139,92,246,.28), transparent), var(--canvas);
+         color:var(--text); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
+  a { color: var(--violet); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  main { max-width: 1040px; margin: 0 auto; padding: 28px 22px 72px; }
+  nav { display:flex; align-items:center; justify-content:space-between; }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
+  .brand svg { width:28px; height:28px; }
+  nav .links a { color: var(--muted); margin-left: 18px; font-size: 15px; }
+  .hero { display:grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items:center; padding: 72px 0 40px; }
+  h1 { font-size: clamp(40px, 6vw, 64px); line-height: 1.02; letter-spacing: -.035em; margin: 0; }
+  .lead { color: var(--muted); font-size: 19px; max-width: 30em; margin: 20px 0 30px; }
+  .cta { display:flex; gap: 12px; flex-wrap: wrap; align-items:center; }
+  .btn { display:inline-block; padding: 15px 22px; border-radius: 16px; font-weight: 600; }
+  .primary { background: var(--purple); color: #fff; }
+  .primary:hover { text-decoration:none; filter: brightness(1.08); }
+  .soon { color: var(--faint); font-size: 14px; }
+  .card { background: var(--surface); border-radius: 24px; padding: 24px 24px 18px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .row { display:flex; justify-content:space-between; align-items:baseline; }
+  .ticker { font-weight: 800; color: var(--lilac); font-size: 20px; letter-spacing: -.01em; }
+  .pill { font-size: 12px; font-weight: 700; color: var(--lilac); background: rgba(139,92,246,.18); padding: 5px 10px; border-radius: 99px; }
+  .value { font-size: 54px; font-weight: 650; letter-spacing: -.04em; margin-top: 10px; font-variant-numeric: tabular-nums; }
+  .change { color: var(--up); font-weight: 650; }
+  .muted { color: var(--muted); }
+  .card svg { width: 100%; height: 170px; display:block; margin-top: 14px; }
+  .chips { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .chip { background: var(--raised); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+  .chip b { color: var(--up); font-weight: 650; margin-left: 4px; }
+  .features { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px; }
+  .feature { background: var(--surface); border-radius: 20px; padding: 22px; }
+  .feature h3 { margin: 0 0 6px; font-size: 18px; }
+  .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+  footer { margin-top: 72px; color: var(--faint); font-size: 14px; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { color: var(--muted); margin-left: 16px; }
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 44px; }
+    .features { grid-template-columns: 1fr; }
+    nav .links { display:none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <nav>
+    <a class="brand" href="/" aria-label="GYSE home">
+      <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
+      </svg>
+      GYSE
+    </a>
+    <div class="links"><a href="/support">Support</a><a href="/privacy">Privacy</a></div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>Your strength,<br>as an index.</h1>
+      <p class="lead">Log one top set per exercise. GYSE turns it into your own ticker that starts at 100 and climbs as you get stronger. Then see who's up.</p>
+      <div class="cta">
+        <a class="btn primary" href="/support">How it works</a>
+        <span class="soon">Coming soon to the App Store for iPhone</span>
+      </div>
+    </div>
+
+    <div class="card" aria-label="Example GYSE index card">
+      <div class="row"><span class="ticker">$YOU</span><span class="pill">✦ All-time high</span></div>
+      <div class="muted" style="margin-top:6px;font-size:14px">Strength index</div>
+      <div class="value">112.40</div>
+      <div><span class="change">▲ +12.4%</span> <span class="muted">since you started</span></div>
+      <svg viewBox="0 0 400 170" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#A78BFA" stop-opacity=".28"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="140" x2="400" y2="140" stroke="#6F6979" stroke-opacity=".6" stroke-dasharray="2 5"/>
+        <path d="M4 140 L34 133 L64 137 L94 121 L124 113 L154 117 L184 101 L214 88 L244 94 L274 70 L304 58 L334 63 L364 39 L396 28 L396 170 L4 170 Z" fill="url(#fill)"/>
+        <path d="M4 140 L34 133 L64 137 L94 121 L124 113 L154 117 L184 101 L214 88 L244 94 L274 70 L304 58 L334 63 L364 39 L396 28" fill="none" stroke="#A78BFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="396" cy="28" r="5" fill="#A78BFA"/>
+      </svg>
+      <div class="chips"><span class="chip">Chest<b>+8.1%</b></span><span class="chip">Back<b>+11.6%</b></span><span class="chip">Legs<b>+15.2%</b></span></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature"><h3>One set, one number</h3><p>Log your heaviest set per exercise. Every 3–10 rep set moves your index, chain-linked like a stock.</p></div>
+    <div class="feature"><h3>Claim your ticker</h3><p>1–8 letters, all yours. Friends follow your index and you see who's up this week.</p></div>
+    <div class="feature"><h3>Made to share</h3><p>Story cards and a transparent sticker of your top sets and their moves, ready for Instagram.</p></div>
+  </section>
+
+  <footer>
+    <span>© 2026 GYSE · Strength, as an index.</span>
+    <span><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="mailto:jungwookimjwk@gmail.com">Contact</a></span>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GYSE · Follow on GYSE</title>
+<meta name="description" content="Strength, as an index. Follow a friend's GYSE ticker.">
+<meta property="og:title" content="Follow me on GYSE">
+<meta property="og:description" content="I track my strength like a stock. Let's see who's up.">
+<style>
+  :root { --canvas:#111114; --surface:#1B191F; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979; --purple:#8B5CF6; --violet:#A78BFA; --lilac:#CBB5FF; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background: radial-gradient(600px 420px at 10% 0%, rgba(139,92,246,.26), transparent), var(--canvas);
+         color:var(--text); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
+  main { max-width: 480px; margin: 0 auto; padding: 56px 22px 64px; }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
+  .brand svg { width:26px; height:26px; }
+  .ticker { font-size: 56px; font-weight: 800; letter-spacing: -.02em; color: var(--lilac); margin: 40px 0 0; word-break: break-all; }
+  p { color: var(--muted); margin: 10px 0 0; }
+  .btn { display:block; text-align:center; text-decoration:none; font-weight:600; border-radius: 16px; padding: 16px; margin-top: 14px; }
+  .primary { background: var(--purple); color: #fff; margin-top: 36px; }
+  .secondary { background: var(--surface); color: var(--text); }
+  .note { font-size: 14px; color: var(--faint); margin-top: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/" style="text-decoration:none">
+    <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
+    </svg>
+    GYSE
+  </a>
+  <div class="ticker" id="ticker">$GYSE</div>
+  <p id="lead">Strength, as an index. Every top set you log moves your own ticker.</p>
+  <a class="btn primary" id="open" href="gyse://">Open in GYSE</a>
+  <a class="btn secondary" href="/support">What is GYSE?</a>
+  <p class="note">GYSE is coming to the App Store. If the button does nothing, the app isn't on this iPhone yet.</p>
+</main>
+<script>
+  // Only A–Z, 0–9 and _ survive, so nothing from the URL is ever injected as markup.
+  const raw = new URLSearchParams(location.search).get("t") || "";
+  const ticker = raw.replace(/[^A-Za-z0-9_]/g, "").slice(0, 20).toUpperCase();
+  if (ticker) {
+    document.getElementById("ticker").textContent = "$" + ticker;
+    document.getElementById("lead").textContent = "Follow $" + ticker + "'s strength index on GYSE and see who's up.";
+    document.getElementById("open").href = "gyse://profile/" + ticker.toLowerCase();
+    document.title = "$" + ticker + " on GYSE";
+  }
+</script>
+</body>
+</html>
