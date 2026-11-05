@@ -3,87 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GYSE · Privacy Policy</title>
-<meta name="description" content="What GYSE stores, why, and how to delete it.">
-<style>
-  :root { --canvas:#111114; --surface:#1B191F; --text:#F4F3F7; --muted:#A19AAE; --faint:#6F6979; --violet:#A78BFA; --lilac:#CBB5FF; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--canvas); color:var(--text); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif; }
-  main { max-width: 680px; margin: 0 auto; padding: 56px 22px 80px; }
-  .brand { display:flex; align-items:center; gap:10px; color:var(--lilac); font-weight:800; letter-spacing:.08em; font-size:15px; }
-  .brand svg { width:26px; height:26px; }
-  h1 { font-size: 34px; line-height:1.15; letter-spacing:-.02em; margin: 28px 0 6px; }
-  .meta { color: var(--faint); font-size: 14px; margin-bottom: 36px; }
-  h2 { font-size: 20px; margin: 36px 0 10px; letter-spacing:-.01em; }
-  p, li { color: var(--muted); }
-  strong { color: var(--text); font-weight: 600; }
-  ul { padding-left: 20px; }
-  a { color: var(--violet); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .card { background: var(--surface); border-radius: 18px; padding: 18px 20px; margin: 18px 0; }
-  code { background: var(--surface); padding: 2px 6px; border-radius: 6px; font-size: 15px; }
-  footer { margin-top: 56px; color: var(--faint); font-size: 14px; }
-</style>
+<title>Privacy Policy · GYSE</title>
+<meta name="description" content="What GYSE collects, why, who can see it, where it is stored, and how to delete it.">
+<meta name="theme-color" content="#111114">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/legal.css">
 </head>
 <body>
+<header class="top">
+  <a class="brand" href="/" aria-label="GYSE home"><svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>GYSE</a>
+  <nav><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy" aria-current="page">Privacy</a></nav>
+</header>
 <main>
-  <a class="brand" href="/" style="text-decoration:none">
-    <svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="70" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/>
-    </svg>
-    GYSE
-  </a>
   <h1>Privacy Policy</h1>
-  <div class="meta">Effective November 5, 2026</div>
+  <p class="meta">Effective November 5, 2026</p>
+  <p class="lang">Also in <a href="/ko/privacy" hreflang="ko" lang="ko">한국어</a></p>
 
-  <p>GYSE turns the top sets you log into a personal strength index. This page explains what the app stores, who can see it, and how you stay in control. The short version: <strong>your email is never shown to anyone</strong>, you choose whether your log is public or friends-only, and you can delete everything from inside the app.</p>
+  <p class="lede">GYSE turns the top sets you log into a personal strength index. This policy explains what we collect, why, who can see it, where it is stored and how you stay in control. In short: we collect only what the app needs, we never sell your data, there are no ads, and you can delete everything from inside the app.</p>
 
-<h2>What GYSE stores</h2>
-<ul>
-<li><strong>Account:</strong> your email address and a password, or your Apple or Google account through Sign in with Apple or Continue with Google, used only to sign you in. Passwords are handled by our authentication provider and are never visible to us. With Sign in with Apple, Apple may give us a private relay address instead of your real email. With Google we receive your email address and name. The name Apple or Google shares only pre-fills your display name, and we never see your Apple or Google password.</li>
-<li><strong>Profile:</strong> your ticker (1–8 English letters, for example <code>$JUNG</code>), the display name you choose, whether your profile is public or private, and when you last changed your ticker.</li>
-<li><strong>Workouts:</strong> the exercise, weight, reps and day of each top set you log, any notes you add, and any exercises you create.</li>
-<li><strong>Settings:</strong> your unit (kg / lb), chosen exercises and allocations, and chart preferences.</li>
-<li><strong>Index summary:</strong> your current index value and up to 30 recent index points.</li>
-<li><strong>Friends and safety:</strong> friend requests, people you block, and reports you send.</li>
-<li><strong>Anonymous usage and crash data:</strong> see below.</li>
-</ul>
+  <nav class="toc" aria-label="Contents"><ol>
+    <li><a href="#who">Who we are</a></li>
+    <li><a href="#collect">What we collect</a></li>
+    <li><a href="#why">Why we use it</a></li>
+    <li><a href="#visible">Who can see what</a></li>
+    <li><a href="#processors">Companies that process data for us</a></li>
+    <li><a href="#transfers">Where data is stored and transferred</a></li>
+    <li><a href="#retention">How long we keep it</a></li>
+    <li><a href="#rights">Your rights and choices</a></li>
+    <li><a href="#security">How we protect it</a></li>
+    <li><a href="#children">Age limits</a></li>
+    <li><a href="#website">This website</a></li>
+    <li><a href="#changes">Changes and contact</a></li>
+  </ol></nav>
 
-<h2>Who can see what</h2>
-<div class="card">
-<p style="margin:0 0 10px">Anyone signed in to GYSE can look you up by your exact ticker and see your <strong>ticker, display name and index</strong> (with its recent line).</p>
-<p style="margin:0 0 10px"><strong>Public profile</strong> (the default): everyone can also see your exercises and the sets you log (exercise, weight, reps and day).</p>
-<p style="margin:0"><strong>Private profile</strong>: only people you have accepted as friends see your exercises and sets. Switch at any time in <strong>You → Private profile</strong>.</p>
-</div>
-<p>Never shown to anyone: your email address, your password and your set notes. Blocking someone hides your profile from them and removes any request between you.</p>
+  <h2 id="who">1. Who we are</h2>
+  <p>GYSE (the app and gyse.app) is operated by Jungwoo Kim, an independent developer in the Republic of Korea ("GYSE", "we", "us"). We decide how your personal information is used, so we are its controller (in Korean law, the personal information controller).</p>
+  <p><strong>Privacy officer:</strong> Jungwoo Kim, <a href="mailto:support@gyse.app">support@gyse.app</a>. Contact this address for any privacy question or request.</p>
 
-<h2>Keeping GYSE safe</h2>
-<p>Tickers and names are checked against a list of reserved and offensive words. You can report any profile from its page; reports go privately to the GYSE team, who review them within 24 hours and may remove content or accounts that break the rules.</p>
+  <h2 id="collect">2. What we collect</h2>
+  <h3>Information you give us</h3>
+  <ul>
+    <li><strong>Account:</strong> your email address and password, or the account details Apple or Google share when you use Sign in with Apple or Continue with Google (an email address, which Apple may replace with a private relay address, and optionally your name). Passwords are stored as one-way hashes by our authentication provider. We never see your Apple or Google password.</li>
+    <li><strong>Profile:</strong> your ticker (1–8 English letters), the display name you choose, whether your profile is public or private, and when you last changed your ticker.</li>
+    <li><strong>Training log:</strong> for each top set, the exercise, weight, reps and day, any note you add, and the custom exercises you create.</li>
+    <li><strong>Settings:</strong> units (kg or lb), chosen exercises, sector allocation and chart preferences.</li>
+    <li><strong>Social and safety:</strong> friend requests and friendships, people you block, and reports you send (the reason, any details you type and the account reported).</li>
+    <li><strong>Messages to us:</strong> anything you send to support@gyse.app.</li>
+  </ul>
+  <h3>Information created as you use GYSE</h3>
+  <ul>
+    <li><strong>Index summary:</strong> your current index value and up to 30 recent index points, calculated from your log so friends and the watchlist can show your line.</li>
+    <li><strong>Usage and crash data:</strong> a small set of app events (for example "logged a set", "opened the share card" or "viewed the paywall") and the crash, hang and performance reports Apple provides through MetricKit, together with the app version, iOS version and device model. These are tied to a random ID created on your iPhone, not to your account, and never include your email, ticker, name, notes or weights. You can turn this off at any time (see section 8).</li>
+    <li><strong>Purchases:</strong> if you buy GYSE Plus, Apple tells the app which plan is active. Payments are handled entirely by Apple; we never receive your payment card details.</li>
+    <li><strong>Technical data:</strong> our hosting provider records IP addresses and request metadata in short-lived server logs, and uses IP addresses to limit abuse such as repeated sign-in attempts.</li>
+  </ul>
+  <p>We do not collect your contacts, photos, location, advertising identifier, or health records, and GYSE does not read from or write to Apple Health. The weights and reps you log are training records, not medical information.</p>
 
-<h2>Anonymous usage and crash data</h2>
-<p>To fix bugs and understand which features help, the app sends a small number of usage events (for example "logged a set" or "opened the share card") and Apple's crash and hang reports to our own backend. They are tied to a random ID created on your phone, not to your account, and never include your email, ticker, name, notes or weights. Turn this off any time in <strong>You → Share anonymous usage data</strong>.</p>
+  <h2 id="why">3. Why we use it</h2>
+  <div class="table"><table>
+    <thead><tr><th>Purpose</th><th>Information used</th><th>Legal basis (EU/UK GDPR)</th></tr></thead>
+    <tbody>
+      <tr><td>Create your account, sign you in and keep it secure</td><td>Account, technical data</td><td>Performing our contract with you</td></tr>
+      <tr><td>Store and sync your log, calculate your index and show your charts</td><td>Training log, settings, index summary</td><td>Performing our contract with you</td></tr>
+      <tr><td>Profiles, ticker search, watchlist and head-to-head</td><td>Profile, index summary, training log (as your visibility allows), social data</td><td>Performing our contract with you</td></tr>
+      <tr><td>Keep the community safe: filter offensive tickers and names, handle reports, enforce blocks, prevent spam</td><td>Profile, social and safety data, technical data</td><td>Our legitimate interest in a safe service, and legal obligations</td></tr>
+      <tr><td>Sell and restore GYSE Plus</td><td>Purchases</td><td>Performing our contract with you</td></tr>
+      <tr><td>Fix crashes and understand which features help</td><td>Usage and crash data</td><td>Our legitimate interest in a working, improving app. You can opt out at any time.</td></tr>
+      <tr><td>Answer you and send service messages (for example a sign-in or confirmation email)</td><td>Account, messages to us</td><td>Performing our contract with you</td></tr>
+      <tr><td>Comply with law and defend legal claims</td><td>Any of the above, as needed</td><td>Legal obligation and legitimate interests</td></tr>
+    </tbody>
+  </table></div>
+  <p>We do not sell or rent personal information, do not share it for cross-context behavioral advertising, show no third-party ads and do not use your data to train AI models. Automatic checks only block offensive or reserved tickers and names; no decision with legal or similarly significant effects is made about you automatically.</p>
 
-<h2>Where it lives</h2>
-<p>Your data is stored on your iPhone and synced to a hosted database (Supabase). Access is enforced on the server, row by row: you can change only your own records, and other people can read only what the rules above allow.</p>
+  <h2 id="visible">4. Who can see what</h2>
+  <ul>
+    <li><strong>Everyone using GYSE</strong> can find you by ticker and see your ticker, display name and index with its recent line.</li>
+    <li><strong>Public profile</strong> (the default): anyone using GYSE can also see your exercises and sessions (exercise, weight, reps and day).</li>
+    <li><strong>Private profile:</strong> only people you accept as friends see your exercises and sessions. Switch at any time in <strong>You → Private profile</strong>.</li>
+    <li><strong>Never shown to anyone:</strong> your email address, password, set notes, the people you block and the reports you send.</li>
+    <li><strong>Share cards and stickers</strong> are created on your iPhone and go only where you send them with the iOS share sheet.</li>
+  </ul>
 
-<h2>What we don't do</h2>
-<ul>
-<li>No third-party advertising, no ad identifiers, no tracking across apps or websites.</li>
-<li>No selling or renting of your data.</li>
-<li>No access to contacts, photos or location. Sharing a card uses the standard iOS share sheet; the image goes only where you send it.</li>
-<li>No third-party analytics SDKs. The app talks to one service: its own backend.</li>
-</ul>
+  <h2 id="processors">5. Companies that process data for us</h2>
+  <p>We use a few service providers to run GYSE. They may process personal information only to provide their service to us.</p>
+  <div class="table"><table>
+    <thead><tr><th>Provider</th><th>What they do for GYSE</th><th>Information involved</th></tr></thead>
+    <tbody>
+      <tr><td>Supabase, Inc. (USA)</td><td>Database, authentication, server functions and sign-in emails</td><td>All account, profile, log, social, safety and usage data stored by GYSE</td></tr>
+      <tr><td>Apple Inc. (USA) and its affiliates</td><td>App distribution, Sign in with Apple, in-app purchases and subscriptions, crash and performance reports</td><td>Apple ID sign-in token and relay email, purchase status, diagnostics</td></tr>
+      <tr><td>Google LLC (USA)</td><td>Continue with Google; email hosting for support@gyse.app</td><td>Google account email and name; support emails</td></tr>
+      <tr><td>GitHub, Inc. (USA)</td><td>Hosting the gyse.app website</td><td>IP address and browser details in website logs</td></tr>
+    </tbody>
+  </table></div>
+  <p>Apple and Google also act under their own privacy policies when you use their sign-in or Apple's App Store.</p>
 
-<h2>Deleting your data</h2>
-  <p>Open <strong>You → Delete account</strong>. This removes your account, profile, workouts, custom exercises, settings, index summary, friendships and blocks from the server immediately and wipes the copy on your phone. There is no retention period and nothing to email us about — though you are welcome to.</p>
+  <h2 id="transfers">6. Where data is stored and transferred</h2>
+  <p>The GYSE database is hosted in Seoul, Republic of Korea (Amazon Web Services, ap-northeast-2 region) by Supabase. A copy of your own data is also kept on your iPhone.</p>
+  <p>Some providers are based in, or may access data from, other countries. The table below lists these transfers, as required by Korea's Personal Information Protection Act (Article 28-8). They are necessary to provide the service you sign up for and happen over encrypted connections when you use the feature concerned.</p>
+  <div class="table"><table>
+    <thead><tr><th>Recipient and contact</th><th>Country</th><th>Information</th><th>Purpose</th><th>Kept until</th></tr></thead>
+    <tbody>
+      <tr><td>Supabase, Inc., support@supabase.io</td><td>Stored in the Republic of Korea; support and maintenance access from the USA and other countries</td><td>All data stored by GYSE</td><td>Hosting, authentication, operations</td><td>Account deletion, or the end of our contract with Supabase</td></tr>
+      <tr><td>Apple Inc., apple.com/legal/privacy/contact</td><td>USA and other countries</td><td>Sign-in token, relay email, purchase status, diagnostics</td><td>Sign in with Apple, App Store purchases, crash reports</td><td>As set by Apple's privacy policy</td></tr>
+      <tr><td>Google LLC, support.google.com/policies</td><td>USA and other countries</td><td>Google account email and name, support emails</td><td>Continue with Google, support email</td><td>As set by Google's privacy policy</td></tr>
+      <tr><td>GitHub, Inc., support.github.com</td><td>USA</td><td>Website visitors' IP address and browser details</td><td>Hosting gyse.app</td><td>As set by GitHub's privacy statement</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>How to refuse:</strong> Sign in with Apple and Continue with Google are optional; you can use an email account instead. Hosting is needed for accounts, sync and social features; if you don't want your data hosted, use GYSE without an account ("Try it now"), which keeps your log only on your iPhone. If you are in the EU or UK, Korea is covered by an adequacy decision; for transfers to the USA our providers rely on the EU–US Data Privacy Framework or standard contractual clauses.</p>
 
-  <h2>Changes</h2>
-  <p>If this policy changes in a way that matters, the date above changes and the app will point you here.</p>
+  <h2 id="retention">7. How long we keep it</h2>
+  <ul>
+    <li><strong>Account, profile, log, settings, index summary and social data:</strong> until you delete your account. Deleting it removes them from our database immediately. Copies in our hosting provider's backups are overwritten within 30 days.</li>
+    <li><strong>Reports:</strong> up to 12 months after review, so we can deal with repeated abuse, then deleted. A report you sent is deleted with your account.</li>
+    <li><strong>Usage and crash data:</strong> up to 24 months, then deleted. Because it is not linked to your account, it is not removed when you delete your account.</li>
+    <li><strong>Server logs and rate-limit records:</strong> kept by our hosting provider for a short period, normally no more than 90 days.</li>
+    <li><strong>Support emails:</strong> as long as needed to help you, and no longer than 3 years.</li>
+  </ul>
+  <p>When a retention period ends we delete the data from our database, which cannot be restored afterwards. We keep data longer only where the law requires it, and then only for that purpose.</p>
 
-  <h2>Contact</h2>
-  <p>Questions about privacy or your data: <a href="mailto:support@gyse.app">support@gyse.app</a>.</p>
+  <h2 id="rights">8. Your rights and choices</h2>
+  <ul>
+    <li><strong>See and correct:</strong> your profile, log and settings are shown in the app, and you can edit them there.</li>
+    <li><strong>Take a copy:</strong> <strong>You → Your data → Export as CSV</strong> exports every top set you have logged.</li>
+    <li><strong>Delete:</strong> <strong>You → Delete account</strong> deletes your account and its data. If you signed in with Apple, we also revoke GYSE's access to your Apple ID.</li>
+    <li><strong>Limit who sees your training:</strong> turn on <strong>Private profile</strong>.</li>
+    <li><strong>Turn off usage data:</strong> <strong>You → Share anonymous usage data</strong>.</li>
+    <li><strong>Ask us:</strong> email <a href="mailto:support@gyse.app">support@gyse.app</a> to request access, correction, deletion, restriction, portability or to object to processing. We may ask you to confirm the request from your account email. We reply within 10 days for requests under Korean law and within one month otherwise.</li>
+  </ul>
+  <p>You can also complain to a data protection authority. In Korea: the Personal Information Protection Commission (privacy.go.kr, call 182) or the KISA Privacy Infringement Report Center (privacy.kisa.or.kr, call 118). In the EU or UK, the authority where you live (in the UK, the ICO). If you live in California, you have the rights to know, delete and correct, and we will not treat you differently for using them. We do not sell or share personal information as those laws define it.</p>
 
-  <footer>GYSE · Strength, as an index.</footer>
+  <h2 id="security">9. How we protect it</h2>
+  <ul>
+    <li>All connections between the app, the website and our servers are encrypted (TLS).</li>
+    <li>The database enforces access rules on every row: you can change only your own records, and others can read only what section 4 allows. Sensitive operations run through restricted database roles.</li>
+    <li>Your session is stored in the iPhone Keychain. Passwords are hashed and never stored in readable form.</li>
+    <li>Sign-in, lookups, reports and requests are rate-limited to slow down abuse.</li>
+    <li>Only the operator of GYSE can access production data, and only to run and support the service.</li>
+  </ul>
+  <p>No system is perfectly secure. If a breach affects your information, we will notify you and the relevant authorities as the law requires.</p>
+
+  <h2 id="children">10. Age limits</h2>
+  <p>GYSE is not intended for children. You must be at least 14 to create an account, and in the EU, EEA or UK you must also be old enough to consent to data processing in your country, or have a parent's consent where the law allows. If we learn that an account belongs to someone under these ages, we will delete it. Parents can contact us at <a href="mailto:support@gyse.app">support@gyse.app</a>.</p>
+
+  <h2 id="website">11. This website</h2>
+  <p>gyse.app uses no cookies, analytics or trackers, and loads its fonts from gyse.app itself. GitHub, which hosts the site, receives your IP address and browser details to deliver pages and protect the service.</p>
+
+  <h2 id="changes">12. Changes and contact</h2>
+  <p>If we change this policy in a way that affects you, we will update the date above and tell you in the app before the change takes effect. Earlier versions are available on request.</p>
+  <p>Questions, requests or complaints: <a href="mailto:support@gyse.app">support@gyse.app</a>.</p>
 </main>
+<footer><div class="in"><span>© 2026 GYSE</span><span><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></span></div></footer>
 </body>
 </html>
