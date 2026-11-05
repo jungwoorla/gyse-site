@@ -1,49 +1,50 @@
-/* Shared style for gyse.app's reading pages (privacy, terms, support). */
+/* Shared style for gyse.app's reading pages (privacy, terms, support). Same tokens as the homepage's chalk sections. */
 @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
              font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
-:root { --ink:#111114; --plate:#1B191F; --raised:#25212B; --line:rgba(255,255,255,.08);
-        --text:#F4F3F7; --muted:#B4AEBF; --faint:#7C7688; --violet:#A78BFA; --lilac:#CBB5FF; --up:#4ED5AD; }
+:root { --chalk:#F1F1F3; --paper:#FFFFFF; --ink:#141317; --slate:#5F5C68; --rule:rgba(20,19,23,.12); --violet:#6C47F0; --violet-ink:#5734D9; }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; }
-body { margin: 0; background: var(--ink); color: var(--text); font-family: "Archivo", -apple-system, system-ui, sans-serif;
+body { margin: 0; background: var(--chalk); color: var(--ink); font-family: "Archivo", -apple-system, system-ui, sans-serif;
        font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-:focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; border-radius: 6px; }
-.top { max-width: 1240px; margin: 0 auto; padding: 26px clamp(20px, 4vw, 56px) 0; display: flex; justify-content: space-between; align-items: center; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--lilac); text-decoration: none; font-stretch: 125%; font-weight: 800; font-size: 17px; }
-.brand svg { width: 26px; height: 26px; }
-.top nav a { color: var(--text); opacity: .78; text-decoration: none; margin-left: 20px; font-size: 15px; }
+:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
+.top { max-width: 1280px; margin: 0 auto; padding: 28px clamp(20px, 4.4vw, 64px) 0; display: flex; justify-content: space-between; align-items: center; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
+.brand svg { width: 24px; height: 24px; }
+.brand svg path { stroke: var(--violet); }
+.top nav a { color: var(--ink); opacity: .7; text-decoration: none; margin-left: 24px; font-size: 15px; }
 .top nav a:hover, .top nav a[aria-current] { opacity: 1; }
-main { max-width: 760px; margin: 0 auto; padding: clamp(48px, 8vw, 96px) clamp(20px, 4vw, 32px) 80px; }
-h1 { font-stretch: 125%; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-size: clamp(38px, 6vw, 64px); margin: 0; }
-.meta { color: var(--faint); font-size: 15px; margin: 18px 0 0; }
-.lede { font-size: 19px; color: var(--text); margin: 32px 0 0; }
-h2 { font-stretch: 112%; font-weight: 750; letter-spacing: -.02em; line-height: 1.2; font-size: 23px; margin: 52px 0 12px; }
-h3 { font-weight: 700; font-size: 17px; margin: 26px 0 6px; }
-p, li, td { color: var(--muted); }
-strong { color: var(--text); font-weight: 650; }
-a { color: var(--violet); }
+main { max-width: 760px; margin: 0 auto; padding: clamp(56px, 8vw, 104px) clamp(20px, 4vw, 32px) 96px; }
+h1 { font-weight: 560; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(40px, 5.6vw, 64px); margin: 0; text-wrap: balance; }
+.meta { color: var(--slate); font-size: 15px; margin: 18px 0 0; }
+.lede { font-size: 19px; color: var(--ink); margin: 32px 0 0; }
+h2 { font-weight: 600; letter-spacing: -.02em; line-height: 1.2; font-size: 23px; margin: 56px 0 12px; }
+h3 { font-weight: 600; font-size: 17px; margin: 26px 0 6px; }
+p, li, td { color: var(--slate); }
+strong { color: var(--ink); font-weight: 600; }
+a { color: var(--violet-ink); text-underline-offset: 3px; }
 ul, ol { padding-left: 22px; }
 li { margin: 6px 0; }
-code { font-family: inherit; font-stretch: 125%; font-weight: 700; color: var(--lilac); }
-.toc { background: var(--plate); border-radius: 20px; padding: 18px 24px; margin: 36px 0 0; }
+code { font-family: inherit; font-weight: 650; color: var(--ink); }
+.toc { background: var(--paper); border: 1px solid var(--rule); border-radius: 18px; padding: 18px 24px; margin: 36px 0 0; }
 .toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
 .toc li { margin: 0; padding: 4px 0; break-inside: avoid; }
-.toc a { color: var(--text); text-decoration: none; }
-.toc a:hover { color: var(--lilac); }
-.note { background: var(--plate); border-left: 3px solid var(--violet); border-radius: 0 16px 16px 0; padding: 14px 18px; margin: 18px 0; }
+.toc a { color: var(--ink); text-decoration: none; }
+.toc a:hover { color: var(--violet-ink); }
+.note { background: var(--paper); border: 1px solid var(--rule); border-left: 3px solid var(--violet); border-radius: 4px 16px 16px 4px; padding: 14px 18px; margin: 22px 0; }
 .note p { margin: 0; }
-.table { overflow-x: auto; margin: 16px 0; border-radius: 16px; background: var(--plate); }
+.table { overflow-x: auto; margin: 16px 0; border-radius: 16px; background: var(--paper); border: 1px solid var(--rule); }
 table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 560px; }
-th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
-th { color: var(--text); font-weight: 650; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
+th { color: var(--ink); font-weight: 600; font-size: 14px; }
 tr:last-child td { border-bottom: 0; }
-.lang { color: var(--faint); font-size: 15px; margin-top: 14px; }
-.lang a { color: var(--muted); }
-footer { border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
-footer .in { max-width: 1240px; margin: 0 auto; padding: 26px clamp(20px, 4vw, 56px) 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
-footer a { color: var(--muted); text-decoration: none; margin-left: 20px; }
+.lang { color: var(--slate); font-size: 15px; margin-top: 14px; }
+.lang a { color: var(--ink); }
+footer { border-top: 1px solid var(--rule); color: var(--slate); font-size: 14px; }
+footer .in { max-width: 1280px; margin: 0 auto; padding: 24px clamp(20px, 4.4vw, 64px) 36px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
+footer a { color: var(--slate); text-decoration: none; margin-left: 22px; }
 footer a:first-child { margin-left: 0; }
-@media (max-width: 640px) { .toc ol { columns: 1; } .top nav a { margin-left: 14px; font-size: 14px; } }
+footer a:hover { color: var(--ink); }
+@media (max-width: 640px) { .toc ol { columns: 1; } .top nav a { margin-left: 16px; font-size: 14px; } }
 /* Korean pages: Archivo has no Hangul, so Hangul falls through to the system Korean face. */
 :lang(ko) body, body:lang(ko) { font-family: "Archivo", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
                                 word-break: keep-all; line-height: 1.75; }
