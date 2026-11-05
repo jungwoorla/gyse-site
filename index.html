@@ -10,8 +10,7 @@
 <meta property="og:url" content="https://gyse.app">
 <meta property="og:image" content="https://gyse.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0C0C0E">
-<link rel="preload" as="image" href="/assets/hero-mono.jpg" imagesrcset="/assets/hero-mono-1200.jpg 1200w, /assets/hero-mono.jpg 1920w" imagesizes="100vw">
+<meta name="theme-color" content="#F1F1F3">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
 <style>
   /* Archivo (SIL Open Font License), variable weight 100–900 and width 62–125, served from gyse.app. */
@@ -40,38 +39,43 @@
   .btn:hover { background: var(--violet-ink); }
   .quiet { color: var(--ash); font-size: 15px; }
 
-  /* ---------- Hero ---------- */
-  .hero { position: relative; height: clamp(640px, 100svh, 940px); background: var(--iron); color: #F3F2F6;
-          overflow: hidden; isolation: isolate; container-type: size; --fx: 50%; }
-  /* The photo and the line share one box sized like object-fit: cover, so the line stays on the lifter at any size. */
-  .stage { position: absolute; z-index: -2; top: 50%; left: var(--fx); aspect-ratio: 16 / 9;
-           width: max(100cqw, calc(100cqh * 16 / 9)); transform: translate(calc(var(--fx) * -1), -50%); }
-  .stage img, .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(90deg, rgba(12,12,14,.92) 0%, rgba(12,12,14,.7) 34%, rgba(12,12,14,0) 62%),
-                linear-gradient(180deg, rgba(12,12,14,.55) 0%, rgba(12,12,14,0) 20%); }
-  .index-line { fill: none; stroke: var(--lilac); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke;
-                stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.8s cubic-bezier(.45,.05,.2,1) .35s forwards; }
-  .tick { fill: var(--iron); stroke: var(--lilac); stroke-width: 2; vector-effect: non-scaling-stroke; }
-  .label { font-family: "Archivo", system-ui, sans-serif; opacity: 0; animation: show .6s ease forwards; }
-  .label .v { font-stretch: 72%; font-variant-numeric: lining-nums tabular-nums; font-weight: 500; fill: #F3F2F6; }
-  .label .k { font-weight: 450; fill: #A6A3AE; }
-  .label.start { animation-delay: .25s; }
-  .label.end { animation-delay: 3s; }
-  .end-dot { opacity: 0; animation: show .4s ease 2.95s forwards; }
-  .portrait { display: none; }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
-  @keyframes show { to { opacity: 1; } }
-
+  /* ---------- Hero: the page is the chart ---------- */
+  .hero { position: relative; overflow: hidden; background: var(--chalk); border-bottom: 1px solid var(--rule); }
   .bar { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; }
   .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
   .brand svg { width: 24px; height: 24px; }
-  .bar nav a { text-decoration: none; color: #F3F2F6; opacity: .72; margin-left: 28px; font-size: 15px; }
+  .bar nav a { text-decoration: none; color: var(--ink); opacity: .7; margin-left: 28px; font-size: 15px; }
   .bar nav a:hover { opacity: 1; }
-  .lead { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-56%); }
-  .lead h1 { font-size: clamp(46px, 6vw, 88px); line-height: .98; max-width: 7.6em; }
-  .lead p { max-width: 27em; margin: 28px 0 36px; color: #C9C6D0; font-size: clamp(17px, 1.35vw, 19px); }
-  .lead .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 clamp(32px, 5vw, 88px); padding-top: clamp(56px, 8vw, 112px); }
+  .copy h1 { font-size: clamp(48px, 6.4vw, 96px); line-height: .97; max-width: 7.2em; }
+  .copy p { max-width: 26em; margin: 28px 0 34px; color: var(--slate); font-size: clamp(17px, 1.35vw, 20px); }
+  .copy .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .copy { padding-bottom: clamp(28px, 3vw, 44px); }
+  .copy .quiet { color: var(--slate); }
+
+  /* The index line: values 96–114 map to the chart's height; 100 is day one. */
+  .chart { position: relative; height: clamp(190px, 24vw, 320px); margin-top: clamp(48px, 6vw, 80px); }
+  .chart .gl { position: absolute; left: calc(var(--gutter) * -1); width: 200vw; border-top: 1px solid var(--rule); }
+  .chart .gl.base { border-top-style: dashed; border-top-color: rgba(20,19,23,.28); }
+  .chart .gl span { position: absolute; left: var(--gutter); bottom: 6px; font-size: 13px; color: var(--slate); }
+  /* Drawn once on load: the line is revealed left to right. */
+  .chart svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
+               clip-path: inset(-20px 100% -20px 0); animation: reveal 2.4s cubic-bezier(.45,.05,.2,1) .3s forwards; }
+  .index-line { fill: none; stroke: var(--violet); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .pt { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--chalk); border: 2px solid var(--violet); }
+  .pt.end { width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--violet); border: 0; box-shadow: 0 0 0 6px rgba(108,71,240,.14);
+            opacity: 0; animation: show .4s ease 2.6s forwards; }
+  .tag { position: absolute; line-height: 1.25; }
+  .tag b { display: block; font-size: clamp(22px, 2.2vw, 30px); font-weight: 500; }
+  .tag span { font-size: 14px; color: var(--slate); }
+  .tag.start { left: 0; top: calc(77.8% + 14px); }
+  .tag.end { right: 18px; top: 8.9%; transform: translateY(-112%); text-align: right; opacity: 0; animation: show .5s ease 2.7s forwards; }
+  @keyframes reveal { to { clip-path: inset(-20px -20px -20px 0); } }
+  @keyframes show { to { opacity: 1; } }
+
+  /* The device rises out of the floor: its lower part is cut by the next section. */
+  .device { align-self: end; width: clamp(272px, 27vw, 384px); margin-bottom: clamp(-150px, -9vw, -90px); position: relative; z-index: 1; }
+  .device .phone { max-width: none; }
 
   /* ---------- Sections on chalk ---------- */
   section { padding: clamp(96px, 12vw, 168px) 0; }
@@ -142,11 +146,25 @@
   .screen .rank.me { box-shadow: inset 0 0 0 1px rgba(167,139,250,.55); }
   .screen .rank svg { width: 50px; height: 20px; }
   .screen .rank .v { font-variant-numeric: tabular-nums; font-weight: 700; }
-  .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; display: grid; grid-template-columns: repeat(4, 1fr);
-          border-top: 1px solid rgba(255,255,255,.07); background: #111114; padding: 8px 6px 12px; }
-  .tabs span { display: grid; justify-items: center; gap: 3px; color: #6F6979; font-size: 9px; font-weight: 600; }
-  .tabs span::before { content: ""; width: 16px; height: 16px; border-radius: 5px; background: currentColor; opacity: .5; }
-  .tabs .on { color: #CBB5FF; } .tabs .on::before { opacity: 1; }
+  .tabs { position: absolute; left: 10px; right: 10px; bottom: 12px; height: 48px; display: grid; grid-template-columns: repeat(4, 1fr); padding: 5px;
+          border-radius: 999px; background: rgba(37,33,43,.9); border: 1px solid rgba(255,255,255,.08); }
+  .tabs span { display: grid; place-items: center; align-content: center; gap: 2px; color: #A19AAE; font-size: 8.5px; font-weight: 600; border-radius: 999px; }
+  .tabs span::before { content: ""; width: 14px; height: 14px; border-radius: 5px; background: currentColor; opacity: .55; }
+  .tabs .on { color: #CBB5FF; background: rgba(255,255,255,.07); } .tabs .on::before { opacity: 1; }
+  .screen .status { position: absolute; top: 15px; left: 28px; right: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 650; }
+  .screen .status .sb { display: flex; gap: 3px; }
+  .screen .status .sb i { width: 13px; height: 7px; border-radius: 2px; background: #F4F3F7; opacity: .9; }
+  .screen .status .sb i:first-child { width: 10px; opacity: .7; }
+  .screen.home { padding-top: 50px; }
+  .screen .appbar { display: flex; align-items: center; gap: 7px; font-weight: 800; font-stretch: 118%; font-size: 13px; margin-bottom: 14px; }
+  .screen .appbar svg { width: 22px; height: 22px; padding: 4px; border-radius: 7px; background: #1B191F; }
+  .screen .muted { color: #A19AAE; }
+  .screen.home .num { font-size: 42px; margin-top: 8px; }
+  .screen .mini { display: block; width: 100%; margin-top: 12px; }
+  .screen .ranges { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: #6F6979; font-weight: 600; font-size: 10.5px; padding: 0 4px; }
+  .screen .ranges .on { background: #25212B; color: #F4F3F7; border-radius: 99px; padding: 3px 9px; }
+  .screen .cta.ghost { background: #25212B; color: #F4F3F7; }
+  .screen .rec { font-size: 9px; font-weight: 700; color: #111114; background: #CBB5FF; border-radius: 99px; padding: 2px 6px; margin-left: 6px; vertical-align: 1px; }
 
   /* ---------- Principles ---------- */
   .principles { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(32px, 6vw, 96px); }
@@ -177,53 +195,75 @@
     .steps::-webkit-scrollbar { display: none; }
     .steps li { flex: 0 0 min(76vw, 300px); scroll-snap-align: start; }
   }
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .device { justify-self: center; width: min(80vw, 320px); margin-top: 40px; margin-bottom: -150px; }
+    .chart .gl { width: 300vw; }
+  }
   @media (max-width: 720px) {
-    .hero { --fx: 70%; height: clamp(640px, 100svh, 820px); }
-    .hero::after { background: linear-gradient(180deg, rgba(12,12,14,.6) 0%, rgba(12,12,14,0) 22%, rgba(12,12,14,.35) 46%, rgba(12,12,14,.94) 72%, var(--iron) 100%); }
-    .stage svg { display: none; }
-    .portrait { display: block; position: absolute; z-index: -1; left: 0; top: 84px; width: 100%; height: auto; }
-    .lead { top: auto; bottom: 36px; transform: none; }
-    .lead p { margin: 18px 0 26px; }
     .bar nav a { margin-left: 18px; font-size: 14px; }
     .bar nav a.wide-only { display: none; }
+    .copy p { margin: 20px 0 28px; }
+    .tag.end { right: 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .index-line { animation: none; stroke-dashoffset: 0; }
-    .label, .end-dot { animation: none; opacity: 1; }
+    .chart svg { animation: none; clip-path: none; }
+    .pt.end, .tag.end { animation: none; opacity: 1; }
   }
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <div class="stage" aria-hidden="true">
-    <img src="/assets/hero-mono.jpg" srcset="/assets/hero-mono-1200.jpg 1200w, /assets/hero-mono.jpg 1920w" sizes="(max-width: 720px) 220vw, 110vw" alt="">
-    <svg viewBox="0 0 1920 1080">
-      <path class="index-line" pathLength="1" d="M820 868 L880 860 L940 846 L990 852 L1050 818 L1110 808 L1170 790 L1230 797 L1290 748 L1350 732 L1410 700 L1470 708 L1530 640 L1590 604 L1640 560 L1690 538 L1735 452 L1784 300"/>
-      <circle class="tick" cx="820" cy="868" r="5"/>
-      <g class="end-dot"><circle cx="1784" cy="300" r="15" fill="none" stroke="#B9A4FF" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="1784" cy="300" r="6" fill="#B9A4FF"/></g>
-      <g class="label start"><text class="v" x="820" y="926" font-size="34">100.00</text><text class="k" x="820" y="958" font-size="20">Day one</text></g>
-      <g class="label end" text-anchor="end"><text class="v" x="1756" y="236" font-size="46">112.40</text><text class="k" x="1756" y="268" font-size="20">New high, week 14</text></g>
-    </svg>
-  </div>
-  <svg class="portrait" viewBox="0 0 390 360" aria-hidden="true">
-    <path class="index-line" pathLength="1" d="M20 330 L48 324 L74 316 L98 320 L124 296 L152 290 L178 276 L204 281 L230 246 L258 236 L284 214 L308 219 L330 170 L352 140 L370 60"/>
-    <g class="end-dot"><circle cx="370" cy="60" r="11" fill="none" stroke="#B9A4FF" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/><circle cx="370" cy="60" r="4.5" fill="#B9A4FF"/></g>
-    <g class="label end" text-anchor="end"><text class="v" x="352" y="40" font-size="26">112.40</text><text class="k" x="352" y="60" font-size="12">New high, week 14</text></g>
-  </svg>
   <div class="wrap bar">
     <a class="brand" href="/" aria-label="GYSE home">
-      <svg viewBox="0 0 1024 1024" fill="none" stroke="#B9A4FF" stroke-width="84" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
+      <svg viewBox="0 0 1024 1024" fill="none" stroke="#6C47F0" stroke-width="84" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
       GYSE
     </a>
     <nav aria-label="Site"><a class="wide-only" href="#how">How it works</a><a href="/support">Support</a></nav>
   </div>
-  <div class="wrap lead">
-    <h1>Your strength, as an index.</h1>
-    <p>Log one top set per exercise. GYSE turns your lifts into a single line that starts at 100 and rises as you get stronger.</p>
-    <div class="actions">
-      <a class="btn" href="#try">Try it with a set</a>
-      <span class="quiet">Coming soon to iPhone</span>
+  <div class="wrap hero-grid">
+    <div class="copy">
+      <h1>Your strength, as an index.</h1>
+      <p>Log one top set per exercise. GYSE turns your lifts into one line that starts at 100 and climbs as you get stronger.</p>
+      <div class="actions">
+        <a class="btn" href="#try">Try it with a set</a>
+        <span class="quiet">Coming soon to iPhone</span>
+      </div>
+      <div class="chart" aria-label="Example index: from 100.00 on day one to a new high of 112.40 in week 14">
+        <div class="gl" style="top:22.2%"><span class="fig">110</span></div>
+        <div class="gl" style="top:50%"><span class="fig">105</span></div>
+        <div class="gl base" style="top:77.8%"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path class="index-line" d="M1 77.8 L8.46 74.4 L15.92 67.8 L23.38 70.6 L30.85 60 L38.31 55.6 L45.77 49.4 L53.23 51.7 L60.69 39.4 L68.15 35.6 L75.62 26.7 L83.08 28.9 L90.54 17.2 L98 8.9"/>
+        </svg>
+        <i class="pt" style="left:1%;top:77.8%" aria-hidden="true"></i>
+        <i class="pt end" style="left:98%;top:8.9%" aria-hidden="true"></i>
+        <div class="tag start" aria-hidden="true"><b class="fig">100.00</b><span>Day one</span></div>
+        <div class="tag end" aria-hidden="true"><b class="fig">112.40</b><span>New high, week 14</span></div>
+      </div>
+    </div>
+
+    <div class="device" aria-hidden="true">
+      <div class="phone"><div class="screen home">
+        <div class="status"><span>9:41</span><span class="sb"><i></i><i></i><i></i></span></div>
+        <div class="appbar"><svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>GYSE</div>
+        <span class="tk">$ALEX</span>
+        <div class="muted">Strength index</div>
+        <div class="num">112.40</div>
+        <div class="up">▲ 2.9% today</div>
+        <svg class="mini" viewBox="0 0 300 120" aria-hidden="true">
+          <defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".32"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
+          <line x1="0" x2="300" y1="104" y2="104" stroke="#6F6979" stroke-opacity=".6" stroke-dasharray="2 5"/>
+          <path d="M0 104 L23 99 L46 90 L69 94 L92 80 L115 74 L138 66 L161 69 L184 53 L207 48 L230 36 L253 39 L276 23 L300 12 L300 120 L0 120Z" fill="url(#hf)"/>
+          <path d="M0 104 L23 99 L46 90 L69 94 L92 80 L115 74 L138 66 L161 69 L184 53 L207 48 L230 36 L253 39 L276 23 L300 12" fill="none" stroke="#A78BFA" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="300" cy="12" r="4.5" fill="#A78BFA"/>
+        </svg>
+        <div class="ranges"><span>1M</span><span>3M</span><span>6M</span><span>1Y</span><span class="on">All</span></div>
+        <div class="cta">+ Log today's top sets</div>
+        <div class="row"><span><b>5 sessions</b><small>in the last 4 weeks</small></span><span class="pill up">+2.9%</span></div>
+        <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
+      </div></div>
     </div>
   </div>
 </header>
@@ -301,16 +341,17 @@
         </li>
         <li>
           <div class="phone" aria-hidden="true"><div class="screen">
-            <span class="tk">$ALEX</span>
-            <div class="num">112.40</div>
-            <div><span class="up">▲ 2.9%</span> <span style="color:#A19AAE">vs last close</span></div>
-            <svg viewBox="0 0 300 140" style="width:100%;margin-top:12px;display:block" aria-hidden="true">
-              <path d="M0 120 L25 114 L50 117 L75 103 L100 97 L125 100 L150 86 L175 75 L200 80 L225 60 L250 51 L275 43 L300 20" fill="none" stroke="#A78BFA" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-              <circle cx="300" cy="20" r="4.5" fill="#A78BFA"/>
-            </svg>
-            <div class="chips"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span><span>Arms <b class="down">−0.6%</b></span></div>
-            <div class="row" style="margin-top:10px"><span><b>5-week run</b><small>Log by Sunday to extend it</small></span><span class="pill">5</span></div>
-            <div class="row"><span><b>Today</b><small>3 top sets, 1 new record</small></span><span class="pill up">+2.9%</span></div>
+            <h4>Thursday close</h4>
+            <p class="sub">3 top sets, 1 new record.</p>
+            <div class="num up">+2.9%</div>
+            <div class="muted" style="margin-top:4px">$ALEX closed at 112.40</div>
+            <div style="margin-top:14px">
+              <div class="row"><span><b>Bench press</b><span class="rec">Record</span><small>87.5 kg × 5</small></span><span class="pill up">+2.9%</span></div>
+              <div class="row"><span><b>Back squat</b><small>122.5 kg × 5</small></span><span class="pill up">+2.1%</span></div>
+              <div class="row"><span><b>Lat pulldown</b><small>70 kg × 9</small></span><span class="pill up">+2.8%</span></div>
+            </div>
+            <div class="chips"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span></div>
+            <div class="cta ghost">Share the close</div>
             <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
           </div></div>
           <h3><span class="n fig">2</span>Your index closes the day</h3>
