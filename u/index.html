@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-SMncyEfrlxHT48QSHYFJzS+WbIKkp8IV1DOkP6LZrwY='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Follow on GYSE</title>
 <meta name="description" content="Strength, as an index. Follow a friend's GYSE ticker.">
 <meta property="og:title" content="Follow me on GYSE">
@@ -51,9 +53,9 @@
   <p class="note">GYSE is coming soon to the App Store. If the button does nothing, the app isn't on this iPhone yet.</p>
 </main>
 <script>
-  // Only A–Z, 0–9 and _ survive, so nothing from the URL is ever injected as markup.
-  const raw = new URLSearchParams(location.search).get("t") || "";
-  const ticker = raw.replace(/[^A-Za-z0-9_]/g, "").slice(0, 20).toUpperCase();
+  // Tickers are 1–8 letters. Anything else is ignored, and the value is only ever set as text.
+  const raw = (new URLSearchParams(location.search).get("t") || "").replace(/^[$@]/, "");
+  const ticker = /^[A-Za-z]{1,8}$/.test(raw) ? raw.toUpperCase() : "";
   if (ticker) {
     document.getElementById("ticker").textContent = "$" + ticker;
     document.getElementById("lead").textContent = "Follow $" + ticker + "'s strength index on GYSE.";
