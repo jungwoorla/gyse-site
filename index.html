@@ -41,43 +41,64 @@
   .btn:hover { background: var(--violet-ink); }
   .quiet { color: var(--ash); font-size: 15px; }
 
-  /* ---------- Hero: the page is the chart ---------- */
-  .hero { position: relative; overflow: hidden; background: var(--chalk); border-bottom: 1px solid var(--rule); }
-  .bar { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; }
+  /* ---------- Hero: one line runs through the app ---------- */
+  .hero { position: relative; overflow: hidden; background: var(--chalk); border-bottom: 1px solid var(--rule); isolation: isolate; }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; position: relative; z-index: 3; }
   .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
   .brand svg { width: 24px; height: 24px; }
   .bar nav a { text-decoration: none; color: var(--ink); opacity: .7; margin-left: 28px; font-size: 15px; }
   .bar nav a:hover { opacity: 1; }
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 clamp(32px, 5vw, 88px); padding-top: clamp(56px, 8vw, 112px); }
-  .copy h1 { font-size: clamp(48px, 6.4vw, 96px); line-height: .97; max-width: 7.2em; }
-  .copy p { max-width: 26em; margin: 28px 0 34px; color: var(--slate); font-size: clamp(17px, 1.35vw, 20px); }
-  .copy .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
-  .copy { padding-bottom: clamp(28px, 3vw, 44px); }
-  .copy .quiet { color: var(--slate); }
 
-  /* The index line: values 96–114 map to the chart's height; 100 is day one. */
-  .chart { position: relative; height: clamp(190px, 24vw, 320px); margin-top: clamp(48px, 6vw, 80px); }
-  .chart .gl { position: absolute; left: calc(var(--gutter) * -1); width: 200vw; border-top: 1px solid var(--rule); }
-  .chart .gl.base { border-top-style: dashed; border-top-color: rgba(20,19,23,.28); }
-  .chart .gl span { position: absolute; left: var(--gutter); bottom: 6px; font-size: 13px; color: var(--slate); }
-  /* Drawn once on load: the line is revealed left to right. */
-  .chart svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
-               clip-path: inset(-20px 100% -20px 0); animation: reveal 2.4s cubic-bezier(.45,.05,.2,1) .3s forwards; }
-  .index-line { fill: none; stroke: var(--violet); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-  .pt { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--chalk); border: 2px solid var(--violet); }
-  .pt.end { width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--violet); border: 0; box-shadow: 0 0 0 6px rgba(108,71,240,.14);
-            opacity: 0; animation: show .4s ease 2.6s forwards; }
-  .tag { position: absolute; line-height: 1.25; }
+  .intro { position: relative; z-index: 3; text-align: center; padding-top: clamp(56px, 8vw, 104px); }
+  .intro h1 { font-size: clamp(50px, 8.4vw, 132px); line-height: .94; letter-spacing: -.045em; margin: 0 auto; max-width: 9em; }
+  .intro p { max-width: 30em; margin: 26px auto 32px; color: var(--slate); font-size: clamp(17px, 1.4vw, 20px); }
+  .intro .actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 22px; }
+  .intro .quiet { color: var(--slate); }
+
+  /* The stage: a full-width chart with the phone standing in it. */
+  .stage { --ph: clamp(270px, 25vw, 360px); position: relative; height: clamp(520px, 52vw, 760px); margin-top: clamp(40px, 5vw, 72px); }
+  .stage .gl { position: absolute; left: 0; right: 0; border-top: 1px solid var(--rule); }
+  .stage .gl.base { border-top: 1px dashed rgba(20,19,23,.28); }
+  .stage .gl span { position: absolute; left: var(--gutter); bottom: 6px; font-size: 13px; color: var(--slate); }
+  .stage .line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1;
+                 clip-path: inset(-30px 100% -30px 0); animation: reveal 2.6s cubic-bezier(.5,.05,.25,1) .35s forwards; }
+  .index-line { fill: none; stroke: var(--violet); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .index-glow { fill: none; stroke: var(--violet); stroke-opacity: .12; stroke-width: 14; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .pt { position: absolute; z-index: 1; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: var(--chalk); border: 2px solid var(--violet); }
+  .pt.end { width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--violet); border: 0; box-shadow: 0 0 0 7px rgba(108,71,240,.14);
+            opacity: 0; animation: show .4s ease 2.9s forwards; }
+  .tag { position: absolute; z-index: 1; line-height: 1.25; }
   .tag b { display: block; font-size: clamp(22px, 2.2vw, 30px); font-weight: 500; }
   .tag span { font-size: 14px; color: var(--slate); }
-  .tag.start { left: 0; top: calc(77.8% + 14px); }
-  .tag.end { right: 18px; top: 8.9%; transform: translateY(-112%); text-align: right; opacity: 0; animation: show .5s ease 2.7s forwards; }
-  @keyframes reveal { to { clip-path: inset(-20px -20px -20px 0); } }
-  @keyframes show { to { opacity: 1; } }
+  .tag.start { left: var(--gutter); top: calc(var(--y0) + 16px); }
+  .tag.end { right: var(--gutter); top: calc(var(--y1) - 18px); transform: translateY(-100%); text-align: right; opacity: 0; animation: show .5s ease 3s forwards; }
 
-  /* The device rises out of the floor: its lower part is cut by the next section. */
-  .device { align-self: end; width: clamp(272px, 27vw, 384px); margin-bottom: clamp(-150px, -9vw, -90px); position: relative; z-index: 1; }
-  .device .phone { max-width: none; }
+  .phone-wrap { position: absolute; z-index: 2; left: 50%; top: 0; width: var(--ph); transform: translateX(-50%);
+                animation: rise 1.1s cubic-bezier(.2,.7,.2,1) .1s both; }
+  .real { position: relative; aspect-ratio: 1206 / 2622; border-radius: 15% / 7%; background: #050506; padding: 3.2%;
+          box-shadow: 0 0 0 1px rgba(20,19,23,.18), 0 2px 0 1px rgba(255,255,255,.6) inset, 0 60px 90px -40px rgba(20,19,23,.45), 0 30px 40px -30px rgba(20,19,23,.3); }
+  .real img { display: block; width: 100%; height: 100%; border-radius: 12.4% / 5.8%; object-fit: cover; background: #111114; }
+  .real::after { content: ""; position: absolute; top: 4.6%; left: 50%; width: 31%; height: 3.9%; transform: translateX(-50%); background: #000; border-radius: 99px; }
+
+  /* Moments from the app, placed where they happen on the line. */
+  .moment { position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 18px;
+            background: rgba(255,255,255,.86); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+            box-shadow: 0 0 0 1px rgba(20,19,23,.07), 0 18px 40px -18px rgba(20,19,23,.35); font-size: 14px; line-height: 1.3;
+            opacity: 0; transform: translateY(10px) scale(.98); animation: pop .55s cubic-bezier(.2,.8,.2,1) forwards; }
+  .moment .ic { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: #111114; color: #CBB5FF; font-weight: 800; font-size: 13px; }
+  .moment .ic svg { width: 18px; height: 18px; }
+  .moment b { display: block; font-weight: 650; color: var(--ink); }
+  .moment span { color: var(--slate); }
+  .moment .up { color: var(--gain); font-weight: 600; }
+  /* Placed off the phone's edges, so they never cover the screen. */
+  .m1 { right: calc(50% + var(--ph) / 2 + 32px); top: 30%; animation-delay: 1.15s; }
+  .m2 { left: calc(50% + var(--ph) / 2 + 40px); top: 24%; animation-delay: 2.1s; }
+  .m3 { left: calc(50% + var(--ph) / 2 + 24px); top: 60%; animation-delay: 2.6s; }
+
+  @keyframes reveal { to { clip-path: inset(-30px -30px -30px 0); } }
+  @keyframes show { to { opacity: 1; } }
+  @keyframes pop { to { opacity: 1; transform: none; } }
+  @keyframes rise { from { opacity: 0; transform: translate(-50%, 40px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
   /* ---------- Sections on chalk ---------- */
   section { padding: clamp(96px, 12vw, 168px) 0; }
@@ -125,48 +146,8 @@
   .steps h3 { font-size: clamp(22px, 1.9vw, 27px); line-height: 1.15; margin-top: 32px; letter-spacing: -.025em; }
   .steps h3 .n { color: var(--slate); margin-right: .45em; font-weight: 450; }
   .steps p { margin: 10px 0 0; color: var(--slate); font-size: 17px; max-width: 24em; }
+  .real.shot { width: 100%; max-width: 300px; box-shadow: 0 0 0 1px rgba(20,19,23,.16), 0 50px 70px -50px rgba(20,19,23,.5); }
 
-  .phone { width: 100%; max-width: 300px; aspect-ratio: 9 / 19.3; border-radius: 46px; background: #050506; padding: 9px;
-           box-shadow: 0 0 0 1px rgba(20,19,23,.14), 0 50px 70px -50px rgba(20,19,23,.55); }
-  .screen { position: relative; height: 100%; border-radius: 38px; overflow: hidden; background: #111114; color: #F4F3F7;
-            font-size: 11.5px; line-height: 1.4; padding: 46px 15px 15px; }
-  .screen::before { content: ""; position: absolute; top: 10px; left: 50%; width: 30%; height: 22px; transform: translateX(-50%); background: #000; border-radius: 99px; }
-  .screen h4 { margin: 4px 0 2px; font-size: 19px; font-weight: 750; font-stretch: 118%; letter-spacing: -.03em; }
-  .screen .sub { color: #A19AAE; margin: 0 0 12px; }
-  .screen .row { display: flex; justify-content: space-between; align-items: center; background: #1B191F; border-radius: 13px; padding: 10px 11px; margin-bottom: 7px; }
-  .screen .row b { font-weight: 650; }
-  .screen .row small { display: block; color: #A19AAE; font-size: 10px; }
-  .screen .pill { font-stretch: 112%; font-variant-numeric: tabular-nums; font-weight: 700; background: #25212B; border-radius: 9px; padding: 5px 8px; }
-  .screen .cta { margin-top: 12px; background: #8B5CF6; color: #fff; text-align: center; font-weight: 700; border-radius: 13px; padding: 11px; }
-  .screen .tk { color: #CBB5FF; font-weight: 800; font-stretch: 118%; font-size: 13px; }
-  .screen .num { font-stretch: 118%; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 36px; letter-spacing: -.04em; line-height: 1; margin-top: 4px; }
-  .screen .up { color: #4ED5AD; font-weight: 700; } .screen .down { color: #E6A2B4; font-weight: 700; }
-  .screen .chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
-  .screen .chips span { background: #25212B; border-radius: 99px; padding: 4px 8px; font-weight: 600; }
-  .screen .rank { display: grid; grid-template-columns: 16px 1fr 50px auto; align-items: center; gap: 7px; background: #1B191F; border-radius: 13px; padding: 9px 11px; margin-bottom: 7px; }
-  .screen .rank .pos { color: #6F6979; font-weight: 800; }
-  .screen .rank.me { box-shadow: inset 0 0 0 1px rgba(167,139,250,.55); }
-  .screen .rank svg { width: 50px; height: 20px; }
-  .screen .rank .v { font-variant-numeric: tabular-nums; font-weight: 700; }
-  .tabs { position: absolute; left: 10px; right: 10px; bottom: 12px; height: 48px; display: grid; grid-template-columns: repeat(4, 1fr); padding: 5px;
-          border-radius: 999px; background: rgba(37,33,43,.9); border: 1px solid rgba(255,255,255,.08); }
-  .tabs span { display: grid; place-items: center; align-content: center; gap: 2px; color: #A19AAE; font-size: 8.5px; font-weight: 600; border-radius: 999px; }
-  .tabs span::before { content: ""; width: 14px; height: 14px; border-radius: 5px; background: currentColor; opacity: .55; }
-  .tabs .on { color: #CBB5FF; background: rgba(255,255,255,.07); } .tabs .on::before { opacity: 1; }
-  .screen .status { position: absolute; top: 15px; left: 28px; right: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 650; }
-  .screen .status .sb { display: flex; gap: 3px; }
-  .screen .status .sb i { width: 13px; height: 7px; border-radius: 2px; background: #F4F3F7; opacity: .9; }
-  .screen .status .sb i:first-child { width: 10px; opacity: .7; }
-  .screen.home { padding-top: 50px; }
-  .screen .appbar { display: flex; align-items: center; gap: 7px; font-weight: 800; font-stretch: 118%; font-size: 13px; margin-bottom: 14px; }
-  .screen .appbar svg { width: 22px; height: 22px; padding: 4px; border-radius: 7px; background: #1B191F; }
-  .screen .muted { color: #A19AAE; }
-  .screen.home .num { font-size: 42px; margin-top: 8px; }
-  .screen .mini { display: block; width: 100%; margin-top: 12px; }
-  .screen .ranges { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: #6F6979; font-weight: 600; font-size: 10.5px; padding: 0 4px; }
-  .screen .ranges .on { background: #25212B; color: #F4F3F7; border-radius: 99px; padding: 3px 9px; }
-  .screen .cta.ghost { background: #25212B; color: #F4F3F7; }
-  .screen .rec { font-size: 9px; font-weight: 700; color: #111114; background: #CBB5FF; border-radius: 99px; padding: 2px 6px; margin-left: 6px; vertical-align: 1px; }
 
   /* ---------- Principles ---------- */
   .principles { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(32px, 6vw, 96px); }
@@ -198,19 +179,28 @@
     .steps li { flex: 0 0 min(76vw, 300px); scroll-snap-align: start; }
   }
   @media (max-width: 960px) {
-    .hero-grid { grid-template-columns: 1fr; }
-    .device { justify-self: center; width: min(80vw, 320px); margin-top: 40px; margin-bottom: -150px; }
-    .chart .gl { width: 300vw; }
+    .m3 { display: none; }
   }
   @media (max-width: 720px) {
     .bar nav a { margin-left: 18px; font-size: 14px; }
     .bar nav a.wide-only { display: none; }
-    .copy p { margin: 20px 0 28px; }
-    .tag.end { right: 12px; }
+    .intro { text-align: left; }
+    .intro h1 { margin: 0; }
+    .intro p { margin: 20px 0 28px; }
+    .intro .actions { justify-content: flex-start; }
+    .stage { height: 600px; margin-top: 40px; }
+    .stage { --ph: min(66vw, 290px); }
+    .tag { display: none; }
+    .moment { font-size: 12.5px; padding: 9px 12px 9px 9px; gap: 9px; border-radius: 15px; }
+    .moment .ic { width: 30px; height: 30px; border-radius: 9px; }
+    .m1 { right: auto; left: 10px; top: 40%; } .m2 { left: auto; right: 10px; top: 9%; }
+    .tag.start { top: calc(var(--y0) + 10px); }
+    .tag b { font-size: 20px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .chart svg { animation: none; clip-path: none; }
-    .pt.end, .tag.end { animation: none; opacity: 1; }
+    .stage .line { animation: none; clip-path: none; }
+    .pt.end, .tag.end, .moment, .phone-wrap { animation: none; opacity: 1; transform: none; }
+    .phone-wrap { transform: translateX(-50%); }
   }
 </style>
 </head>
@@ -224,48 +214,45 @@
     </a>
     <nav aria-label="Site"><a class="wide-only" href="#how">How it works</a><a href="/support">Support</a></nav>
   </div>
-  <div class="wrap hero-grid">
-    <div class="copy">
-      <h1>Your strength, as an index.</h1>
-      <p>Log one top set per exercise. GYSE turns your lifts into one line that starts at 100 and climbs as you get stronger.</p>
-      <div class="actions">
-        <a class="btn" href="#try">Try it with a set</a>
-        <span class="quiet">Coming soon to iPhone</span>
-      </div>
-      <div class="chart" aria-label="Example index: from 100.00 on day one to a new high of 112.40 in week 14">
-        <div class="gl" style="top:22.2%"><span class="fig">110</span></div>
-        <div class="gl" style="top:50%"><span class="fig">105</span></div>
-        <div class="gl base" style="top:77.8%"></div>
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path class="index-line" d="M1 77.8 L8.46 74.4 L15.92 67.8 L23.38 70.6 L30.85 60 L38.31 55.6 L45.77 49.4 L53.23 51.7 L60.69 39.4 L68.15 35.6 L75.62 26.7 L83.08 28.9 L90.54 17.2 L98 8.9"/>
-        </svg>
-        <i class="pt" style="left:1%;top:77.8%" aria-hidden="true"></i>
-        <i class="pt end" style="left:98%;top:8.9%" aria-hidden="true"></i>
-        <div class="tag start" aria-hidden="true"><b class="fig">100.00</b><span>Day one</span></div>
-        <div class="tag end" aria-hidden="true"><b class="fig">112.40</b><span>New high, week 14</span></div>
-      </div>
+
+  <div class="wrap intro">
+    <h1>Your strength, as an index.</h1>
+    <p>Log one top set per exercise. GYSE turns your lifts into one line that starts at 100 and climbs as you get stronger.</p>
+    <div class="actions">
+      <a class="btn" href="#try">Try it with a set</a>
+      <span class="quiet">Coming soon to iPhone</span>
+    </div>
+  </div>
+
+  <!-- Values 96–114 map to the stage height: 100 sits at --y0, the new high at --y1. -->
+  <div class="stage" style="--y0:78%; --y1:16%" aria-label="Example index: from 100.00 on day one to a new high of 117.32 in week 15">
+    <div class="gl" style="top:34%"><span class="fig">110</span></div>
+    <div class="gl" style="top:56%"><span class="fig">105</span></div>
+    <div class="gl base" style="top:78%"></div>
+    <svg class="line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path class="index-glow" d="M2 78 L7 76.4 L12 72.3 L17 74.5 L22 68 L27 66.2 L32 61.5 L37 63.3 L42 56.8 L47 55 L52 49.5 L57 51.2 L62 44.6 L67 42.2 L72 36.4 L77 38 L82 30.1 L87 27 L92 22.5 L97 16"/>
+      <path class="index-line" d="M2 78 L7 76.4 L12 72.3 L17 74.5 L22 68 L27 66.2 L32 61.5 L37 63.3 L42 56.8 L47 55 L52 49.5 L57 51.2 L62 44.6 L67 42.2 L72 36.4 L77 38 L82 30.1 L87 27 L92 22.5 L97 16"/>
+    </svg>
+    <i class="pt" style="left:2%; top:78%" aria-hidden="true"></i>
+    <i class="pt end" style="left:97%; top:16%" aria-hidden="true"></i>
+    <div class="tag start" aria-hidden="true"><b class="fig">100.00</b><span>Day one</span></div>
+    <div class="tag end" aria-hidden="true"><b class="fig">117.32</b><span>New high, week 15</span></div>
+
+    <div class="phone-wrap" aria-hidden="true">
+      <div class="real"><img src="/assets/screens/index.webp" alt="" width="780" height="1695" fetchpriority="high"></div>
     </div>
 
-    <div class="device" aria-hidden="true">
-      <div class="phone"><div class="screen home">
-        <div class="status"><span>9:41</span><span class="sb"><i></i><i></i><i></i></span></div>
-        <div class="appbar"><svg viewBox="0 0 1024 1024" fill="none" stroke="#A78BFA" stroke-width="90" stroke-linecap="round" stroke-linejoin="round"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>GYSE</div>
-        <span class="tk">$ALEX</span>
-        <div class="muted">Strength index</div>
-        <div class="num">112.40</div>
-        <div class="up">▲ 2.9% today</div>
-        <svg class="mini" viewBox="0 0 300 120" aria-hidden="true">
-          <defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity=".32"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient></defs>
-          <line x1="0" x2="300" y1="104" y2="104" stroke="#6F6979" stroke-opacity=".6" stroke-dasharray="2 5"/>
-          <path d="M0 104 L23 99 L46 90 L69 94 L92 80 L115 74 L138 66 L161 69 L184 53 L207 48 L230 36 L253 39 L276 23 L300 12 L300 120 L0 120Z" fill="url(#hf)"/>
-          <path d="M0 104 L23 99 L46 90 L69 94 L92 80 L115 74 L138 66 L161 69 L184 53 L207 48 L230 36 L253 39 L276 23 L300 12" fill="none" stroke="#A78BFA" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="300" cy="12" r="4.5" fill="#A78BFA"/>
-        </svg>
-        <div class="ranges"><span>1M</span><span>3M</span><span>6M</span><span>1Y</span><span class="on">All</span></div>
-        <div class="cta">+ Log today's top sets</div>
-        <div class="row"><span><b>5 sessions</b><small>in the last 4 weeks</small></span><span class="pill up">+2.9%</span></div>
-        <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
-      </div></div>
+    <div class="moment m1" aria-hidden="true">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg></span>
+      <span><b>New record</b>Bench press, 87.5 kg × 6</span>
+    </div>
+    <div class="moment m2" aria-hidden="true">
+      <span class="ic">$</span>
+      <span><b>Closed at 117.32</b><span class="up">+17.3%</span> since day one</span>
+    </div>
+    <div class="moment m3" aria-hidden="true">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><path d="M16 5.5a3 3 0 010 5.8M18.5 14.6c1.2.7 1.9 2.2 2.2 4.4"/></svg></span>
+      <span><b>$MINA is watching you</b>Added you to their watchlist</span>
     </div>
   </div>
 </header>
@@ -328,50 +315,19 @@
       </div>
       <ol class="steps">
         <li>
-          <div class="phone" aria-hidden="true"><div class="screen">
-            <h4>Make today count.</h4>
-            <p class="sub">One top set per exercise.</p>
-            <div class="row"><span><b>Bench press</b><small>Last: 85 kg × 5</small></span><span class="pill">87.5 × 5</span></div>
-            <div class="row"><span><b>Back squat</b><small>Last: 120 kg × 5</small></span><span class="pill">122.5 × 5</span></div>
-            <div class="row"><span><b>Lat pulldown</b><small>Last: 70 kg × 8</small></span><span class="pill">70 × 9</span></div>
-            <div class="row"><span><b>Lateral raise</b><small>Last: 12 kg × 10 per hand</small></span><span class="pill">12 × 12</span></div>
-            <div class="cta">Save 4 top sets</div>
-            <div class="tabs"><span>Index</span><span class="on">Log</span><span>Watchlist</span><span>You</span></div>
-          </div></div>
+          <div class="real shot"><img src="/assets/screens/log.webp" alt="The Log screen: one top set per exercise, with last time and the next target." width="780" height="1695" loading="lazy"></div>
           <h3><span class="n fig">1</span>Log your top set</h3>
           <p>One heaviest set per exercise. GYSE remembers last time and suggests the next target to beat.</p>
         </li>
         <li>
-          <div class="phone" aria-hidden="true"><div class="screen">
-            <h4>Thursday close</h4>
-            <p class="sub">3 top sets, 1 new record.</p>
-            <div class="num up">+2.9%</div>
-            <div class="muted" style="margin-top:4px">$ALEX closed at 112.40</div>
-            <div style="margin-top:14px">
-              <div class="row"><span><b>Bench press</b><span class="rec">Record</span><small>87.5 kg × 5</small></span><span class="pill up">+2.9%</span></div>
-              <div class="row"><span><b>Back squat</b><small>122.5 kg × 5</small></span><span class="pill up">+2.1%</span></div>
-              <div class="row"><span><b>Lat pulldown</b><small>70 kg × 9</small></span><span class="pill up">+2.8%</span></div>
-            </div>
-            <div class="chips"><span>Chest <b class="up">+8.1%</b></span><span>Back <b class="up">+11.6%</b></span><span>Legs <b class="up">+15.2%</b></span></div>
-            <div class="cta ghost">Share the close</div>
-            <div class="tabs"><span class="on">Index</span><span>Log</span><span>Watchlist</span><span>You</span></div>
-          </div></div>
+          <div class="real shot"><img src="/assets/screens/sessions.webp" alt="The Sessions screen: each training day with its index close." width="780" height="1695" loading="lazy"></div>
           <h3><span class="n fig">2</span>Your index closes the day</h3>
           <p>Each exercise feeds its sector, and the sectors blend into one line that began at 100. Miss a week and a market holiday keeps your run alive.</p>
         </li>
         <li>
-          <div class="phone" aria-hidden="true"><div class="screen">
-            <h4>Watchlist</h4>
-            <p class="sub">Friends, ranked by index.</p>
-            <div class="rank"><span class="pos">1</span><span><b>$MINA</b><br><small style="color:#A19AAE">Mina</small></span><svg viewBox="0 0 50 20"><path d="M0 16 L9 14 L18 15 L27 10 L36 8 L44 5 L50 3" fill="none" stroke="#4ED5AD" stroke-width="1.8"/></svg><span class="v">118.2</span></div>
-            <div class="rank me"><span class="pos">2</span><span><b>$ALEX</b><br><small style="color:#A19AAE">You</small></span><svg viewBox="0 0 50 20"><path d="M0 17 L9 15 L18 16 L27 12 L36 11 L44 6 L50 4" fill="none" stroke="#A78BFA" stroke-width="1.8"/></svg><span class="v">112.4</span></div>
-            <div class="rank"><span class="pos">3</span><span><b>$TOMS</b><br><small style="color:#A19AAE">Tomás</small></span><svg viewBox="0 0 50 20"><path d="M0 11 L9 12 L18 9 L27 11 L36 10 L44 12 L50 11" fill="none" stroke="#E6A2B4" stroke-width="1.8"/></svg><span class="v">104.9</span></div>
-            <div class="rank"><span class="pos">4</span><span><b>$ELLE</b><br><small style="color:#A19AAE">Elle</small></span><svg viewBox="0 0 50 20"><path d="M0 15 L9 14 L18 13 L27 14 L36 11 L44 11 L50 9" fill="none" stroke="#4ED5AD" stroke-width="1.8"/></svg><span class="v">101.3</span></div>
-            <div class="row" style="margin-top:10px"><span><b>Head to head</b><small>$ALEX vs $MINA this month</small></span><span class="pill">−5.8</span></div>
-            <div class="tabs"><span>Index</span><span>Log</span><span class="on">Watchlist</span><span>You</span></div>
-          </div></div>
-          <h3><span class="n fig">3</span>Follow friends by ticker</h3>
-          <p>Claim a ticker of 1 to 8 letters. Friends add you to their watchlist, and you can go head to head on any month.</p>
+          <div class="real shot"><img src="/assets/screens/week.webp" alt="A weekly story card showing the index and the week's sessions." width="780" height="1695" loading="lazy"></div>
+          <h3><span class="n fig">3</span>Share it, follow friends</h3>
+          <p>Post your week as a story card. Claim a ticker of 1 to 8 letters, and friends follow your line on their watchlist.</p>
         </li>
       </ol>
     </div>
