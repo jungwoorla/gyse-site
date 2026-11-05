@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["U249JPKA79.app.gyse"],
+        "components": [
+          { "/": "/u/*", "comment": "Invite and profile links open the profile in GYSE" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["U249JPKA79.app.gyse"]
+  }
+}
