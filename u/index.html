@@ -11,40 +11,48 @@
 <meta property="og:description" content="I track my strength as an index. Follow my line on GYSE.">
 <meta property="og:image" content="https://gyse.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#F1F1F3">
+<meta name="theme-color" content="#111114">
+<meta name="color-scheme" content="dark">
 <style>
-  @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
-               font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
-  :root { --chalk:#F1F1F3; --ink:#141317; --slate:#5F5C68; --rule:rgba(20,19,23,.12); --violet:#6C47F0; --violet-ink:#5734D9; }
+  /* Same tokens as the homepage: the app's charcoal and purple. */
+  @font-face { font-family: "Instrument Sans"; src: url(/assets/fonts/instrument-sans-var.woff2) format("woff2"); font-weight: 400 700; font-display: swap; }
+  @font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+  :root { color-scheme: dark; --bg:#111114; --text:#F5F4F7; --body:#B1ABBD; --muted:#8F899B; --line:rgba(255,255,255,.1); --btn:#7C4DF0; --violet:#A78BFA; --lilac:#CBB5FF; }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100svh; background: var(--chalk); color: var(--ink);
-         font: 17px/1.6 "Archivo", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
+  html { background: var(--bg); }
+  body { margin: 0; min-height: 100svh; color: var(--text); -webkit-font-smoothing: antialiased;
+         background: radial-gradient(90% 50% at 50% 30%, rgba(139,92,246,.18), transparent 70%), var(--bg);
+         font: 17px/1.6 "Instrument Sans", -apple-system, system-ui, sans-serif; }
+  ::selection { background: rgba(139,92,246,.5); color: #fff; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 6px; }
   main { max-width: 480px; margin: 0 auto; padding: 28px 22px 56px; }
-  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
-  .brand svg { width: 24px; height: 24px; }
-  .line { display: block; width: 100%; height: auto; margin: 56px 0 28px; overflow: visible; }
-  .ticker { font-stretch: 72%; font-weight: 500; font-size: clamp(56px, 17vw, 84px); line-height: 1; letter-spacing: -.01em; margin: 0; word-break: break-all; }
-  p { color: var(--slate); margin: 14px 0 0; }
-  .btn { display: flex; align-items: center; justify-content: center; min-height: 54px; border-radius: 999px; text-decoration: none; font-weight: 600; margin-top: 12px; }
-  .primary { background: var(--violet); color: #fff; margin-top: 32px; }
-  .primary:hover { background: var(--violet-ink); }
-  .secondary { border: 1px solid var(--rule); color: var(--ink); }
-  .note { font-size: 14px; margin-top: 28px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 600; font-size: 18px; letter-spacing: .01em; }
+  .brand svg { width: 28px; height: 28px; }
+  .line { display: block; width: 100%; height: auto; margin: 64px 0 32px; overflow: visible; }
+  .ticker { font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 700; color: var(--lilac); font-size: clamp(40px, 13vw, 64px); line-height: 1.02; letter-spacing: -.01em; margin: 0; word-break: break-all; }
+  p { color: var(--body); margin: 16px 0 0; }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 54px; border-radius: 999px; text-decoration: none; font-weight: 600; margin-top: 12px;
+         transition: transform 160ms cubic-bezier(.23,1,.32,1), background-color 160ms ease; }
+  .btn:active { transform: scale(.97); }
+  .primary { background: var(--btn); color: #fff; margin-top: 36px; box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 30px -10px rgba(139,92,246,.7); }
+  .secondary { background: rgba(255,255,255,.06); color: var(--text); }
+  @media (hover: hover) and (pointer: fine) { .primary:hover { background: #8656F4; } .secondary:hover { background: rgba(255,255,255,.1); } }
+  .note { font-size: 14px; margin-top: 28px; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
 </style>
 </head>
 <body>
 <main>
   <a class="brand" href="/" aria-label="GYSE home">
-    <svg viewBox="0 0 1024 1024" fill="none" stroke="#6C47F0" stroke-width="84" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M224 720 L418 482 L580 600 L798 304 M642 304 L798 304 L798 460"/></svg>
+    <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#1F1C24"/><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
     GYSE
   </a>
   <svg class="line" viewBox="0 0 436 140" aria-hidden="true">
-    <line x1="0" x2="436" y1="124" y2="124" stroke="rgba(20,19,23,.28)" stroke-dasharray="3 5"/>
-    <line x1="0" x2="436" y1="72" y2="72" stroke="rgba(20,19,23,.1)"/>
-    <path d="M4 124 L36 119 L68 109 L100 113 L132 98 L164 92 L196 83 L228 86 L260 69 L292 63 L324 50 L356 53 L388 36 L428 14" fill="none" stroke="#6C47F0" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="4" cy="124" r="4" fill="#F1F1F3" stroke="#6C47F0" stroke-width="2"/>
-    <circle cx="428" cy="14" r="6" fill="#6C47F0"/>
+    <line x1="0" x2="436" y1="124" y2="124" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 5"/>
+    <line x1="0" x2="436" y1="72" y2="72" stroke="rgba(255,255,255,.07)"/>
+    <path d="M4 124 L36 119 L68 109 L100 113 L132 98 L164 92 L196 83 L228 86 L260 69 L292 63 L324 50 L356 53 L388 36 L428 14" fill="none" stroke="#A78BFA" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="4" cy="124" r="4" fill="#111114" stroke="#A78BFA" stroke-width="2"/>
+    <circle cx="428" cy="14" r="10" fill="#8B5CF6" fill-opacity=".2"/><circle cx="428" cy="14" r="6" fill="#8B5CF6"/>
   </svg>
   <h1 class="ticker" id="ticker">GYSE</h1>
   <p id="lead">Strength, as an index. Every top set you log moves your own line.</p>
