@@ -1,52 +1,76 @@
-/* Shared style for gyse.app's reading pages (privacy, terms, support). Same tokens as the homepage's chalk sections. */
-@font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2-variations"), url(/assets/fonts/archivo-var.woff2) format("woff2");
-             font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
-:root { --chalk:#F1F1F3; --paper:#FFFFFF; --ink:#141317; --slate:#5F5C68; --rule:rgba(20,19,23,.12); --violet:#6C47F0; --violet-ink:#5734D9; }
+/* Shared style for gyse.app's reading pages (privacy, terms, support, and the Korean versions).
+   Same tokens as the homepage: the app's charcoal and purple, Instrument Sans for words, Archivo Expanded for the wordmark. */
+@font-face { font-family: "Instrument Sans"; src: url(/assets/fonts/instrument-sans-var.woff2) format("woff2"); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: "Archivo"; src: url(/assets/fonts/archivo-var.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+:root { color-scheme: dark;
+        --bg: #111114; --card: rgba(255,255,255,.04); --line: rgba(255,255,255,.08);
+        --text: #F5F4F7; --body: #B1ABBD; --muted: #8F899B; --violet: #A78BFA; --lilac: #CBB5FF; --purple: #8B5CF6;
+        --sans: "Instrument Sans", -apple-system, system-ui, sans-serif; --gutter: clamp(20px, 5vw, 72px); }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; }
-body { margin: 0; background: var(--chalk); color: var(--ink); font-family: "Archivo", -apple-system, system-ui, sans-serif;
-       font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
-.top { max-width: 1280px; margin: 0 auto; padding: 28px clamp(20px, 4.4vw, 64px) 0; display: flex; justify-content: space-between; align-items: center; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 650; font-size: 18px; letter-spacing: .01em; }
-.brand svg { width: 24px; height: 24px; }
-.brand svg path { stroke: var(--violet); }
-.top nav a { color: var(--ink); opacity: .7; text-decoration: none; margin-left: 24px; font-size: 15px; }
-.top nav a:hover, .top nav a[aria-current] { opacity: 1; }
-main { max-width: 760px; margin: 0 auto; padding: clamp(56px, 8vw, 104px) clamp(20px, 4vw, 32px) 96px; }
-h1 { font-weight: 560; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(40px, 5.6vw, 64px); margin: 0; text-wrap: balance; }
-.meta { color: var(--slate); font-size: 15px; margin: 18px 0 0; }
-.lede { font-size: 19px; color: var(--ink); margin: 32px 0 0; }
-h2 { font-weight: 600; letter-spacing: -.02em; line-height: 1.2; font-size: 23px; margin: 56px 0 12px; }
-h3 { font-weight: 600; font-size: 17px; margin: 26px 0 6px; }
-p, li, td { color: var(--slate); }
-strong { color: var(--ink); font-weight: 600; }
-a { color: var(--violet-ink); text-underline-offset: 3px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; background: var(--bg); scrollbar-color: #2A2730 var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--body); font-family: var(--sans); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: rgba(139,92,246,.5); color: #fff; }
+:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 6px; }
+
+/* Header, as on the homepage */
+.top { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); height: 76px; display: flex; justify-content: space-between; align-items: center; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: "Archivo", var(--sans); font-stretch: 125%; font-weight: 600; font-size: 18px; letter-spacing: .01em; }
+.brand svg { width: 28px; height: 28px; }
+.top nav { display: flex; gap: 28px; }
+.top nav a { color: var(--body); text-decoration: none; font-size: 15px; transition: color 150ms ease; }
+.top nav a[aria-current] { color: var(--text); }
+@media (hover: hover) and (pointer: fine) { .top nav a:hover { color: var(--text); } }
+
+/* Reading column */
+main { max-width: 740px; margin: 0 auto; padding: clamp(64px, 10vh, 120px) clamp(20px, 4vw, 32px) clamp(96px, 12vh, 140px); }
+h1, h2, h3 { color: var(--text); font-weight: 500; text-wrap: balance; }
+h1 { letter-spacing: -.045em; line-height: .98; font-size: clamp(44px, 6.4vw, 76px); margin: 0; }
+.meta { color: var(--muted); font-size: 15px; margin: 22px 0 0; }
+.lang { color: var(--muted); font-size: 15px; margin-top: 8px; }
+.lang a { color: var(--text); }
+.lede { font-size: 20px; line-height: 1.6; color: var(--text); margin: 40px 0 0; }
+h2 { letter-spacing: -.025em; line-height: 1.2; font-size: clamp(24px, 2.4vw, 28px); margin: 72px 0 14px; }
+h3 { font-size: 18px; letter-spacing: -.01em; margin: 30px 0 6px; }
+p, li, td { color: var(--body); }
+strong { color: var(--text); font-weight: 600; }
+a { color: var(--lilac); text-decoration-color: rgba(203,181,255,.4); text-underline-offset: 3px; transition: text-decoration-color 150ms ease; }
+@media (hover: hover) and (pointer: fine) { a:hover { text-decoration-color: currentColor; } }
 ul, ol { padding-left: 22px; }
-li { margin: 6px 0; }
-code { font-family: inherit; font-weight: 650; color: var(--ink); }
-.toc { background: var(--paper); border: 1px solid var(--rule); border-radius: 18px; padding: 18px 24px; margin: 36px 0 0; }
-.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
-.toc li { margin: 0; padding: 4px 0; break-inside: avoid; }
-.toc a { color: var(--ink); text-decoration: none; }
-.toc a:hover { color: var(--violet-ink); }
-.note { background: var(--paper); border: 1px solid var(--rule); border-left: 3px solid var(--violet); border-radius: 4px 16px 16px 4px; padding: 14px 18px; margin: 22px 0; }
-.note p { margin: 0; }
-.table { overflow-x: auto; margin: 16px 0; border-radius: 16px; background: var(--paper); border: 1px solid var(--rule); }
+li { margin: 8px 0; }
+li::marker { color: var(--muted); }
+code { font-family: inherit; font-weight: 600; color: var(--text); }
+
+/* Contents, notes and tables sit on soft cards */
+.toc { background: var(--card); box-shadow: inset 0 0 0 1px var(--line); border-radius: 24px; padding: 22px 28px; margin: 44px 0 0; }
+.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 36px; }
+.toc li { margin: 0; padding: 5px 0; break-inside: avoid; }
+.toc a { color: var(--text); text-decoration: none; transition: color 150ms ease; }
+@media (hover: hover) and (pointer: fine) { .toc a:hover { color: var(--lilac); } }
+.note { background: rgba(139,92,246,.1); box-shadow: inset 0 0 0 1px rgba(167,139,250,.18); border-radius: 20px; padding: 16px 20px; margin: 24px 0; }
+.note p { margin: 0; color: var(--text); }
+.table { overflow-x: auto; margin: 18px 0; border-radius: 20px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
 table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 560px; }
-th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
-th { color: var(--ink); font-weight: 600; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+th { color: var(--text); font-weight: 600; font-size: 14px; }
 tr:last-child td { border-bottom: 0; }
-.lang { color: var(--slate); font-size: 15px; margin-top: 14px; }
-.lang a { color: var(--ink); }
-footer { border-top: 1px solid var(--rule); color: var(--slate); font-size: 14px; }
-footer .in { max-width: 1280px; margin: 0 auto; padding: 24px clamp(20px, 4.4vw, 64px) 36px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
-footer a { color: var(--slate); text-decoration: none; margin-left: 22px; }
-footer a:first-child { margin-left: 0; }
-footer a:hover { color: var(--ink); }
-@media (max-width: 640px) { .toc ol { columns: 1; } .top nav a { margin-left: 16px; font-size: 14px; } }
-/* Korean pages: Archivo has no Hangul, so Hangul falls through to the system Korean face. */
-:lang(ko) body, body:lang(ko) { font-family: "Archivo", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
-                                word-break: keep-all; line-height: 1.75; }
+
+/* Footer, as on the homepage */
+footer { color: var(--muted); font-size: 14px; }
+footer .in { max-width: 1200px; margin: 0 auto; padding: 28px var(--gutter) max(36px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line);
+             display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
+footer .in > span:last-child { display: flex; gap: 24px; }
+footer a { color: var(--muted); text-decoration: none; transition: color 150ms ease; }
+@media (hover: hover) and (pointer: fine) { footer a:hover { color: var(--text); } }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .toc { padding: 18px 22px; }
+  .toc ol { columns: 1; }
+  .top nav { gap: 18px; }
+  .top nav a { font-size: 14px; }
+}
+/* Korean pages: neither face has Hangul, so Hangul falls through to the system Korean face. */
+:lang(ko) body, body:lang(ko) { font-family: "Instrument Sans", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+                                word-break: keep-all; line-height: 1.8; }
 :lang(ko) h1 { letter-spacing: -.02em; line-height: 1.15; }
 :lang(ko) h2 { letter-spacing: -.01em; }
