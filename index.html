@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-42qafsxMJDIoUW7Kseked4Ibqt0zl4jua5E/A25DmqM='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-tw8yBwX6WYNAfnidTIgdaD5599y2nL7TLZfDXn5FGR0='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE turns the top sets you log into one personal strength index that starts at 100 and rises as you get stronger. Friends follow your ticker on their watchlist. For iPhone.">
@@ -94,7 +94,16 @@ p { margin: 0; }
 .soon { display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 12px; border-radius: 999px; background: rgba(255,255,255,.05); color: var(--body); font-size: 14px; font-weight: 500; }
 .soon i { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 0 3px rgba(167,139,250,.18); }
 .hero .lead { max-width: 30em; }
-.hero .btn { margin-top: 6px; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 6px; }
+/* App Store badge: "coming soon" until assets/store.json has the app's link, then a download link. */
+.store { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 22px 0 18px; border-radius: 999px; white-space: nowrap;
+         background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: var(--text); font-size: 16px; font-weight: 500; text-decoration: none; }
+.store svg { width: 16px; height: 22px; flex: none; color: var(--lilac); }
+.store .soft { color: var(--body); }
+.btn svg { width: 16px; height: 22px; margin-right: 10px; flex: none; }
+.btn.quiet { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+@media (hover: hover) and (pointer: fine) { .btn.quiet:hover { background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); } }
+a.bar-note { text-decoration: none; color: var(--text); }
 .stage { position: relative; height: clamp(500px, 62vw, 640px); margin-top: clamp(56px, 8vh, 88px); }
 .stage .glow { position: absolute; left: 50%; top: 40px; width: min(1100px, 130vw); height: 760px; transform: translateX(-50%); z-index: -1;
                background: radial-gradient(closest-side, rgba(139,92,246,.30), rgba(139,92,246,.08) 55%, transparent); }
@@ -262,7 +271,7 @@ p { margin: 0; }
 .closer h2 { font-size: clamp(52px, 8vw, 112px); line-height: .95; letter-spacing: -.05em; }
 .closer h2 .num { font-weight: 500; letter-spacing: -.04em; }
 .closer .lead { margin-top: 24px; }
-.closer .btn { margin-top: 36px; }
+.closer .actions { margin-top: 36px; }
 .closer .mail { margin-top: 22px; color: var(--muted); font-size: 15px; }
 .foot-site { color: var(--muted); font-size: 14px; overflow: hidden; }
 .mega { font-size: 24.5vw; font-weight: 700; letter-spacing: -.045em; line-height: .74; text-align: center; margin: 5vw 0 -3.6vw; white-space: nowrap; user-select: none;
@@ -291,7 +300,8 @@ p { margin: 0; }
   .chapter { margin: 0 8px; border-radius: 30px; }
   .dock { left: 16px; right: 16px; transform: translateY(18px); justify-content: space-between; }
   .dock.on { transform: none; }
-  .hero .btn { width: 100%; }
+  .actions { width: 100%; }
+  .actions .btn, .actions .store { width: 100%; }
   .stage { height: 470px; }
   .controls { gap: 10px; }
   .stepper button { width: 46px; }
@@ -316,7 +326,7 @@ p { margin: 0; }
       <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#1F1C24"/><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
       GYSE
     </a>
-    <p class="bar-note"><i aria-hidden="true"></i>Coming soon to iPhone</p>
+    <p class="bar-note" data-store="note"><i aria-hidden="true"></i>Coming soon to iPhone</p>
     <nav aria-label="Site"><a class="wide" href="#how">How it works</a><a href="#friends">Friends</a><a href="/support">Support</a></nav>
   </div>
 </header>
@@ -326,7 +336,10 @@ p { margin: 0; }
     <div class="wrap hero-copy">
       <h1 id="hero-h">Your strength,<br>as an index.</h1>
       <p class="lead">Log one top set per exercise. GYSE turns your lifts into one line that starts at 100 and climbs as you get stronger.</p>
-      <a class="btn" href="#try">Try it with a set</a>
+      <div class="actions">
+        <a class="btn" href="#try" data-try>Try it with a set</a>
+        <span class="store" data-store="badge"><svg viewBox="0 0 18 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1.8" y="1" width="14.4" height="22" rx="4"/><rect x="6.2" y="3.4" width="5.6" height="1.7" rx=".85" fill="currentColor" stroke="none"/></svg><span><span class="soft">Coming soon on the</span> App Store</span></span>
+      </div>
     </div>
     <div class="stage">
       <div class="glow" aria-hidden="true"></div>
@@ -482,8 +495,11 @@ p { margin: 0; }
   <section class="closer" aria-labelledby="cl-h">
     <div class="wrap center">
       <h2 id="cl-h">Start at <span class="num">100</span>.</h2>
-      <p class="lead">GYSE is coming soon to the App Store for iPhone.</p>
-      <a class="btn" href="#try">Try it with a set</a>
+      <p class="lead" data-store="line">GYSE is coming soon to the App Store for iPhone.</p>
+      <div class="actions">
+        <a class="btn" href="#try" data-try>Try it with a set</a>
+        <span class="store" data-store="badge"><svg viewBox="0 0 18 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1.8" y="1" width="14.4" height="22" rx="4"/><rect x="6.2" y="3.4" width="5.6" height="1.7" rx=".85" fill="currentColor" stroke="none"/></svg><span><span class="soft">Coming soon on the</span> App Store</span></span>
+      </div>
       <p class="mail">Questions or press: <a class="link" href="mailto:support@gyse.app">support@gyse.app</a></p>
     </div>
   </section>
@@ -491,7 +507,7 @@ p { margin: 0; }
 
 <div class="dock" id="dock" aria-hidden="true">
   <span class="dock-b"><svg viewBox="0 0 28 28"><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>GYSE</span>
-  <a class="btn sm" href="#try" tabindex="-1">Try it with a set</a>
+  <a class="btn sm" href="#try" tabindex="-1" data-store="dock">Try it with a set</a>
 </div>
 
 <footer class="foot-site">
@@ -579,7 +595,7 @@ p { margin: 0; }
   /* ---------- Dock: shows once the hero's button is gone, hides near the page's own buttons ---------- */
   {
     const dock = $('dock'), link = dock.querySelector('a'), seen = new Map();
-    const targets = [document.querySelector('.hero .btn'), $('try'), document.querySelector('.closer')];
+    const targets = [document.querySelector('.hero .actions'), $('try'), document.querySelector('.closer')];
     const update = () => {
       const show = !seen.get(targets[0]) && !seen.get(targets[1]) && !seen.get(targets[2]) && scrollY > 200;
       dock.classList.toggle('on', show); dock.setAttribute('aria-hidden', !show); link.tabIndex = show ? 0 : -1;
@@ -697,6 +713,26 @@ p { margin: 0; }
   setMode('idx', false);
   addEventListener('resize', () => cur && draw(cur));
   if (document.fonts) document.fonts.ready.then(() => cur && draw(cur));
+
+  /* ---------- App Store: paste the app's link into /assets/store.json and every badge becomes a download link ---------- */
+  fetch('/assets/store.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(cfg => {
+    const url = cfg && cfg.appStoreUrl;
+    if (typeof url !== 'string' || !/^https:\/\/apps\.apple\.com\/[\w\-./?=&%]+$/.test(url)) return;
+    const phone = document.querySelector('.store svg').outerHTML;
+    document.querySelectorAll('[data-store="badge"]').forEach(el => {
+      const a = document.createElement('a');
+      a.className = 'btn'; a.href = url; a.innerHTML = phone + 'Download on the App Store';
+      el.replaceWith(a);
+    });
+    document.querySelectorAll('[data-try]').forEach(a => a.classList.add('quiet'));
+    document.querySelectorAll('[data-store="note"]').forEach(el => {
+      const a = document.createElement('a');
+      a.className = 'bar-note'; a.href = url; a.innerHTML = '<i aria-hidden="true"></i>Now on the App Store';
+      el.replaceWith(a);
+    });
+    document.querySelectorAll('[data-store="line"]').forEach(el => { el.textContent = 'GYSE is out now on the App Store for iPhone.'; });
+    document.querySelectorAll('[data-store="dock"]').forEach(a => { a.href = url; a.textContent = 'Download on the App Store'; });
+  }).catch(() => {});
 
   /* ---------- Ticker and story card ---------- */
   {
