@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-tw8yBwX6WYNAfnidTIgdaD5599y2nL7TLZfDXn5FGR0='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-YrWudSEcMbwfj53pXkuACH3SV3MqyyHeIWrNMviGSvk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE turns the top sets you log into one personal strength index that starts at 100 and rises as you get stronger. Friends follow your ticker on their watchlist. For iPhone.">
@@ -432,26 +432,26 @@ a.bar-note { text-decoration: none; color: var(--text); }
     <div class="ghost-100 num" aria-hidden="true">100</div>
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="fr-h">Friends start at 100 too.</h2>
-        <p class="lead">$MINA benches 145 kg and you bench 92.5. GYSE measures each of you against your own first day, so the watchlist ranks who's getting stronger.</p>
+        <h2 id="fr-h">No leaderboards. Just you vs. past you.</h2>
+        <p class="lead">$MINA benches 145 kg and you bench 92.5. It doesn't matter. GYSE measures each of you against your own first day, so the only line you're ever racing is your own.</p>
       </div>
       <div class="card h2h" id="h2h-card">
         <div class="top">
-          <span>Head to head</span>
+          <span>You vs. day one</span>
           <div class="seg" id="h2hmode" role="group" aria-label="Compare by">
             <button type="button" data-v="idx" aria-pressed="true">Index</button><button type="button" data-v="kg" aria-pressed="false">Bench press</button>
           </div>
         </div>
         <div class="sides">
           <div class="side me"><span class="tk">$YOU</span><span class="v num fade" id="hv1"></span><span class="c fade" id="hc1"></span></div>
-          <div class="side them"><span class="tk">$MINA</span><span class="v num fade" id="hv2"></span><span class="c fade" id="hc2"></span></div>
+          <div class="side them"><span class="tk">Day one</span><span class="v num fade" id="hv2"></span><span class="c fade" id="hc2"></span></div>
         </div>
         <svg class="c" id="hchart" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-hidden="true"></svg>
         <p class="verdict fade" id="verdict"></p>
       </div>
       <div class="trio">
-        <p><b>Add friends by ticker.</b>Search any ticker and add them to your watchlist.</p>
-        <p><b>Ranked by progress.</b>Everyone's index starts at 100, beginners and powerlifters alike.</p>
+        <p><b>Add friends by ticker.</b>Follow their progress and cheer it on.</p>
+        <p><b>Nobody is ranked.</b>Everyone starts at 100 and is measured only against their own past.</p>
         <p><b>Private when you want.</b>A private profile shows your exercises to friends only.</p>
       </div>
     </div>
@@ -661,11 +661,12 @@ a.bar-note { text-decoration: none; color: var(--text); }
   }
   render();
 
-  /* ---------- Friends: the same race measured two ways ---------- */
+  /* ---------- You vs. day one, measured two ways: the only comparison GYSE makes ---------- */
   const N = 16, card = $('h2h-card'), hsvg = $('hchart');
+  const meIdx = sample(N), meKg = [80, 80, 82.5, 82.5, 82.5, 85, 85, 85, 87.5, 87.5, 87.5, 90, 90, 90, 92.5, 92.5];
   const data = {
-    idx: { me: sample(N), them: [100, 100.4, 101.2, 100.9, 101.6, 102.1, 101.8, 102.4, 102.9, 102.6, 103.1, 103.3, 103.0, 103.4, 103.6, 103.57] },
-    kg:  { me: [80, 80, 82.5, 82.5, 82.5, 85, 85, 85, 87.5, 87.5, 87.5, 90, 90, 90, 92.5, 92.5], them: [140, 140, 140, 142.5, 140, 142.5, 142.5, 142.5, 145, 142.5, 145, 145, 145, 145, 145, 145] },
+    idx: { me: meIdx, them: Array(N).fill(meIdx[0]) },
+    kg:  { me: meKg, them: Array(N).fill(meKg[0]) },
   };
   const ys = m => { const all = [...data[m].me, ...data[m].them], lo = Math.min(...all), hi = Math.max(...all), p = (hi - lo) * .1; const y = v => 228 - (v - lo + p) / (hi - lo + 2 * p) * 216; return { me: data[m].me.map(y), them: data[m].them.map(y) }; };
   let cur = null;
@@ -673,11 +674,11 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const X = i => i / (N - 1) * 1000, me = s.me.map((y, i) => [X(i), y]), th = s.them.map((y, i) => [X(i), y]), pm = smooth(me);
     hsvg.innerHTML = `<defs><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".24"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient></defs>
       <path d="${pm} L1000 240 L0 240 Z" fill="url(#hf)"/>
-      <path d="${smooth(th)}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <path d="${smooth(th)}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.6" stroke-dasharray="5 7" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
       <path d="${pm}" fill="none" stroke="${C.violet}" stroke-width="2.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
     card.querySelectorAll('.hd').forEach(e => e.remove());
     const box = hsvg.getBoundingClientRect(), cb = card.getBoundingClientRect();
-    [[me[N - 1], C.violet], [th[N - 1], '#fff']].forEach(([[x, y], col]) => {
+    [[me[N - 1], C.violet], [th[0], '#fff']].forEach(([[x, y], col]) => {
       const i = document.createElement('i'); i.className = 'hd';
       i.style.cssText = `position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:${col};box-shadow:0 0 0 4px #1C1A20;left:${box.left - cb.left + x / 1000 * box.width}px;top:${box.top - cb.top + y / 240 * box.height}px`;
       card.append(i);
@@ -687,13 +688,14 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const a = data[m].me[N - 1], b = data[m].them[N - 1], kg = v => `${fmtNum(v)}<small>kg</small>`;
     if (m === 'idx') {
       $('hv1').textContent = fmtIdx(a); $('hv2').textContent = fmtIdx(b);
-      [[$('hc1'), a / 100 - 1], [$('hc2'), b / 100 - 1]].forEach(([el, c]) => { el.className = `c fade ${trend(c)}`; el.innerHTML = tri(c) + pct(c); });
-      $('verdict').innerHTML = `$YOU leads by ${fmtIdx(a - b)} points<span>Both indexes started at 100 on day one.</span>`;
+      const c = a / 100 - 1; $('hc1').className = `c fade ${trend(c)}`; $('hc1').innerHTML = tri(c) + pct(c);
+      $('hc2').className = 'c fade flat'; $('hc2').textContent = 'where you began';
+      $('verdict').innerHTML = `${fmtIdx(a - b)} points above day one<span>Everyone starts at 100. The only line you race is your own.</span>`;
     } else {
       $('hv1').innerHTML = kg(a); $('hv2').innerHTML = kg(b);
-      $('hc1').className = 'c fade flat'; $('hc1').textContent = `from ${fmtNum(data.kg.me[0])} kg`;
-      $('hc2').className = 'c fade flat'; $('hc2').textContent = `from ${fmtNum(data.kg.them[0])} kg`;
-      $('verdict').innerHTML = `$MINA benches ${fmtNum(b - a)} kg more<span>Top set on bench press, 5 reps, each week.</span>`;
+      $('hc1').className = 'c fade flat'; $('hc1').textContent = 'this week';
+      $('hc2').className = 'c fade flat'; $('hc2').textContent = 'where you began';
+      $('verdict').innerHTML = `${fmtNum(a - b)} kg more on bench than day one<span>Top set on bench press, 5 reps, each week.</span>`;
     }
   }
   function setMode(m, animate) {
