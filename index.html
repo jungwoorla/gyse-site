@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-YrWudSEcMbwfj53pXkuACH3SV3MqyyHeIWrNMviGSvk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-cHZjpplXxJz83DkUVxTNvMPuVtUQg71VEAUQTfLiwjc='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE turns the top sets you log into one personal strength index that starts at 100 and rises as you get stronger. Friends follow your ticker on their watchlist. For iPhone.">
@@ -74,8 +74,10 @@ p { margin: 0; }
 .seg button { position: relative; border: 0; background: transparent; color: var(--muted); font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: color 150ms ease; }
 @media (hover: hover) and (pointer: fine) { .seg button:hover { color: var(--text); } }
 .seg .lit { position: absolute; inset: 4px; display: flex; pointer-events: none; clip-path: inset(0 100% 0 0 round 999px); }
-.seg .lit span { flex: none; display: grid; place-items: center; font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 999px; background: rgba(255,255,255,.12); color: var(--text); white-space: nowrap; }
+.seg .lit > span { flex: none; display: grid; place-items: center; font-size: 15px; font-weight: 500; padding: 8px 18px; border-radius: 999px; background: rgba(255,255,255,.12); color: var(--text); white-space: nowrap; }
 .seg.ready .lit { transition: clip-path 280ms var(--ease-io); }
+.seg[hidden] { display: none; }
+.seg .lit > span { display: flex; align-items: center; justify-content: center; }
 
 /* ---------- Header ---------- */
 .bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 76px; }
@@ -159,6 +161,56 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .follow .phone { width: 330px; max-width: 100%; }
 .follow .phone img { position: absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); opacity: 0; transition: opacity 420ms ease; }
 .follow .phone img.on { opacity: 1; }
+
+/* Two years on one line: the app's chart (IndexChart.swift) at page size */
+.pro { max-width: 1040px; margin: 0 auto; padding: clamp(20px, 3.2vw, 40px); }
+.pro-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px 32px; flex-wrap: wrap; }
+.pro-sym { display: flex; align-items: baseline; gap: 10px; }
+.pro-sym b { font-family: var(--num); font-stretch: 125%; color: var(--lilac); font-size: 18px; font-weight: 700; }
+.pro-sym span { color: var(--muted); font-size: 14px; }
+.pro-v { font-size: clamp(44px, 5.6vw, 72px); font-weight: 500; letter-spacing: -.04em; line-height: 1; margin-top: 12px; }
+.pro-c { margin-top: 10px; font-size: 15px; font-weight: 500; min-height: 1.5em; }
+.pro-c .when { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.pro-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.pro-tools .row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.plus { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; line-height: 1; padding: 3px 6px; border-radius: 6px; margin-left: 6px; vertical-align: 1px; background: rgba(139,92,246,.24); color: var(--lilac); }
+.chip { display: inline-flex; align-items: center; gap: 7px; border: 0; cursor: pointer; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.05); color: var(--muted); font-size: 14px; font-weight: 500;
+        transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out); }
+.chip i { width: 12px; height: 2px; border-radius: 2px; background: currentColor; }
+.chip[aria-pressed="true"] { background: rgba(255,255,255,.12); color: var(--text); }
+.chip[data-o="sma"][aria-pressed="true"] i { background: rgba(255,255,255,.6); }
+.chip[data-o="ema"][aria-pressed="true"] i { background: #F2C46D; }
+.chip:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .chip:hover { color: var(--text); } }
+.pro-plot { position: relative; height: clamp(260px, 40vh, 380px); margin-top: 26px; touch-action: pan-y; cursor: crosshair; user-select: none; -webkit-user-select: none; }
+.pro-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pro-plot .layer { transition: opacity 160ms ease; }
+.pro-plot.swapping .layer { opacity: 0; }
+.pro-bottom { display: flex; justify-content: center; margin-top: 18px; }
+.pro-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 28px 0 0; padding-top: 18px; border-top: 1px solid var(--line); }
+.pro-stats div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+.pro-stats dt { color: var(--muted); font-size: 14px; }
+.pro-stats dd { margin: 4px 0 0; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; letter-spacing: -.02em; }
+/* Sessions: the app's training grid (HomeView SessionsCard) and weekly run (WeeklyRun), over the same two years */
+.sess { max-width: 1040px; margin: 16px auto 0; padding: clamp(20px, 3.2vw, 40px); }
+.sess-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px 40px; flex-wrap: wrap; }
+.sess-k { color: var(--muted); font-size: 14px; }
+.sess-n { color: var(--body); font-size: 17px; margin-top: 6px; }
+.sess-n b { color: var(--text); font-size: clamp(36px, 4vw, 52px); font-weight: 500; letter-spacing: -.04em; margin-right: 8px; }
+.sess-stats { display: flex; gap: clamp(20px, 3vw, 40px); margin: 0; }
+.sess-stats dt { color: var(--muted); font-size: 14px; }
+.sess-stats dd { margin: 2px 0 0; font-size: clamp(22px, 2.2vw, 28px); font-weight: 500; letter-spacing: -.02em; }
+.sess-stats .up { color: var(--up); }
+.sess-grid { margin-top: 30px; display: grid; grid-auto-flow: column; grid-template-rows: 16px repeat(7, 11px); grid-auto-columns: 11px; gap: 3px; justify-content: end; overflow: hidden; }
+.sess-grid i { border-radius: 3px; background: rgba(255,255,255,.06); }
+.sess-grid i.on { background: #8B5CF6; }
+.sess-grid i.hol { background: rgba(139,92,246,.26); }
+.sess-grid i.fut { background: rgba(255,255,255,.025); }
+.sess-grid i.today { box-shadow: inset 0 0 0 1.3px #CBB5FF; }
+.sess-grid b { font-size: 11px; font-weight: 500; color: var(--muted); white-space: nowrap; line-height: 1; }
+.sess-key { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; color: var(--muted); font-size: 13px; }
+.sess-key i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
+.pro-note { text-align: center; color: var(--muted); font-size: 14px; margin-top: 22px; }
 
 /* Try a set */
 .card { background: linear-gradient(180deg, var(--card-2), var(--card)); border-radius: 32px; box-shadow: inset 0 0 0 1px var(--line), 0 40px 80px -50px rgba(0,0,0,.8); }
@@ -293,6 +345,11 @@ a.bar-note { text-decoration: none; color: var(--text); }
   .trio { grid-template-columns: minmax(0, 1fr); gap: 22px; max-width: 30em; }
 }
 @media (max-width: 640px) {
+  .pro-tools { align-items: flex-start; width: 100%; }
+  .pro-tools .row { justify-content: flex-start; }
+  .pro-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 16px; }
+  .pro-stats div:nth-child(3) { padding-left: 0; border-left: 0; }
+  #prange button, #prange .lit > span { padding: 8px 13px; }
   body { font-size: 17px; }
   .bar nav { gap: 22px; }
   .bar nav .wide, .bar-note { display: none; }
@@ -385,6 +442,60 @@ a.bar-note { text-decoration: none; color: var(--text); }
           <img src="/assets/screens/week-card.webp" width="900" height="1957" alt="" loading="lazy">
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="sec" id="chart" aria-labelledby="ch-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="ch-h">Two years, one line.</h2>
+        <p class="lead">Every session adds a close. Zoom out to see the whole climb, or switch to candles and read each week like a stock chart.</p>
+      </div>
+      <div class="card pro" id="pro">
+        <div class="pro-top">
+          <div aria-live="polite">
+            <div class="pro-sym"><b>$ALEX</b><span>Example account</span></div>
+            <div class="pro-v num" id="pv">151.67</div>
+            <div class="pro-c" id="pc"></div>
+          </div>
+          <div class="pro-tools">
+            <div class="row">
+              <div class="seg" id="pstyle" role="group" aria-label="Chart style"><button type="button" data-v="line" aria-pressed="true">Line</button><button type="button" data-v="candles" aria-pressed="false">Candles<span class="plus">PLUS</span></button></div>
+            </div>
+            <div class="row">
+              <div class="seg" id="pperiod" role="group" aria-label="Candle period" hidden><button type="button" data-v="day" aria-pressed="false">Daily</button><button type="button" data-v="week" aria-pressed="false">Weekly</button><button type="button" data-v="month" aria-pressed="true">Monthly</button></div>
+              <button type="button" class="chip" data-o="sma" aria-pressed="false"><i aria-hidden="true"></i>SMA 10<span class="plus">PLUS</span></button>
+              <button type="button" class="chip" data-o="ema" aria-pressed="false"><i aria-hidden="true"></i>EMA 20<span class="plus">PLUS</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="pro-plot" id="pplot" role="img" aria-label="Example index over two years, from 100 in November 2024 to 151.67 in November 2026"><svg id="psvg"></svg></div>
+        <div class="pro-bottom">
+          <div class="seg" id="prange" role="group" aria-label="Range"><button type="button" data-v="7" aria-pressed="false">1W</button><button type="button" data-v="30" aria-pressed="false">1M</button><button type="button" data-v="91" aria-pressed="false">3M</button><button type="button" data-v="365" aria-pressed="false">1Y</button><button type="button" data-v="0" aria-pressed="true">ALL</button></div>
+        </div>
+        <dl class="pro-stats">
+          <div><dt>Sessions</dt><dd class="num" id="ps1"></dd></div>
+          <div><dt>New highs</dt><dd class="num" id="ps2"></dd></div>
+          <div><dt>Best week</dt><dd class="num" id="ps3"></dd></div>
+          <div><dt>Worst week</dt><dd class="num" id="ps4"></dd></div>
+        </dl>
+      </div>
+      <div class="card sess" id="sess">
+        <div class="sess-top">
+          <div>
+            <p class="sess-k">Sessions</p>
+            <p class="sess-n"><b class="num" id="sn"></b>sessions logged</p>
+          </div>
+          <dl class="sess-stats">
+            <div><dt>week run</dt><dd class="num up" id="sr"></dd></div>
+            <div><dt>best run</dt><dd class="num" id="sb"></dd></div>
+            <div><dt>market holidays banked</dt><dd class="num" id="sh"></dd></div>
+          </dl>
+        </div>
+        <div class="sess-grid" id="sgrid" role="img"></div>
+        <div class="sess-key"><span><i style="background:#8B5CF6"></i>Session logged</span><span><i style="background:rgba(139,92,246,.26)"></i>Market holiday: a missed week that keeps the run going</span><span><i style="background:rgba(255,255,255,.06)"></i>Rest day</span></div>
+      </div>
+      <p class="pro-note">Candles and moving averages are part of GYSE Plus.</p>
     </div>
   </section>
 
@@ -558,13 +669,14 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const buttons = [...el.querySelectorAll('button')];
     const lit = document.createElement('span');
     lit.className = 'lit'; lit.setAttribute('aria-hidden', 'true');
-    buttons.forEach(b => { const s = document.createElement('span'); s.textContent = b.textContent; lit.append(s); });
+    buttons.forEach(b => { const s = document.createElement('span'); s.innerHTML = b.innerHTML; lit.append(s); });
     el.append(lit);
     const place = () => {
       const b = buttons.find(x => x.getAttribute('aria-pressed') === 'true'), W = lit.clientWidth, left = b.offsetLeft - 4;
       buttons.forEach((x, j) => { lit.children[j].style.width = x.offsetWidth + 'px'; });
       lit.style.clipPath = `inset(0 ${Math.max(0, W - left - b.offsetWidth)}px 0 ${left}px round 999px)`;
     };
+    el.addEventListener('seg:place', place);
     el.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b || b.getAttribute('aria-pressed') === 'true') return;
       buttons.forEach(x => x.setAttribute('aria-pressed', x === b));
@@ -611,6 +723,165 @@ a.bar-note { text-decoration: none; color: var(--text); }
     if (matchMedia('(min-width: 901px)').matches) shots.forEach(s => { s.loading = 'eager'; });
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), { rootMargin: '-45% 0px -45% 0px' });
     steps.forEach(s => io.observe(s));
+  }
+
+  /* ---------- Two years, one line: line or candles, ranges, moving averages, scrubbing (as IndexChart.swift) ---------- */
+  {
+    const PD = [0,2,4,7,9,11,14,16,18,21,23,25,28,30,35,37,39,42,44,49,51,53,56,58,60,63,65,67,70,72,77,79,81,84,86,88,95,98,100,105,107,109,112,114,116,119,121,123,126,128,130,133,135,137,138,140,142,144,147,149,154,163,165,168,170,172,175,177,179,180,182,184,186,187,189,191,196,198,200,203,205,207,210,212,217,219,221,224,226,228,229,231,235,238,240,242,245,250,273,275,277,280,282,284,285,287,289,291,294,296,298,301,303,305,308,310,312,315,317,319,322,324,326,327,329,331,336,338,341,343,345,347,350,352,354,357,359,364,368,369,371,373,375,378,380,382,385,387,389,392,394,396,399,401,403,420,422,424,427,429,431,436,438,441,443,445,448,452,455,460,476,478,480,481,483,485,487,490,492,494,497,499,501,504,506,511,513,515,518,520,522,527,529,532,534,536,539,543,548,550,553,555,557,560,562,564,567,571,572,574,576,578,579,581,583,585,588,590,595,597,599,602,604,606,607,609,611,613,616,618,620,623,625,628,630,632,634,637,639,641,644,646,648,649,653,655,658,660,662,665,667,669,672,674,676,679,681,683,686,688,690,693,704,705,707,709,711,714,716,723,725], PV = [100.0,99.25,99.75,99.22,100.03,101.03,101.44,102.34,101.87,102.53,103.16,104.14,105.35,105.79,106.21,106.66,106.96,107.22,108.9,110.11,108.97,109.41,109.76,110.39,110.99,112.15,111.76,111.48,112.28,112.04,113.03,114.44,114.33,115.42,115.67,116.78,116.96,117.43,118.16,117.78,118.71,118.11,118.6,117.26,118.02,119.54,121.12,121.32,120.83,120.92,121.89,122.23,122.68,123.95,124.05,123.24,124.06,124.29,124.7,124.01,123.79,124.76,124.67,124.69,124.94,124.39,125.38,125.43,126.17,127.86,128.26,126.66,127.6,129.06,129.04,128.69,128.43,129.56,130.23,130.99,130.4,131.21,130.62,130.89,130.93,131.58,131.14,130.55,130.44,130.07,130.04,129.91,130.6,131.33,132.51,132.68,132.13,132.38,132.48,131.05,132.07,131.76,130.77,130.37,128.66,129.49,129.32,130.75,131.54,132.02,132.18,134.1,133.78,133.52,133.49,134.0,134.44,134.59,134.34,134.07,134.79,136.12,135.72,135.59,135.24,135.54,136.0,135.45,135.55,136.39,136.97,137.05,137.64,138.32,138.21,137.41,138.14,138.59,138.93,139.09,138.73,137.95,137.72,136.97,138.0,138.5,138.27,138.25,138.79,139.93,140.09,138.91,139.06,139.16,139.12,140.39,141.24,140.75,140.95,140.86,139.28,140.17,140.93,140.22,141.73,143.73,145.27,145.48,144.85,142.96,140.52,139.51,138.43,139.62,138.97,138.49,139.17,139.5,140.08,141.09,140.91,143.11,143.3,143.16,143.6,144.88,144.96,144.86,145.8,147.23,147.97,147.2,147.0,146.2,145.77,146.88,147.07,148.15,147.69,148.26,148.37,149.29,150.25,149.57,149.76,150.07,150.52,152.31,150.92,151.97,151.66,152.69,150.53,151.11,150.14,150.28,150.34,151.92,152.48,150.86,150.26,150.88,152.65,151.19,152.33,153.36,153.1,151.3,153.57,152.66,152.62,155.86,154.22,154.48,154.4,153.69,152.24,153.26,152.98,153.7,153.79,152.17,152.37,150.82,153.06,151.53,153.31,150.75,150.02,151.13,149.19,150.36,150.75,150.73,151.17,151.16,152.59,153.55,153.51,153.49,154.35,154.59,154.13,153.48,153.05,152.71,152.0,152.34,151.06,152.31,151.67];
+    const DAY = 864e5, T0 = Date.UTC(2024, 10, 11), TN = PD[PD.length - 1];
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dt = d => new Date(T0 + d * DAY);
+    const fmtDay = d => `${MON[dt(d).getUTCMonth()]} ${dt(d).getUTCDate()}, ${dt(d).getUTCFullYear()}`;
+    const plot = $('pplot'), svg = $('psvg');
+    const st = { range: 0, style: 'line', period: 'month', sma: false, ema: false, sel: null };
+    const ATH = []; PV.reduce((m, v, i) => { if (i && v > m) ATH[i] = true; return Math.max(m, v); }, PV[0]);
+    const smaAll = PV.map((v, i) => i < 9 ? null : PV.slice(i - 9, i + 1).reduce((a, b) => a + b, 0) / 10);
+    const emaAll = (() => { const k = 2 / 21, out = []; let e = null; PV.forEach((v, i) => { if (i === 19) e = PV.slice(0, 20).reduce((a, b) => a + b, 0) / 20; else if (i > 19) e = v * k + e * (1 - k); out.push(e); }); return out; })();
+    const bucket = (d, period) => { if (period === 'day') return d; const x = dt(d); if (period === 'month') return (Date.UTC(x.getUTCFullYear(), x.getUTCMonth(), 1) - T0) / DAY; return d - ((x.getUTCDay() + 6) % 7); };
+    const bucketEnd = (b, period) => { if (period === 'day') return b + 1; if (period === 'week') return b + 7; const x = dt(b); return (Date.UTC(x.getUTCFullYear(), x.getUTCMonth() + 1, 1) - T0) / DAY; };
+    // Daily bodies run from the previous close to this one (no invented wicks); weekly and monthly candles use first, last, min and max.
+    function candles(idx, period) {
+      if (period === 'day') return idx.map(i => ({ b: PD[i], e: PD[i] + 1, o: i ? PV[i - 1] : PV[i], c: PV[i], h: Math.max(i ? PV[i - 1] : PV[i], PV[i]), l: Math.min(i ? PV[i - 1] : PV[i], PV[i]), i }));
+      const out = [];
+      idx.forEach(i => { const b = bucket(PD[i], period), last = out[out.length - 1];
+        if (last && last.b === b) { last.c = PV[i]; last.h = Math.max(last.h, PV[i]); last.l = Math.min(last.l, PV[i]); last.i = i; }
+        else out.push({ b, e: bucketEnd(b, period), o: PV[i], c: PV[i], h: PV[i], l: PV[i], i }); });
+      return out;
+    }
+    const monotone = p => {
+      const n = p.length; if (n < 2) return n ? `M${f1(p[0][0])} ${f1(p[0][1])}` : '';
+      const dx = [], m = [], t = [];
+      for (let i = 0; i < n - 1; i++) { dx[i] = p[i + 1][0] - p[i][0]; m[i] = dx[i] ? (p[i + 1][1] - p[i][1]) / dx[i] : 0; }
+      t[0] = m[0]; t[n - 1] = m[n - 2];
+      for (let i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : 3 * (dx[i - 1] + dx[i]) / ((2 * dx[i] + dx[i - 1]) / m[i - 1] + (dx[i] + 2 * dx[i - 1]) / m[i]);
+      let d = `M${f1(p[0][0])} ${f1(p[0][1])}`;
+      for (let i = 0; i < n - 1; i++) { const h = dx[i] / 3; d += ` C${f1(p[i][0] + h)} ${f1(p[i][1] + h * t[i])} ${f1(p[i + 1][0] - h)} ${f1(p[i + 1][1] - h * t[i + 1])} ${f1(p[i + 1][0])} ${f1(p[i + 1][1])}`; }
+      return d;
+    };
+    const niceStep = span => { const raw = span / 4, e = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / e; return (f < 1.5 ? 1 : f < 3 ? 2 : f < 3.5 ? 2.5 : f < 7.5 ? 5 : 10) * e; };
+    const label = { 7: 'past week', 30: 'past month', 91: 'past 3 months', 365: 'past year', 0: 'all time' };
+    let view = null;
+
+    function layout() {
+      const from = st.range ? TN - st.range : 0, idx = [];
+      PD.forEach((d, i) => { if (d >= from) idx.push(i); });
+      const cs = st.style === 'candles' ? candles(idx, st.period) : [];
+      const x0 = cs.length ? Math.min(from, cs[0].b) : from, x1 = cs.length ? Math.max(TN + 1, cs[cs.length - 1].e) : TN;
+      let vals = idx.map(i => PV[i]); cs.forEach(c => vals.push(c.h, c.l));
+      if (st.sma) idx.forEach(i => smaAll[i] != null && vals.push(smaAll[i]));
+      if (st.ema) idx.forEach(i => emaAll[i] != null && vals.push(emaAll[i]));
+      if (!st.range) vals.push(100);
+      const lo = Math.min(...vals), hi = Math.max(...vals), span = Math.max(hi - lo, Math.max(hi * .04, 1)), mid = (hi + lo) / 2, half = span / 2 * 1.25;
+      const W = plot.clientWidth, H = plot.clientHeight, padR = 46, padB = 28, padT = 6;
+      const X = d => (d - x0) / (x1 - x0) * (W - padR), Y = v => padT + (1 - (v - (mid - half)) / (2 * half)) * (H - padT - padB);
+      return { idx, cs, x0, x1, W, H, padR, padB, X, Y, ylo: mid - half, yhi: mid + half };
+    }
+    function draw() {
+      const L = view = layout(), { idx, cs, W, H, padR, padB, X, Y } = L;
+      let g = '';
+      const step = niceStep(L.yhi - L.ylo);
+      for (let y = Math.ceil(L.ylo / step) * step; y <= L.yhi; y += step) g += `<line x1="0" x2="${W - padR}" y1="${f1(Y(y))}" y2="${f1(Y(y))}" stroke="rgba(255,255,255,.06)"/><text x="${W}" y="${f1(Y(y) + 4)}" text-anchor="end" fill="#8F899B" font-size="12" style="font-family:var(--num);font-stretch:125%">${+y.toFixed(1)}</text>`;
+      const span = L.x1 - L.x0, long = span > 120;
+      for (let k = 0; k < 3; k++) { const d = L.x0 + span * (k * 2 + 1) / 6, x = dt(d); g += `<text x="${f1(X(d))}" y="${H - 6}" text-anchor="middle" fill="#8F899B" font-size="12">${long ? MON[x.getUTCMonth()] + ' ' + x.getUTCFullYear() : MON[x.getUTCMonth()] + ' ' + x.getUTCDate()}</text>`; }
+      if (!st.range && Y(100) < H - padB) g += `<line x1="0" x2="${W - padR}" y1="${f1(Y(100))}" y2="${f1(Y(100))}" stroke="rgba(143,137,155,.55)" stroke-dasharray="2 4"/>`;
+      let marks = '';
+      if (st.style === 'line') {
+        const pts = idx.map(i => [X(PD[i]), Y(PV[i])]), path = monotone(pts), e = pts[pts.length - 1];
+        marks = `<defs><linearGradient id="pf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".24"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient></defs>
+          <path d="${path} L${f1(e[0])} ${H - padB} L${f1(pts[0][0])} ${H - padB} Z" fill="url(#pf)"/>
+          <path d="${path}" fill="none" stroke="#A78BFA" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>`;
+      } else {
+        const minBody = (L.yhi - L.ylo) * .006;
+        marks = cs.map(c => {
+          const col = c.c >= c.o ? '#4ED5AD' : '#E6A2B4', xa = X(c.b), xb = X(c.e), w = Math.max(1, (xb - xa) * .62), cx = (xa + xb) / 2;
+          const top = Y(Math.max(c.o, c.c, Math.min(c.o, c.c) + minBody)), bot = Y(Math.min(c.o, c.c));
+          const wick = st.period !== 'day' && c.h > c.l ? `<line x1="${f1(cx)}" x2="${f1(cx)}" y1="${f1(Y(c.h))}" y2="${f1(Y(c.l))}" stroke="${col}" stroke-opacity=".7"/>` : '';
+          return `${wick}<rect x="${f1(cx - w / 2)}" y="${f1(top)}" width="${f1(w)}" height="${f1(Math.max(1, bot - top))}" rx="${w > 5 ? 2 : 0}" fill="${col}"/>`;
+        }).join('');
+      }
+      const overlay = (arr, col) => monotone(idx.filter(i => arr[i] != null).map(i => [X(PD[i]), Y(arr[i])]));
+      if (st.sma) marks += `<path d="${overlay(smaAll)}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.3"/>`;
+      if (st.ema) marks += `<path d="${overlay(emaAll)}" fill="none" stroke="#F2C46D" stroke-width="1.3"/>`;
+      svg.innerHTML = `<g class="layer">${g}${marks}</g><g id="psel"></g>`;
+      select(st.sel);
+      stats();
+    }
+    // The headline reads from the scrubbed point, like the app; otherwise from the latest close. Its % follows the range.
+    function select(i) {
+      st.sel = i;
+      const L = view, first = PV[L.idx[0]], el = svg.querySelector('#psel');
+      let at = L.idx[L.idx.length - 1], when = label[st.range];
+      if (i != null) {
+        const c = st.style === 'candles' ? L.cs[i] : null;
+        at = c ? c.i : i;
+        when = c ? (st.period === 'month' ? `${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCFullYear()}` : st.period === 'week' ? `Week of ${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCDate()}` : fmtDay(c.b)) : fmtDay(PD[i]);
+        const x = c ? (L.X(c.b) + L.X(c.e)) / 2 : L.X(PD[i]);
+        el.innerHTML = `<line x1="${f1(x)}" x2="${f1(x)}" y1="0" y2="${L.H - L.padB}" stroke="rgba(143,137,155,.5)"/>` + (c ? '' : `<circle cx="${f1(x)}" cy="${f1(L.Y(PV[i]))}" r="5.5" fill="#A78BFA" stroke="#1C1A20" stroke-width="3"/>`);
+      } else if (st.style === 'line') {
+        el.innerHTML = `<circle cx="${f1(L.X(PD[at]))}" cy="${f1(L.Y(PV[at]))}" r="4" fill="#A78BFA"/>`;
+      } else el.innerHTML = '';
+      const v = PV[at], ch = v / first - 1;
+      $('pv').textContent = fmtIdx(v);
+      $('pc').className = `pro-c ${trend(ch)}`;
+      $('pc').innerHTML = `${tri(ch)}${pct(ch)} <span class="num">${ch >= 0 ? '+' : '−'}${Math.abs(v - first).toFixed(2)}</span><span class="when">${when}</span>`;
+    }
+    function stats() {
+      const L = view, weeks = candles(L.idx, 'week').map(c => c.c / c.o - 1);
+      $('ps1').textContent = L.idx.length;
+      $('ps2').textContent = L.idx.filter(i => ATH[i]).length;
+      const best = Math.max(...weeks), worst = Math.min(...weeks);
+      $('ps3').textContent = pct(best); $('ps3').className = `num ${trend(best)}`;
+      $('ps4').textContent = pct(worst); $('ps4').className = `num ${trend(worst)}`;
+    }
+    function nearest(clientX) {
+      const L = view, r = plot.getBoundingClientRect(), x = clientX - r.left;
+      if (x < 0 || x > L.W - L.padR + 6) return null;
+      if (st.style === 'candles') { let best = 0, bd = Infinity; L.cs.forEach((c, k) => { const d = Math.abs((L.X(c.b) + L.X(c.e)) / 2 - x); if (d < bd) { bd = d; best = k; } }); return best; }
+      let best = L.idx[0], bd = Infinity; L.idx.forEach(i => { const d = Math.abs(L.X(PD[i]) - x); if (d < bd) { bd = d; best = i; } }); return best;
+    }
+    plot.addEventListener('pointermove', e => select(nearest(e.clientX)));
+    plot.addEventListener('pointerdown', e => select(nearest(e.clientX)));
+    plot.addEventListener('pointerleave', () => select(null));
+    const swap = fn => { fn(); st.sel = null; if (reduce) return draw(); plot.classList.add('swapping'); setTimeout(() => { draw(); plot.classList.remove('swapping'); }, 160); };
+    const autoPeriod = () => { const p = { 7: 'day', 30: 'day', 91: 'week', 365: 'week', 0: 'month' }[st.range]; st.period = p; $('pperiod').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === p)); $('pperiod').dispatchEvent(new Event('seg:place')); };
+    segmented($('prange'), v => swap(() => { st.range = +v; autoPeriod(); }));
+    segmented($('pstyle'), v => swap(() => { st.style = v; $('pperiod').hidden = v !== 'candles'; }));
+    segmented($('pperiod'), v => swap(() => { st.period = v; }));
+    document.querySelectorAll('.chip[data-o]').forEach(b => b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); swap(() => { st[b.dataset.o] = on; });
+    }));
+    new ResizeObserver(() => draw()).observe(plot);
+    draw();
+
+    /* Sessions: the weekly run with market holidays, worked out exactly as the app does (WeeklyRun, 2 holidays on a free account). */
+    const NOW = 727;                                   // Sun, Nov 8, 2026, in days since Mon, Nov 11, 2024
+    const logged = new Set(PD), weeksOn = new Set(PD.map(d => Math.floor(d / 7))), curWeek = Math.floor(NOW / 7);
+    let run = 0, best = 0, banked = 0, earned = 0; const hol = new Set();
+    for (let w = 0; w < curWeek; w++) {
+      if (weeksOn.has(w)) { run++; earned++; if (earned % 4 === 0) banked = Math.min(2, banked + 1); }
+      else if (banked > 0) { banked--; run++; hol.add(w); }
+      else { run = 0; earned = 0; }
+      best = Math.max(best, run);
+    }
+    if (weeksOn.has(curWeek)) { run++; earned++; if (earned % 4 === 0) banked = Math.min(2, banked + 1); best = Math.max(best, run); }
+    $('sn').textContent = PD.length; $('sr').textContent = run; $('sb').textContent = best; $('sh').textContent = banked;
+    const grid = $('sgrid');
+    grid.setAttribute('aria-label', `Training calendar: ${PD.length} sessions over two years, a ${run}-week run, best run ${best} weeks`);
+    const drawGrid = () => {
+      const fit = Math.max(8, Math.floor((grid.clientWidth + 3) / 14)), first = Math.max(0, curWeek - fit + 1);
+      let html = '', lastMonth = -1;
+      for (let w = first; w <= curWeek; w++) {
+        const m = dt(w * 7).getUTCMonth(), label = m !== lastMonth && w > first && w < curWeek - 1 ? MON[m] : ''; lastMonth = m;
+        html += label ? `<b>${label}</b>` : '<span></span>';
+        for (let k = 0; k < 7; k++) {
+          const d = w * 7 + k, c = d > NOW ? 'fut' : logged.has(d) ? 'on' : hol.has(w) ? 'hol' : '';
+          html += `<i class="${c}${d === NOW ? ' today' : ''}"></i>`;
+        }
+      }
+      grid.innerHTML = html;
+    };
+    new ResizeObserver(drawGrid).observe(grid);
+    drawGrid();
   }
 
   /* ---------- Try a set: e1RM = w × (1 + r/30); index = 100 × e1RM / day-one e1RM ---------- */
