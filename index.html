@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-cHZjpplXxJz83DkUVxTNvMPuVtUQg71VEAUQTfLiwjc='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-jzqokL63Xw0xt0JdLNdz1/nrwdWjp9vH7BhSOD9GBLg='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE turns the top sets you log into one personal strength index that starts at 100 and rises as you get stronger. Friends follow your ticker on their watchlist. For iPhone.">
@@ -466,7 +466,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
               <div class="seg" id="pstyle" role="group" aria-label="Chart style"><button type="button" data-v="line" aria-pressed="true">Line</button><button type="button" data-v="candles" aria-pressed="false">Candles<span class="plus">PLUS</span></button></div>
             </div>
             <div class="row">
-              <div class="seg" id="pperiod" role="group" aria-label="Candle period" hidden><button type="button" data-v="day" aria-pressed="false">Daily</button><button type="button" data-v="week" aria-pressed="false">Weekly</button><button type="button" data-v="month" aria-pressed="true">Monthly</button></div>
+              <div class="seg" id="pperiod" role="group" aria-label="Candle period" hidden><button type="button" data-v="day" aria-pressed="true">Daily</button><button type="button" data-v="week" aria-pressed="false">Weekly</button><button type="button" data-v="month" aria-pressed="false">Monthly</button></div>
               <button type="button" class="chip" data-o="sma" aria-pressed="false"><i aria-hidden="true"></i>SMA 10<span class="plus">PLUS</span></button>
               <button type="button" class="chip" data-o="ema" aria-pressed="false"><i aria-hidden="true"></i>EMA 20<span class="plus">PLUS</span></button>
             </div>
@@ -736,7 +736,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const dt = d => new Date(T0 + d * DAY);
     const fmtDay = d => `${MON[dt(d).getUTCMonth()]} ${dt(d).getUTCDate()}, ${dt(d).getUTCFullYear()}`;
     const plot = $('pplot'), svg = $('psvg');
-    const st = { range: 0, style: 'line', period: 'month', sma: false, ema: false, sel: null };
+    const st = { range: 0, style: 'line', period: 'day', sma: false, ema: false, sel: null };
     const ATH = []; PV.reduce((m, v, i) => { if (i && v > m) ATH[i] = true; return Math.max(m, v); }, PV[0]);
     const smaAll = PV.map((v, i) => i < 9 ? null : PV.slice(i - 9, i + 1).reduce((a, b) => a + b, 0) / 10);
     const emaAll = (() => { const k = 2 / 21, out = []; let e = null; PV.forEach((v, i) => { if (i === 19) e = PV.slice(0, 20).reduce((a, b) => a + b, 0) / 20; else if (i > 19) e = v * k + e * (1 - k); out.push(e); }); return out; })();
@@ -776,11 +776,20 @@ a.bar-note { text-decoration: none; color: var(--text); }
       if (!st.range) vals.push(100);
       const lo = Math.min(...vals), hi = Math.max(...vals), span = Math.max(hi - lo, Math.max(hi * .04, 1)), mid = (hi + lo) / 2, half = span / 2 * 1.25;
       const W = plot.clientWidth, H = plot.clientHeight, padR = 46, padB = 28, padT = 6;
-      const X = d => (d - x0) / (x1 - x0) * (W - padR), Y = v => padT + (1 - (v - (mid - half)) / (2 * half)) * (H - padT - padB);
-      return { idx, cs, x0, x1, W, H, padR, padB, X, Y, ylo: mid - half, yhi: mid + half };
+      const Y = v => padT + (1 - (v - (mid - half)) / (2 * half)) * (H - padT - padB);
+      let X = d => (d - x0) / (x1 - x0) * (W - padR), cx = c => (X(c.b) + X(c.e)) / 2, cw = c => X(c.e) - X(c.b);
+      if (cs.length && st.period === 'day') {
+        // Daily candles get one even slot per session, like a stock chart skipping the days the market was shut.
+        const n = cs.length, slot = (W - padR) / n, ds = cs.map(c => c.b);
+        X = d => { let lo = 0, hi = n - 1; if (d <= ds[0]) return slot / 2; if (d >= ds[hi]) return (n - .5) * slot;
+          while (hi - lo > 1) { const m = (lo + hi) >> 1; if (ds[m] <= d) lo = m; else hi = m; }
+          return (lo + .5 + (d - ds[lo]) / (ds[hi] - ds[lo])) * slot; };
+        cx = c => X(c.b); cw = () => slot;
+      }
+      return { idx, cs, x0, x1, W, H, padR, padB, X, Y, cx, cw, ylo: mid - half, yhi: mid + half };
     }
     function draw() {
-      const L = view = layout(), { idx, cs, W, H, padR, padB, X, Y } = L;
+      const L = view = layout(), { idx, cs, W, H, padR, padB, X, Y, cx: CX, cw: CW } = L;
       let g = '';
       const step = niceStep(L.yhi - L.ylo);
       for (let y = Math.ceil(L.ylo / step) * step; y <= L.yhi; y += step) g += `<line x1="0" x2="${W - padR}" y1="${f1(Y(y))}" y2="${f1(Y(y))}" stroke="rgba(255,255,255,.06)"/><text x="${W}" y="${f1(Y(y) + 4)}" text-anchor="end" fill="#8F899B" font-size="12" style="font-family:var(--num);font-stretch:125%">${+y.toFixed(1)}</text>`;
@@ -796,7 +805,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       } else {
         const minBody = (L.yhi - L.ylo) * .006;
         marks = cs.map(c => {
-          const col = c.c >= c.o ? '#4ED5AD' : '#E6A2B4', xa = X(c.b), xb = X(c.e), w = Math.max(1, (xb - xa) * .62), cx = (xa + xb) / 2;
+          const col = c.c >= c.o ? '#4ED5AD' : '#E6A2B4', w = Math.max(1, CW(c) * .62), cx = CX(c);
           const top = Y(Math.max(c.o, c.c, Math.min(c.o, c.c) + minBody)), bot = Y(Math.min(c.o, c.c));
           const wick = st.period !== 'day' && c.h > c.l ? `<line x1="${f1(cx)}" x2="${f1(cx)}" y1="${f1(Y(c.h))}" y2="${f1(Y(c.l))}" stroke="${col}" stroke-opacity=".7"/>` : '';
           return `${wick}<rect x="${f1(cx - w / 2)}" y="${f1(top)}" width="${f1(w)}" height="${f1(Math.max(1, bot - top))}" rx="${w > 5 ? 2 : 0}" fill="${col}"/>`;
@@ -818,7 +827,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
         const c = st.style === 'candles' ? L.cs[i] : null;
         at = c ? c.i : i;
         when = c ? (st.period === 'month' ? `${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCFullYear()}` : st.period === 'week' ? `Week of ${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCDate()}` : fmtDay(c.b)) : fmtDay(PD[i]);
-        const x = c ? (L.X(c.b) + L.X(c.e)) / 2 : L.X(PD[i]);
+        const x = c ? L.cx(c) : L.X(PD[i]);
         el.innerHTML = `<line x1="${f1(x)}" x2="${f1(x)}" y1="0" y2="${L.H - L.padB}" stroke="rgba(143,137,155,.5)"/>` + (c ? '' : `<circle cx="${f1(x)}" cy="${f1(L.Y(PV[i]))}" r="5.5" fill="#A78BFA" stroke="#1C1A20" stroke-width="3"/>`);
       } else if (st.style === 'line') {
         el.innerHTML = `<circle cx="${f1(L.X(PD[at]))}" cy="${f1(L.Y(PV[at]))}" r="4" fill="#A78BFA"/>`;
@@ -839,15 +848,14 @@ a.bar-note { text-decoration: none; color: var(--text); }
     function nearest(clientX) {
       const L = view, r = plot.getBoundingClientRect(), x = clientX - r.left;
       if (x < 0 || x > L.W - L.padR + 6) return null;
-      if (st.style === 'candles') { let best = 0, bd = Infinity; L.cs.forEach((c, k) => { const d = Math.abs((L.X(c.b) + L.X(c.e)) / 2 - x); if (d < bd) { bd = d; best = k; } }); return best; }
+      if (st.style === 'candles') { let best = 0, bd = Infinity; L.cs.forEach((c, k) => { const d = Math.abs(L.cx(c) - x); if (d < bd) { bd = d; best = k; } }); return best; }
       let best = L.idx[0], bd = Infinity; L.idx.forEach(i => { const d = Math.abs(L.X(PD[i]) - x); if (d < bd) { bd = d; best = i; } }); return best;
     }
     plot.addEventListener('pointermove', e => select(nearest(e.clientX)));
     plot.addEventListener('pointerdown', e => select(nearest(e.clientX)));
     plot.addEventListener('pointerleave', () => select(null));
     const swap = fn => { fn(); st.sel = null; if (reduce) return draw(); plot.classList.add('swapping'); setTimeout(() => { draw(); plot.classList.remove('swapping'); }, 160); };
-    const autoPeriod = () => { const p = { 7: 'day', 30: 'day', 91: 'week', 365: 'week', 0: 'month' }[st.range]; st.period = p; $('pperiod').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === p)); $('pperiod').dispatchEvent(new Event('seg:place')); };
-    segmented($('prange'), v => swap(() => { st.range = +v; autoPeriod(); }));
+    segmented($('prange'), v => swap(() => { st.range = +v; }));
     segmented($('pstyle'), v => swap(() => { st.style = v; $('pperiod').hidden = v !== 'candles'; }));
     segmented($('pperiod'), v => swap(() => { st.period = v; }));
     document.querySelectorAll('.chip[data-o]').forEach(b => b.addEventListener('click', () => {
