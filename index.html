@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-jzqokL63Xw0xt0JdLNdz1/nrwdWjp9vH7BhSOD9GBLg='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-EX2vRpODENmlOBGR3lFVS3o4xt5aqxLxCbccoSlIH4Q='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE is a workout tracker for iPhone that turns your lifts into a stock-style chart of your strength. It starts at 100 and climbs as you get stronger.">
@@ -287,6 +287,24 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .tkbox .cnt { font-size: 14px; color: var(--muted); }
 .tkfield .msg { margin: 10px 0 0 4px; font-size: 15px; color: var(--muted); min-height: 1.55em; }
 .tkfield .msg.warn { color: var(--down); }
+.tkfield .msg.ok { color: var(--up); }
+.rsv { display: grid; gap: 12px; margin-top: 16px; }
+.rsv label { margin-bottom: -2px; }
+.emf { height: 58px; width: 100%; padding: 0 22px; border: 0; border-radius: 18px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px var(--line);
+       color: var(--text); font: inherit; font-size: 17px; transition: box-shadow 160ms ease; }
+.emf::placeholder { color: var(--muted); opacity: .7; }
+.emf:focus { outline: 0; box-shadow: inset 0 0 0 1px var(--violet), 0 0 0 4px rgba(139,92,246,.2); }
+.rsv[hidden], .rsv-done[hidden], .tkfield[hidden] { display: none; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; }
+.rsv .btn { width: 100%; margin-top: 4px; }
+.btn:disabled { opacity: .42; cursor: default; box-shadow: none; transform: none; pointer-events: none; }
+.fine { margin: 0 4px; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+.fine.warn { color: var(--down); }
+.rsv-done { margin-top: 40px; max-width: 26em; padding: 26px 28px; border-radius: 24px; background: rgba(78,213,173,.07); box-shadow: inset 0 0 0 1px rgba(78,213,173,.22); outline: 0; }
+.rd-t { margin: 0; font-size: 22px; color: var(--text); }
+.rd-t b { color: var(--lilac); font-family: var(--num); font-stretch: 125%; font-weight: 700; }
+.rd-b { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--body); }
+.rd-b b { color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
 
 /* The weekly story card, as the app draws it */
 .story-card { position: relative; width: min(100%, 360px); margin: 0 auto; aspect-ratio: 9 / 16; border-radius: 34px; padding: 8%; container-type: inline-size; display: flex; flex-direction: column;
@@ -397,7 +415,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       <h1 id="hero-h">Your strength,<br>as an index.</h1>
       <p class="lead">GYSE is a workout tracker that turns your lifts into a visual stock chart of your strength. It starts at 100 and climbs as you get stronger.</p>
       <div class="actions">
-        <a class="btn" href="#try" data-try>Try it with a set</a>
+        <a class="btn" href="#ticker" data-reserve>Reserve your ticker</a>
         <span class="store" data-store="badge"><svg viewBox="0 0 18 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1.8" y="1" width="14.4" height="22" rx="4"/><rect x="6.2" y="3.4" width="5.6" height="1.7" rx=".85" fill="currentColor" stroke="none"/></svg><span><span class="soft">Coming soon on the</span> App Store</span></span>
       </div>
     </div>
@@ -574,12 +592,23 @@ a.bar-note { text-decoration: none; color: var(--text); }
   <section class="sec" id="ticker" aria-labelledby="tk-h">
     <div class="wrap claim">
       <div>
-        <h2 id="tk-h">Every account is a ticker.</h2>
-        <p class="lead">Pick 1 to 8 letters. Friends find you by it, it's on every card you share, and you can change it once a week.</p>
-        <div class="tkfield">
-          <label for="tk">Try yours</label>
+        <h2 id="tk-h" data-launch="Every account is a ticker.">Reserve your ticker.</h2>
+        <p class="lead" data-launch="Pick 1 to 8 letters. Friends find you by it, it's on every card you share, and you can change it once a week.">Every account is a ticker of 1 to 8 letters. Friends find you by it and it's on every card you share. Pick yours now and we'll hold it for you until launch.</p>
+        <form class="tkfield" id="reserve" novalidate>
+          <label for="tk" data-launch="Try yours">Your ticker</label>
           <div class="tkbox"><span aria-hidden="true">$</span><input id="tk" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="YOU" aria-describedby="tkmsg"><span class="cnt" id="tkcnt">0 / 8</span></div>
-          <p class="msg" id="tkmsg">Letters A to Z.</p>
+          <p class="msg" id="tkmsg" aria-live="polite">Letters A to Z.</p>
+          <div class="rsv" data-prelaunch>
+            <label for="em">Email</label>
+            <input class="emf" id="em" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@example.com" required>
+            <input class="hp" id="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="btn" id="rsvb" type="submit" disabled>Reserve your ticker</button>
+            <p class="fine" id="rsvmsg" aria-live="polite">One ticker per email. We use your email only to hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
+          </div>
+        </form>
+        <div class="rsv-done" id="rsvdone" tabindex="-1" hidden>
+          <p class="rd-t"><b class="num" id="rdt">$YOU</b> is reserved.</p>
+          <p class="rd-b">To claim it, sign up in GYSE with <b id="rde">your email</b> within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.</p>
         </div>
       </div>
       <div class="story-card" id="story" role="img" aria-label="A weekly story card: $YOU closed the week at 117.32">
@@ -611,7 +640,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       <h2 id="cl-h">Start at <span class="num">100</span>.</h2>
       <p class="lead" data-store="line">GYSE is coming soon to the App Store for iPhone.</p>
       <div class="actions">
-        <a class="btn" href="#try" data-try>Try it with a set</a>
+        <a class="btn" href="#ticker" data-reserve>Reserve your ticker</a>
         <span class="store" data-store="badge"><svg viewBox="0 0 18 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1.8" y="1" width="14.4" height="22" rx="4"/><rect x="6.2" y="3.4" width="5.6" height="1.7" rx=".85" fill="currentColor" stroke="none"/></svg><span><span class="soft">Coming soon on the</span> App Store</span></span>
       </div>
       <p class="mail">Questions or press: <a class="link" href="mailto:support@gyse.app">support@gyse.app</a></p>
@@ -621,7 +650,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
 
 <div class="dock" id="dock" aria-hidden="true">
   <span class="dock-b"><svg viewBox="0 0 28 28"><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>GYSE</span>
-  <a class="btn sm" href="#try" tabindex="-1" data-store="dock">Try it with a set</a>
+  <a class="btn sm" href="#ticker" tabindex="-1" data-store="dock">Reserve your ticker</a>
 </div>
 
 <footer class="foot-site">
@@ -710,7 +739,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
   /* ---------- Dock: shows once the hero's button is gone, hides near the page's own buttons ---------- */
   {
     const dock = $('dock'), link = dock.querySelector('a'), seen = new Map();
-    const targets = [document.querySelector('.hero .actions'), $('try'), document.querySelector('.closer')];
+    const targets = [document.querySelector('.hero .actions'), $('ticker'), document.querySelector('.closer')];
     const update = () => {
       const show = !seen.get(targets[0]) && !seen.get(targets[1]) && !seen.get(targets[2]) && scrollY > 200;
       dock.classList.toggle('on', show); dock.setAttribute('aria-hidden', !show); link.tabIndex = show ? 0 : -1;
@@ -1009,6 +1038,10 @@ a.bar-note { text-decoration: none; color: var(--text); }
       el.replaceWith(a);
     });
     document.querySelectorAll('[data-try]').forEach(a => a.classList.add('quiet'));
+    document.querySelectorAll('[data-reserve]').forEach(a => a.remove());
+    document.querySelectorAll('[data-prelaunch]').forEach(el => { el.hidden = true; });
+    document.querySelectorAll('[data-launch]').forEach(el => { el.textContent = el.dataset.launch; });
+    if (window.gyseLaunched) window.gyseLaunched();
     document.querySelectorAll('[data-store="note"]').forEach(el => {
       const a = document.createElement('a');
       a.className = 'bar-note'; a.href = url; a.innerHTML = '<i aria-hidden="true"></i>Now on the App Store';
@@ -1027,14 +1060,65 @@ a.bar-note { text-decoration: none; color: var(--text); }
     $('schart').innerHTML = `<defs><linearGradient id="sf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".38"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient></defs>
       <path d="${p} L300 200 L0 200 Z" fill="url(#sf)"/><path d="${p}" fill="none" stroke="${C.violet}" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
     const tk = $('tk'), msg = $('tkmsg'), base = msg.textContent;
+    const em = $('em'), btn = $('rsvb'), fine = $('rsvmsg'), fineBase = fine.innerHTML;
+    // Before launch the ticker you type is checked live and can be reserved (the `waitlist` function on GYSE's Supabase).
+    const WAITLIST = 'https://lggthlqzohwxnammtzxg.supabase.co/functions/v1/waitlist';
+    const ask = body => fetch(WAITLIST, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(r => r.json()).catch(() => ({ status: 'error' }));
+    let live = !document.querySelector('[data-prelaunch]').hidden, state = 'empty', seq = 0, timer = 0, busy = false;
+    const say = (text, kind) => { msg.textContent = text; msg.className = 'msg' + (kind ? ' ' + kind : ''); };
+    const mailOK = () => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim());
+    const sync = () => {
+      const t = tk.value;
+      btn.textContent = t ? `Reserve $${t}` : 'Reserve your ticker';
+      btn.disabled = busy || !t || state === 'taken' || state === 'not_allowed' || !mailOK();
+    };
+    const check = () => {
+      const t = tk.value, mine = ++seq;
+      clearTimeout(timer);
+      if (!t || !live) { state = 'empty'; sync(); return; }
+      state = 'checking'; sync();
+      timer = setTimeout(() => ask({ action: 'check', ticker: t }).then(r => {
+        if (mine !== seq) return;
+        state = r.status === 'available' || r.status === 'taken' || r.status === 'not_allowed' ? r.status : 'unknown';
+        if (state === 'available') say(`$${t} is available.`, 'ok');
+        else if (state === 'taken') say(`$${t} is taken. Try another.`, 'warn');
+        else if (state === 'not_allowed') say(`$${t} isn't allowed. Try another.`, 'warn');
+        else say(base);
+        sync();
+      }), 350);
+    };
     tk.addEventListener('input', () => {
       const raw = tk.value, clean = raw.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8), bad = clean !== raw.toUpperCase();
-      msg.textContent = bad ? 'Tickers use English letters A–Z only.' : base; msg.classList.toggle('warn', bad);
+      say(bad ? 'Tickers use English letters A–Z only.' : base, bad ? 'warn' : '');
       if (tk.value !== clean) { const at = Math.max(0, tk.selectionStart - (raw.length - clean.length)); tk.value = clean; tk.setSelectionRange(at, at); }
       $('stk').textContent = '$' + (clean || 'YOU');
       $('tkcnt').textContent = `${clean.length} / 8`;
       $('story').setAttribute('aria-label', `A weekly story card: $${clean || 'YOU'} closed the week at 117.32`);
+      check();
     });
+    em.addEventListener('input', () => { fine.innerHTML = fineBase; fine.classList.remove('warn'); sync(); });
+    $('reserve').addEventListener('submit', e => {
+      e.preventDefault();
+      const t = tk.value, mail = em.value.trim();
+      if (!live || busy || !t || !mailOK()) return;
+      busy = true; sync(); btn.textContent = 'Reserving…';
+      ask({ action: 'reserve', ticker: t, email: mail, website: $('hp').value }).then(r => {
+        busy = false;
+        const oops = text => { fine.textContent = text; fine.classList.add('warn'); sync(); };
+        if (r.status === 'reserved') {
+          $('rdt').textContent = '$' + (r.ticker ? r.ticker.toUpperCase() : t); $('rde').textContent = mail;
+          $('reserve').hidden = true; $('rsvdone').hidden = false; $('rsvdone').focus();
+        } else if (r.status === 'taken') { state = 'taken'; say(`$${t} was just taken. Try another.`, 'warn'); sync(); }
+        else if (r.status === 'not_allowed') { state = 'not_allowed'; say(`$${t} isn't allowed. Try another.`, 'warn'); sync(); }
+        else if (r.status === 'email_used') oops('This email has already reserved a ticker. Each email can hold one.');
+        else if (r.status === 'bad_email') oops('Check your email address.');
+        else if (r.status === 'rate_limited') oops('Too many reservations from this network. Try again in an hour.');
+        else oops("Couldn't reserve it right now. Try again in a moment.");
+      });
+    });
+    window.gyseLaunched = () => { live = false; clearTimeout(timer); seq++; say(base); };
+    sync();
   }
 })();
 </script>
