@@ -53,13 +53,13 @@
     <li><strong>Profile:</strong> your ticker (1–8 English letters), the display name you choose, a profile photo if you add one, whether your profile is public or private, and when you last changed your ticker.</li>
     <li><strong>Training log:</strong> for each top set, the exercise, weight, reps and day, any note you add, and the custom exercises you create.</li>
     <li><strong>Settings:</strong> units (kg or lb), chosen exercises, sector allocation and chart preferences.</li>
-    <li><strong>Social and safety:</strong> friend requests and friendships, people you block, and reports you send (the reason, any details you type and the account reported).</li>
+    <li><strong>Social and safety:</strong> who you follow and who follows you, including follow requests to and from private profiles; people you block; and reports you send (the reason, any details you type and the account reported).</li>
     <li><strong>Messages to us:</strong> anything you send to support@gyse.app.</li>
     <li id="reservations"><strong>Ticker reservation:</strong> if you reserve a ticker on gyse.app before GYSE launches, the ticker and the email address you enter, and when you reserved it. We email that address once so you can confirm the reservation. To limit spam we also keep a salted one-way hash of your IP address, not the address itself.</li>
   </ul>
   <h3>Information created as you use GYSE</h3>
   <ul>
-    <li><strong>Index summary:</strong> your current index value and up to 30 recent index points, calculated from your log so friends and the watchlist can show your line.</li>
+    <li><strong>Index summary:</strong> your current index value and up to 30 recent index points, calculated from your log so the people who follow you can see your line on their watchlist.</li>
     <li><strong>Usage and crash data:</strong> a small set of app events (for example "logged a set", "opened the share card" or "viewed the paywall") and the crash, hang and performance reports Apple provides through MetricKit, together with the app version, iOS version and device model. These are tied to a random ID created on your iPhone, not to your account, and never include your email, ticker, name, notes or weights. In the EU, EEA, UK and Switzerland this is off unless you turn it on; elsewhere it is on and you can turn it off at any time (see section 8).</li>
     <li><strong>Purchases:</strong> if you buy GYSE Plus, Apple tells the app which plan is active. Payments are handled entirely by Apple; we never receive your payment card details.</li>
     <li><strong>Technical data:</strong> our hosting provider records IP addresses and request metadata in short-lived server logs, and uses IP addresses to limit abuse such as repeated sign-in attempts.</li>
@@ -85,9 +85,11 @@
 
   <h2 id="visible">4. Who can see what</h2>
   <ul>
-    <li><strong>Everyone using GYSE</strong> can find you by ticker and see your ticker, display name, profile photo and index with its recent line: up to 30 index points, each with the date it was recorded.</li>
-    <li><strong>Private profile</strong> (the default): only people you accept as friends see your exercises and sessions (exercise, weight, reps and day).</li>
-    <li><strong>Public profile:</strong> if you turn Private profile off, anyone using GYSE can also see your exercises and sessions. Switch at any time in <strong>You → Private profile</strong>.</li>
+    <li><strong>Everyone using GYSE</strong> can find you by ticker and see your ticker, display name, profile photo, how many people follow you and how many you follow, and your index with its recent line: up to 30 index points, each with the date it was recorded.</li>
+    <li><strong>Public or private:</strong> you choose when you create your account, and can switch at any time in <strong>You → Private profile</strong>.</li>
+    <li><strong>Private profile:</strong> only followers you have approved see your exercises and sessions (exercise, weight, reps and day). Anyone can ask to follow you; they see nothing more until you accept.</li>
+    <li><strong>Public profile:</strong> anyone using GYSE can see your exercises and sessions and can follow you without asking. Switching to public accepts the follow requests that were waiting.</li>
+    <li><strong>Your followers:</strong> only you can see the list of people who follow you, and you can remove a follower at any time. Someone you follow can see that you follow them.</li>
     <li><strong>Never shown to anyone:</strong> your email address, password, set notes, the people you block and the reports you send.</li>
     <li><strong>Share cards and stickers</strong> are created on your iPhone and go only where you send them with the iOS share sheet.</li>
   </ul>
@@ -138,7 +140,7 @@
     <li><strong>See and correct:</strong> your profile, log and settings are shown in the app, and you can edit them there.</li>
     <li><strong>Take a copy:</strong> <strong>You → Your data → Export as CSV</strong> exports every top set you have logged.</li>
     <li><strong>Delete:</strong> <strong>You → Delete account</strong> deletes your account and its data. If you signed in with Apple, we also revoke GYSE's access to your Apple ID.</li>
-    <li><strong>Limit who sees your training:</strong> <strong>Private profile</strong> is on by default. Unless you turn it off, only friends see your exercises and sessions.</li>
+    <li><strong>Limit who sees your training:</strong> choose <strong>Private profile</strong> when you sign up, or turn it on later in <strong>You → Private profile</strong>. Then only followers you approve see your exercises and sessions, and you can remove a follower at any time.</li>
     <li><strong>Turn usage data on or off:</strong> <strong>You → Share anonymous usage data</strong>.</li>
     <li><strong>Ask us:</strong> email <a href="mailto:support@gyse.app">support@gyse.app</a> to request access, correction, deletion, restriction, portability or to object to processing. We may ask you to confirm the request from your account email. We reply within 10 days for requests under Korean law and within one month otherwise.</li>
   </ul>

@@ -53,13 +53,13 @@
     <li><strong>Perfil:</strong> tu ticker (de 1 a 8 letras inglesas), el nombre visible que elijas, una foto de perfil si añades una, si tu perfil es público o privado y cuándo cambiaste tu ticker por última vez.</li>
     <li><strong>Registro de entrenamiento:</strong> por cada serie top, el ejercicio, el peso, las repeticiones y el día, cualquier nota que añadas y los ejercicios personalizados que crees.</li>
     <li><strong>Ajustes:</strong> unidades (kg o lb), ejercicios elegidos, asignación por sectores y preferencias del gráfico.</li>
-    <li><strong>Social y seguridad:</strong> solicitudes de amistad y amistades, las personas que bloqueas y las denuncias que envías (el motivo, los detalles que escribas y la cuenta denunciada).</li>
+    <li><strong>Social y seguridad:</strong> a quién sigues y quién te sigue, incluidas las solicitudes de seguimiento hacia y desde perfiles privados; las personas que bloqueas; y las denuncias que envías (el motivo, los detalles que escribas y la cuenta denunciada).</li>
     <li><strong>Mensajes que nos envías:</strong> todo lo que envíes a support@gyse.app.</li>
     <li id="reservations"><strong>Reserva de ticker:</strong> si reservas un ticker en gyse.app antes del lanzamiento de GYSE, el ticker y la dirección de email que introduces, y cuándo lo reservaste. Enviamos un email a esa dirección una sola vez para que puedas confirmar la reserva. Para limitar el spam también conservamos un hash unidireccional con sal de tu dirección IP, no la dirección en sí.</li>
   </ul>
   <h3>Información que se genera al usar GYSE</h3>
   <ul>
-    <li><strong>Resumen del índice:</strong> el valor actual de tu índice y hasta 30 puntos recientes del índice, calculados a partir de tu registro para que tus amigos y la lista puedan mostrar tu línea.</li>
+    <li><strong>Resumen del índice:</strong> el valor actual de tu índice y hasta 30 puntos recientes del índice, calculados a partir de tu registro para que las personas que te siguen puedan ver tu línea en su lista.</li>
     <li><strong>Datos de uso y de fallos:</strong> un pequeño conjunto de eventos de la app (por ejemplo, «registró una serie», «abrió la tarjeta para compartir» o «vio la pantalla de pago») y los informes de fallos, bloqueos y rendimiento que Apple proporciona a través de MetricKit, junto con la versión de la app, la versión de iOS y el modelo del dispositivo. Están vinculados a un identificador aleatorio creado en tu iPhone, no a tu cuenta, y nunca incluyen tu email, ticker, nombre, notas ni pesos. En la UE, el EEE, el Reino Unido y Suiza esto está desactivado a menos que lo actives; en los demás lugares está activado y puedes desactivarlo en cualquier momento (consulta la sección 8).</li>
     <li><strong>Compras:</strong> si compras GYSE Plus, Apple le indica a la app qué plan está activo. Los pagos los gestiona íntegramente Apple; nunca recibimos los datos de tu tarjeta de pago.</li>
     <li><strong>Datos técnicos:</strong> nuestro proveedor de alojamiento registra direcciones IP y metadatos de las solicitudes en registros del servidor de corta duración, y usa las direcciones IP para limitar abusos como los intentos repetidos de inicio de sesión.</li>
@@ -85,9 +85,11 @@
 
   <h2 id="visible">4. Quién puede ver qué</h2>
   <ul>
-    <li><strong>Todas las personas que usan GYSE</strong> pueden encontrarte por tu ticker y ver tu ticker, tu nombre visible, tu foto de perfil y tu índice con su línea reciente: hasta 30 puntos del índice, cada uno con la fecha en que se registró.</li>
-    <li><strong>Perfil privado</strong> (la opción predeterminada): solo las personas que aceptas como amigos ven tus ejercicios y sesiones (ejercicio, peso, repeticiones y día).</li>
-    <li><strong>Perfil público:</strong> si desactivas Perfil privado, cualquier persona que use GYSE también puede ver tus ejercicios y sesiones. Cámbialo en cualquier momento en <strong>Tú → Perfil privado</strong>.</li>
+    <li><strong>Todas las personas que usan GYSE</strong> pueden encontrarte por tu ticker y ver tu ticker, tu nombre visible, tu foto de perfil, cuántas personas te siguen y a cuántas sigues, y tu índice con su línea reciente: hasta 30 puntos del índice, cada uno con la fecha en que se registró.</li>
+    <li><strong>Público o privado:</strong> lo eliges al crear tu cuenta y puedes cambiarlo en cualquier momento en <strong>Tú → Perfil privado</strong>.</li>
+    <li><strong>Perfil privado:</strong> solo los seguidores que has aprobado ven tus ejercicios y sesiones (ejercicio, peso, repeticiones y día). Cualquier persona puede pedir seguirte; no ve nada más hasta que aceptes.</li>
+    <li><strong>Perfil público:</strong> cualquier persona que use GYSE puede ver tus ejercicios y sesiones y seguirte sin pedirlo. Al cambiar a público se aceptan las solicitudes de seguimiento que estaban pendientes.</li>
+    <li><strong>Tus seguidores:</strong> solo tú puedes ver la lista de personas que te siguen, y puedes quitar a un seguidor en cualquier momento. Una persona a la que sigues puede ver que la sigues.</li>
     <li><strong>Nunca se muestra a nadie:</strong> tu dirección de email, tu contraseña, las notas de tus series, las personas que bloqueas y las denuncias que envías.</li>
     <li><strong>Las tarjetas para compartir y los stickers</strong> se crean en tu iPhone y solo van adonde tú los envíes con la hoja para compartir de iOS.</li>
   </ul>
@@ -138,7 +140,7 @@
     <li><strong>Ver y corregir:</strong> tu perfil, tu registro y tus ajustes se muestran en la app, y puedes editarlos allí.</li>
     <li><strong>Llevarte una copia:</strong> <strong>Tú → Tus datos → Exportar como CSV</strong> exporta todas las series top que has registrado.</li>
     <li><strong>Eliminar:</strong> <strong>Tú → Eliminar cuenta</strong> elimina tu cuenta y sus datos. Si iniciaste sesión con Apple, también revocamos el acceso de GYSE a tu Apple ID.</li>
-    <li><strong>Limitar quién ve tu entrenamiento:</strong> <strong>Perfil privado</strong> está activado de forma predeterminada. A menos que lo desactives, solo tus amigos ven tus ejercicios y sesiones.</li>
+    <li><strong>Limitar quién ve tu entrenamiento:</strong> elige <strong>Perfil privado</strong> al registrarte, o actívalo más tarde en <strong>Tú → Perfil privado</strong>. Entonces solo los seguidores que apruebes ven tus ejercicios y sesiones, y puedes quitar a un seguidor en cualquier momento.</li>
     <li><strong>Activar o desactivar los datos de uso:</strong> <strong>Tú → Compartir datos de uso anónimos</strong>.</li>
     <li><strong>Pedírnoslo:</strong> escribe a <a href="mailto:support@gyse.app">support@gyse.app</a> para solicitar el acceso, la rectificación, la eliminación, la limitación o la portabilidad, o para oponerte al tratamiento. Es posible que te pidamos que confirmes la solicitud desde el email de tu cuenta. Respondemos en un plazo de 10 días a las solicitudes conforme a la legislación coreana y en un plazo de un mes en los demás casos.</li>
   </ul>
