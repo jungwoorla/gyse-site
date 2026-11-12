@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-Xu82LPXtBOVxB7jl9CKIyRg5knMWele2Qet4NvZSO94='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Confirm your ticker · GYSE</title>
+<meta name="description" content="Confirm the ticker you reserved on gyse.app.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#111114">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-var.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/legal.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="GYSE home"><svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#1F1C24"/><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>GYSE</a>
+  <nav><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></nav>
+</header>
+<main>
+  <h1 id="h">Confirming your ticker…</h1>
+  <p class="lede" id="m" aria-live="polite">One moment.</p>
+  <noscript><p>This page needs JavaScript to confirm your reservation. Turn it on and reload, or email <a href="mailto:support@gyse.app">support@gyse.app</a>.</p></noscript>
+</main>
+<footer><div class="in"><span>© 2026 GYSE (지와이에스이) · Jungwoo Kim · KR business reg. 642-03-03840</span><span><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></span></div></footer>
+<script>
+(() => {
+  const h = document.getElementById('h'), m = document.getElementById('m');
+  const show = (title, text) => { h.textContent = title; m.textContent = text; };
+  const token = location.hash.slice(1).trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(token)) {
+    show("This link isn't complete.", 'Open the link from your email again, or copy the whole address into your browser.');
+    return;
+  }
+  fetch('https://lggthlqzohwxnammtzxg.supabase.co/functions/v1/waitlist', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'confirm', token })
+  }).then(r => r.json()).catch(() => ({ status: 'error' })).then(r => {
+    if (r.status === 'confirmed' && typeof r.ticker === 'string') {
+      show('$' + r.ticker.toUpperCase() + ' is reserved.', 'To claim it, sign up in GYSE with the same email within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.');
+      history.replaceState(null, '', location.pathname);
+    } else if (r.status === 'expired' || r.status === 'invalid') {
+      show('This link has expired or was already used.', 'If you already confirmed, your ticker is held and there is nothing more to do. Otherwise, reserve it again at gyse.app.');
+    } else {
+      show("Couldn't confirm right now.", 'Reload this page in a moment to try again.');
+    }
+  });
+})();
+</script>
+</body>
+</html>
