@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-EX2vRpODENmlOBGR3lFVS3o4xt5aqxLxCbccoSlIH4Q='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-HZEkM3WVwp1IkvMQOCcOGn8AyvJ80SF7pKlRWZNpHBI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE is a workout tracker for iPhone that turns your lifts into a stock-style chart of your strength. It starts at 100 and climbs as you get stronger.">
@@ -603,11 +603,12 @@ a.bar-note { text-decoration: none; color: var(--text); }
             <input class="emf" id="em" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@example.com" required>
             <input class="hp" id="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button class="btn" id="rsvb" type="submit" disabled>Reserve your ticker</button>
-            <p class="fine" id="rsvmsg" aria-live="polite">One ticker per email. We use your email only to hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
+            <p class="fine" id="rsvmsg" aria-live="polite">One ticker per email. We use your email only to confirm and hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
           </div>
         </form>
         <div class="rsv-done" id="rsvdone" tabindex="-1" hidden>
-          <p class="rd-t"><b class="num" id="rdt">$YOU</b> is reserved.</p>
+          <p class="rd-t"><b class="num" id="rdt">$YOU</b> <span id="rds">is reserved.</span></p>
+          <p class="rd-b" id="rdp" hidden>We sent a link to <b id="rdpe">your email</b>. Open it within 48 hours to confirm, or the ticker is released.</p>
           <p class="rd-b">To claim it, sign up in GYSE with <b id="rde">your email</b> within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.</p>
         </div>
       </div>
@@ -1103,10 +1104,14 @@ a.bar-note { text-decoration: none; color: var(--text); }
       const t = tk.value, mail = em.value.trim();
       if (!live || busy || !t || !mailOK()) return;
       busy = true; sync(); btn.textContent = 'Reserving…';
-      ask({ action: 'reserve', ticker: t, email: mail, website: $('hp').value }).then(r => {
+      ask({ action: 'reserve', ticker: t, email: mail, website: $('hp').value, confirm: true }).then(r => {
         busy = false;
         const oops = text => { fine.textContent = text; fine.classList.add('warn'); sync(); };
-        if (r.status === 'reserved') {
+        if (r.status === 'reserved' || r.status === 'pending') {
+          // "pending": held for 48 hours until the emailed link is opened.
+          const pending = r.status === 'pending';
+          $('rds').textContent = pending ? 'is almost yours.' : 'is reserved.';
+          $('rdp').hidden = !pending; $('rdpe').textContent = mail;
           $('rdt').textContent = '$' + (r.ticker ? r.ticker.toUpperCase() : t); $('rde').textContent = mail;
           $('reserve').hidden = true; $('rsvdone').hidden = false; $('rsvdone').focus();
         } else if (r.status === 'taken') { state = 'taken'; say(`$${t} was just taken. Try another.`, 'warn'); sync(); }
