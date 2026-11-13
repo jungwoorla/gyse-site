@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-f/3MrSnk9Nw6UUlzqwoUMPaRnMJuCirjLp3Ji2nv6Hs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-oB5pNEaHdVBX1psXehnQ0mH1ZEU3j7s4Tn60KrtDaZU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE is a workout tracker for iPhone that turns your lifts into a stock-style chart of your strength. It starts at 100 and climbs as you get stronger.">
@@ -862,6 +862,77 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
       nav.prepend(a);
     }
   }
+
+  // Visit counts, as totals: the page adds one to "opened", "came from <site>", "reached <section>" or "pressed <button>".
+  // No cookie, nothing kept on the device and no identifier; each thing counts once per page load.
+  // A browser that sends Global Privacy Control or Do Not Track is not counted at all.
+  const count = (() => {
+    const page = { en: '/', ko: '/ko/', es: '/es/' }[LANG.slice(0, 2)];
+    if (!page || navigator.globalPrivacyControl || navigator.doNotTrack === '1' || navigator.webdriver) return () => {};
+    const COUNT = 'https://lggthlqzohwxnammtzxg.supabase.co/functions/v1/count';
+    const seen = new Set(), queue = [];
+    let timer = 0, from = '';
+    const send = () => {
+      clearTimeout(timer); timer = 0;
+      if (!queue.length) return;
+      const body = JSON.stringify({ p: page, d: (innerWidth || screen.width) < 768 ? 'phone' : 'desktop', s: from, e: queue.splice(0) });
+      try { fetch(COUNT, { method: 'POST', body, mode: 'no-cors', credentials: 'omit', keepalive: true }).catch(() => {}); } catch (e) {}
+    };
+    const count = (ev, label = '') => {
+      const k = ev + ':' + label;
+      if (seen.has(k) || seen.size >= 40) return;
+      seen.add(k); queue.push([ev, label]);
+      if (!timer) timer = setTimeout(send, 2000);
+    };
+    addEventListener('pagehide', send);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') send(); });
+
+    // "view" is every time the page is shown; "visit" is an arrival from somewhere else (not a reload, not another gyse.app page).
+    const start = () => {
+      count('view');
+      const nav = (performance.getEntriesByType('navigation')[0] || {}).type;
+      let host = '';
+      try { host = new URL(document.referrer).hostname; } catch (e) {}
+      if (nav === 'reload' || nav === 'back_forward' || /(^|\.)gyse\.app$/.test(host)) return;
+      const tag = new URLSearchParams(location.search).get('utm_source');   // a link can name its own source: gyse.app/?utm_source=reels
+      from = (tag || host.replace(/^www\./, '')).toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 60) || 'direct';
+      count('visit');
+    };
+    if (document.visibilityState === 'visible') start();
+    else document.addEventListener('visibilitychange', start, { once: true });
+
+    // How far down people get: a section counts when it crosses the middle of the screen.
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(list => list.forEach(e => {
+        if (e.isIntersecting) { count('section', e.target.dataset.count); io.unobserve(e.target); }
+      }), { rootMargin: '-45% 0px -45% 0px' });
+      [['#how', 'how'], ['#chart', 'chart'], ['#try', 'try'], ['#friends', 'follow'], ['#ticker', 'ticker'],
+       ['[aria-labelledby="pl-h"]', 'plus'], ['#faq', 'faq'], ['.closer', 'end']].forEach(([q, name]) => {
+        const el = document.querySelector(q);
+        if (el) { el.dataset.count = name; io.observe(el); }
+      });
+    }
+
+    // What people press: links in the header and footer, the App Store badge, the demos, and each question.
+    document.addEventListener('click', e => {
+      const el = e.target.closest ? e.target.closest('a, button, summary') : null;
+      if (!el) return;
+      const href = el.getAttribute('href') || '', name = href.split('/').pop().replace(/[^a-z]/g, '').slice(0, 12);
+      if (el.matches('summary')) {
+        if (!el.parentNode.open) count('faq', 'q' + ([...document.querySelectorAll('#faq details')].indexOf(el.parentNode) + 1));
+      } else if (href.startsWith('https://apps.apple.com/')) count('click', 'store');
+      else if (el.hreflang) count('click', 'lang_' + el.hreflang.slice(0, 2).toLowerCase().replace(/[^a-z]/g, ''));
+      else if (href === '#ticker') count('click', 'reserve');
+      else if (el.closest('.bar nav') && name) count('click', 'nav_' + name);
+      else if (el.closest('.foot-site') && name) count('click', 'foot_' + name);
+      else if (el.matches('button')) {
+        const demo = { chart: 'chart', try: 'try', friends: 'compare' }[(el.closest('section[id]') || {}).id];
+        if (demo) count('click', demo);
+      }
+    }, true);
+    document.addEventListener('gyse:ticker', () => count('ticker', 'typed'));
+    return count;
+  })();
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const C = { violet: '#A78BFA', muted: '#8F899B', down: '#E6A2B4' };
   const TRI_UP = '<svg class="tri" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1.5 9.2 8.5H.8z" fill="currentColor"/></svg>';
@@ -1379,11 +1450,13 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
       e.preventDefault();
       const step = part(r, 'step'), em = part(r, 'em'), t = S.t, mail = S.mail;
       if (!S.live || S.busy || !t || blocked()) return;
-      if (step && step.hidden) { step.hidden = false; sync(); em.focus(); return; }   // the hero asks for the email second
+      if (step && step.hidden) { step.hidden = false; sync(); em.focus(); count('reserve', 'email_step'); return; }   // the hero asks for the email second
       if (!mailOK()) { em.focus(); return; }
       S.busy = true; sync();
+      count('reserve', 'sent_' + r.dataset.rsv);
       ask({ action: 'reserve', ticker: t, email: mail, website: part(r, 'hp').value, confirm: true }).then(res => {
         S.busy = false;
+        count('reserve', res.status === 'reserved' || res.status === 'pending' ? 'ok' : String(res.status).replace(/[^a-z_]/g, '').slice(0, 24));
         const oops = text => each('fine', el => { el.textContent = text; el.classList.add('warn'); });
         if (res.status === 'reserved' || res.status === 'pending') {
           const pending = res.status === 'pending', sym = '$' + (res.ticker ? res.ticker.toUpperCase() : t);
