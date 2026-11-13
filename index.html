@@ -3,13 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-HZEkM3WVwp1IkvMQOCcOGn8AyvJ80SF7pKlRWZNpHBI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-f/3MrSnk9Nw6UUlzqwoUMPaRnMJuCirjLp3Ji2nv6Hs='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE is a workout tracker for iPhone that turns your lifts into a stock-style chart of your strength. It starts at 100 and climbs as you get stronger.">
 <meta property="og:title" content="GYSE: your strength, as an index">
 <meta property="og:description" content="A workout tracker that turns your lifts into a stock-style chart of your strength.">
-<meta property="og:url" content="https://gyse.app">
+<meta property="og:url" content="https://gyse.app/">
+<link rel="canonical" href="https://gyse.app/">
+<link rel="alternate" hreflang="en" href="https://gyse.app/">
+<link rel="alternate" hreflang="ko" href="https://gyse.app/ko/">
+<link rel="alternate" hreflang="es" href="https://gyse.app/es/">
+<link rel="alternate" hreflang="x-default" href="https://gyse.app/">
 <meta property="og:image" content="https://gyse.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#111114">
@@ -18,7 +23,7 @@
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-var.woff2" crossorigin>
-<link rel="preload" as="image" href="/assets/screens/index-demo.webp" fetchpriority="high">
+<noscript><style>.scr { display: none; }</style></noscript>
 <style>
 /* Instrument Sans for words, Archivo at 125% width for numbers and tickers (the app's SF Pro Expanded voice).
    Both SIL Open Font License, served from gyse.app. */
@@ -53,7 +58,7 @@ figure { margin: 0; }
 .num { font-family: var(--num); font-stretch: 125%; font-variant-numeric: lining-nums tabular-nums; }
 
 h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -.035em; text-wrap: balance; }
-h1 { font-size: clamp(54px, 10.6vw, 168px); line-height: .88; letter-spacing: -.06em; }
+h1 { font-size: clamp(44px, 8.6vw, 136px); line-height: .88; letter-spacing: -.06em; }
 h2 { font-size: clamp(34px, 4.2vw, 56px); line-height: 1.04; }
 p { margin: 0; }
 .lead { color: var(--body); font-size: clamp(17px, 1.35vw, 20px); line-height: 1.5; max-width: 32em; text-wrap: pretty; }
@@ -83,7 +88,7 @@ p { margin: 0; }
 .seg .lit > span { display: flex; align-items: center; justify-content: center; }
 
 /* ---------- Header ---------- */
-.bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 76px; }
+.bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 24px; height: 76px; }
 .bar nav { justify-self: end; }
 .bar-note { display: inline-flex; align-items: center; gap: 10px; color: var(--body); font-size: 14px; }
 .bar-note i { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 0 3px rgba(167,139,250,.18); }
@@ -92,13 +97,36 @@ p { margin: 0; }
 .bar nav { display: flex; gap: 32px; }
 .bar nav a { font-size: 15px; color: var(--body); text-decoration: none; transition: color 150ms ease; }
 @media (hover: hover) and (pointer: fine) { .bar nav a:hover { color: var(--text); } }
+@media (max-width: 1023px) { .bar-note { display: none; } .bar { grid-template-columns: 1fr auto; } }   /* the links need the room, most of all in Spanish */
 
 /* ---------- Hero ---------- */
-.hero { position: relative; overflow: hidden; isolation: isolate; padding-top: clamp(40px, 7vh, 80px); }
-.hero-copy { display: grid; justify-items: center; gap: 30px; text-align: center; position: relative; z-index: 2; }
+.hero { position: relative; overflow: hidden; isolation: isolate; padding-top: clamp(20px, 5vh, 64px); }
+.hero-copy { display: grid; justify-items: center; gap: clamp(18px, 2.6vh, 26px); text-align: center; position: relative; z-index: 2; }
 .soon { display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 12px; border-radius: 999px; background: rgba(255,255,255,.05); color: var(--body); font-size: 14px; font-weight: 500; }
 .soon i { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 0 3px rgba(167,139,250,.18); }
 .hero .lead { max-width: 30em; }
+/* Reserve, in the hero: one field. The phone below shows the ticker as you type it. */
+.hrsv { width: min(100%, 500px); }
+.hrsv form { display: grid; gap: 10px; }
+.hrsv form[hidden], .hrsv[hidden] { display: none; }
+.hbox { display: flex; align-items: center; height: 68px; padding: 0 8px 0 26px; border-radius: 999px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.13);
+        -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: box-shadow 160ms ease; }
+.hbox:focus-within { box-shadow: inset 0 0 0 1px var(--violet), 0 0 0 4px rgba(139,92,246,.22), 0 20px 50px -20px rgba(139,92,246,.5); }
+.hbox > span { font-family: var(--num); font-stretch: 125%; color: var(--muted); font-size: 24px; font-weight: 600; }
+.hbox input { flex: 1; width: 100%; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: var(--lilac); font-family: var(--num); font-stretch: 125%;
+              font-size: 24px; font-weight: 600; letter-spacing: .01em; text-transform: uppercase; padding: 0 8px 0 4px; }
+.hbox input::placeholder { color: rgba(203,181,255,.42); }
+.hbox .btn { min-height: 52px; padding: 0 26px; flex: none; }
+.hbox .btn[hidden] { display: none; }
+.hrsv .msg { margin: 0; font-size: 15px; color: var(--muted); min-height: 1.55em; }
+.hrsv .msg.warn { color: var(--down); }
+.hrsv .msg.ok { color: var(--up); }
+.hstep { display: grid; gap: 10px; margin-top: 2px; }
+.hstep[hidden] { display: none; }
+.hstep .emf { border-radius: 999px; height: 60px; padding: 0 26px; }
+.hstep .btn { width: 100%; }
+.hrsv .rsv-done { margin: 0; max-width: none; text-align: left; }
+.hero .actions:not(:has(.btn)) { display: none; }   /* before launch the field above is the action; at launch the badge here becomes the download button */
 .actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 6px; }
 /* App Store badge: "coming soon" until assets/store.json has the app's link, then a download link. */
 .store { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 22px 0 18px; border-radius: 999px; white-space: nowrap;
@@ -109,11 +137,11 @@ p { margin: 0; }
 .btn.quiet { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 @media (hover: hover) and (pointer: fine) { .btn.quiet:hover { background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); } }
 a.bar-note { text-decoration: none; color: var(--text); }
-.stage { position: relative; height: clamp(500px, 62vw, 640px); margin-top: clamp(56px, 8vh, 88px); }
+.stage { position: relative; height: clamp(500px, 62vw, 640px); margin-top: clamp(26px, 5vh, 60px); }
 .stage .glow { position: absolute; left: 50%; top: 40px; width: min(1100px, 130vw); height: 760px; transform: translateX(-50%); z-index: -1;
                background: radial-gradient(closest-side, rgba(139,92,246,.30), rgba(139,92,246,.08) 55%, transparent); }
 .ghost { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); z-index: -1; white-space: nowrap; pointer-events: none; user-select: none;
-         font-size: clamp(130px, 23vw, 360px); font-weight: 600; letter-spacing: -.05em; line-height: .8; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.06);
+         font-size: calc(clamp(130px, 23vw, 360px) * var(--gs, 1)); font-weight: 600; letter-spacing: -.05em; line-height: .8; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.06);
          background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0) 80%); -webkit-background-clip: text; background-clip: text; }
 .floats { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .float { position: absolute; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 18px; font-size: 14px; color: var(--body); white-space: nowrap;
@@ -128,6 +156,9 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .float .fv b { font-weight: 500; }
 .float .tg { width: 16px; height: 16px; color: var(--muted); margin-left: 4px; }
 .float.f3 b { display: inline; font-weight: 500; font-size: 14px; }
+/* The cards arrive with the story the phone tells: someone follows you, a set is logged, the next target appears. */
+.js .float { opacity: 0; scale: .92; transition: opacity 500ms ease, scale 600ms var(--ease-out); }
+.js .float.in { opacity: 1; scale: 1; }
 .f1 { left: calc(50% - 470px); top: 150px; rotate: -3deg; }
 .f2 { left: calc(50% + 205px); top: 90px; rotate: 2.5deg; }
 .f3 { left: calc(50% - 400px); top: 360px; rotate: 2deg; }
@@ -138,6 +169,50 @@ a.bar-note { text-decoration: none; color: var(--text); }
          background: #050506; box-shadow: 0 0 0 1px rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.06), 0 40px 80px -30px rgba(0,0,0,.8); }
 .phone img { width: 100%; height: 100%; border-radius: 48px; object-fit: cover; background: var(--bg); }
 .phone::after { content: ""; position: absolute; z-index: 2; top: 2.4%; left: 50%; width: 32%; height: 3.4%; transform: translateX(-50%); border-radius: 99px; background: #000; }
+/* The hero's phone is drawn by the page (the app's Index tab in miniature), so it can carry the ticker you type and
+   climb from 100. Everything is sized in cqw, so it scales with the phone like the screenshot it replaces. */
+.scr { position: absolute; inset: 10px; border-radius: 48px; overflow: hidden; background: var(--bg); color: var(--text); container-type: inline-size; text-align: left; line-height: 1.2; }
+.scr .sb { display: flex; justify-content: space-between; align-items: center; padding: 6.6cqw 7cqw 0 10cqw; font-size: 3.6cqw; font-weight: 600; letter-spacing: -.01em; }
+.scr .sb svg { width: 16cqw; height: 3.2cqw; }
+.scr .pad { padding: 0 5.6cqw; }
+.scr .tp { display: flex; justify-content: space-between; align-items: center; margin-top: 8.4cqw; }
+.scr .tp b { display: inline-flex; align-items: center; gap: 2.4cqw; font-family: var(--num); font-stretch: 125%; font-weight: 700; font-size: 4.7cqw; letter-spacing: .01em; }
+.scr .tp b svg { width: 7.6cqw; height: 7.6cqw; }
+.scr .tp > svg { width: 4.6cqw; height: 5.4cqw; color: var(--body); }
+.scr .tk { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6cqw 2.4cqw; margin-top: 7.2cqw; min-height: 7.4cqw; }
+.scr .tk b { font-family: var(--num); font-stretch: 125%; font-weight: 700; font-size: 6.6cqw; line-height: 1; color: var(--lilac); letter-spacing: .01em; }
+.scr .tk b[data-long] { font-size: 5.4cqw; }
+.scr .ath { display: inline-flex; align-items: center; gap: 1.3cqw; padding: 1.4cqw 2.5cqw; border-radius: 99px; background: rgba(139,92,246,.2); color: var(--lilac); font-size: 2.9cqw; font-weight: 600; white-space: nowrap;
+            transition: opacity 320ms ease, scale 460ms var(--ease-out); }
+.scr .ath svg { width: 2.5cqw; height: 2.5cqw; }
+.js .scr .ath:not(.on) { opacity: 0; scale: .8; }
+.scr .lb { margin-top: 2.4cqw; color: var(--muted); font-size: 3.4cqw; }
+.scr .big { margin-top: 2cqw; font-size: 15.4cqw; font-weight: 500; letter-spacing: -.04em; line-height: 1.06; }
+.scr .chg { margin-top: 1.2cqw; font-size: 3.4cqw; font-weight: 500; color: var(--up); white-space: nowrap; }
+.scr .chg .tri { margin-right: .1em; }
+.scr .chg b { font-weight: 500; margin-right: 1.4cqw; }
+.scr .chg span { color: var(--muted); font-weight: 400; }
+.scr svg.hc { display: block; width: 88.9cqw; height: 54.3cqw; margin-top: 5.2cqw; overflow: visible; }
+.scr .rg { display: flex; align-items: center; justify-content: space-between; margin-top: 2.2cqw; padding: 0 1.6cqw 0 3cqw; color: var(--muted); font-size: 3.4cqw; font-weight: 600; }
+.scr .rg .on { padding: 2.2cqw 4cqw; border-radius: 99px; background: rgba(255,255,255,.09); color: var(--text); }
+.scr .rg svg { width: 4.4cqw; height: 4.4cqw; }
+.scr .cta { display: flex; align-items: center; justify-content: center; gap: 2.2cqw; height: 13.2cqw; margin-top: 4.4cqw; border-radius: 5cqw; background: var(--btn); font-size: 4.1cqw; font-weight: 600;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.2); transition: scale 150ms var(--ease-out), filter 150ms ease; }
+.scr .cta svg { width: 3.6cqw; height: 3.6cqw; }
+.scr .cta.press { scale: .965; filter: brightness(1.18); }
+.scr .ss { display: flex; justify-content: space-between; gap: 4cqw; margin-top: 3.6cqw; padding: 4.6cqw; border-radius: 6.4cqw; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+.scr .ss b { display: block; font-family: var(--num); font-stretch: 125%; font-size: 8.4cqw; font-weight: 500; line-height: 1; }
+.scr .ss span { display: block; margin-top: 2cqw; color: var(--body); font-size: 3.2cqw; }
+.scr .ss em { display: block; margin-top: 1.6cqw; font-style: normal; color: var(--up); font-size: 3.1cqw; font-weight: 600; }
+.scr .gr { display: grid; grid-template-columns: repeat(7, 4.4cqw); gap: 1.3cqw; align-content: start; color: var(--muted); font-size: 2.4cqw; text-align: center; }
+.scr .gr i { height: 4.4cqw; border-radius: 1.2cqw; background: rgba(255,255,255,.06); }
+.scr .gr i.on { background: var(--purple); }
+.scr .tst { position: absolute; z-index: 3; left: 50%; top: 13.4cqw; translate: -50% -5cqw; opacity: 0; display: flex; align-items: center; gap: 1.8cqw; padding: 2.2cqw 3.8cqw 2.2cqw 3cqw; border-radius: 99px; white-space: nowrap;
+            background: rgba(48,43,58,.97); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 3cqw 8cqw -3cqw rgba(0,0,0,.9); color: var(--body); font-size: 3.2cqw;
+            transition: opacity 240ms ease, translate 420ms var(--ease-out); }
+.scr .tst.on { opacity: 1; translate: -50% 0; }
+.scr .tst b { color: var(--text); font-weight: 600; }
+.scr .tst svg { width: 3.6cqw; height: 3.6cqw; color: var(--up); flex: none; }
 /* The hero shows the top of the phone and lets it fade into the page. */
 .hero .phone { -webkit-mask-image: linear-gradient(#000 62%, transparent 92%); mask-image: linear-gradient(#000 62%, transparent 92%); }
 @media (prefers-reduced-motion: no-preference) {
@@ -154,7 +229,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
 /* How it works: steps on the left, one phone that follows on the right */
 .story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); }
 .steps { list-style: none; margin: 0; padding: 0; }
-.step { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px; max-width: 30em; transition: opacity 360ms ease; }
+.step { min-height: 64vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px; max-width: 30em; transition: opacity 360ms ease; }
 .step .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--num); font-stretch: 125%; font-size: 13px; font-weight: 600; color: var(--lilac); background: rgba(139,92,246,.16); }
 .step h2 { font-size: clamp(32px, 3.4vw, 48px); }
 .step .shot { display: none; }
@@ -228,7 +303,8 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .readout .big { font-size: clamp(64px, 9vw, 112px); font-weight: 500; letter-spacing: -.045em; line-height: 1; margin-top: 10px; }
 .readout .delta { margin-top: 12px; font-size: 16px; font-weight: 500; }
 .demo svg.c { display: block; width: 100%; height: auto; overflow: visible; }
-.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 480px) { .controls { grid-template-columns: minmax(0, 1fr); } }   /* on a phone the two steppers stack, so neither spills out of the card */
 .field > span { display: block; font-size: 14px; color: var(--muted); margin: 0 0 8px 4px; }
 .stepper { display: flex; align-items: center; height: 64px; border-radius: 18px; background: rgba(255,255,255,.05); }
 .stepper button { width: 56px; height: 100%; border: 0; background: transparent; color: var(--body); cursor: pointer; border-radius: 18px; display: grid; place-items: center;
@@ -328,12 +404,24 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .trio.plain { margin-top: 0; }
 .plain-links { display: flex; justify-content: center; gap: 28px; margin-top: clamp(40px, 6vh, 64px); font-size: 16px; color: var(--body); }
 
+/* Questions */
+.faq { max-width: 760px; margin: 0 auto; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 22px 4px; font-size: clamp(18px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.01em; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; flex: none; width: 10px; height: 10px; margin-right: 6px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); rotate: 45deg; translate: 0 -3px; transition: rotate 220ms var(--ease-out), translate 220ms var(--ease-out); }
+.faq details[open] summary::after { rotate: -135deg; translate: 0 3px; }
+@media (hover: hover) and (pointer: fine) { .faq summary:hover::after { border-color: var(--text); } }
+.faq p { color: var(--body); font-size: 17px; line-height: 1.6; padding: 0 4px 24px; max-width: 40em; }
+
 /* Dock */
 .btn.sm { min-height: 42px; padding: 0 18px; font-size: 15px; }
 .dock { position: fixed; z-index: 20; left: 50%; bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px)); display: flex; align-items: center; gap: 14px; padding: 6px 6px 6px 16px; border-radius: 999px;
         background: rgba(30,27,35,.72); -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 20px 40px -16px rgba(0,0,0,.7);
         transform: translate(-50%, 18px); opacity: 0; pointer-events: none; transition: transform 320ms var(--ease-out), opacity 220ms ease; }
 .dock.on { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+/* On wide screens the dock sits in the corner, so it never lands on a centred heading. */
+@media (min-width: 901px) { .dock { left: auto; right: 24px; transform: translateY(18px); } .dock.on { transform: none; } }
 .dock-b { display: inline-flex; align-items: center; gap: 8px; font-family: var(--num); font-stretch: 125%; font-weight: 600; font-size: 15px; }
 .dock-b svg { width: 22px; height: 22px; }
 
@@ -352,17 +440,25 @@ a.bar-note { text-decoration: none; color: var(--text); }
 .foot-site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-top: 28px; padding-bottom: max(36px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
 .foot-site nav { display: flex; gap: 24px; }
 .foot-site a { color: var(--muted); text-decoration: none; transition: color 150ms ease; }
+.foot-site .langs { flex-basis: 100%; gap: 20px; }
+.foot-site .langs a[aria-current] { color: var(--body); }
+/* Korean (/ko/): lines break between words, Hangul falls to the system face, and headings get the room Hangul needs. */
+html:lang(ko) { word-break: keep-all; --sans: "Instrument Sans", "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; }
+html:lang(ko) h1 { font-size: clamp(42px, 7.4vw, 116px); line-height: 1.06; letter-spacing: -.045em; }
+html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
 @media (hover: hover) and (pointer: fine) { .foot-site a:hover { color: var(--text); } }
 
 /* ---------- Narrower screens ---------- */
 @media (max-width: 900px) {
   .story, .claim { grid-template-columns: minmax(0, 1fr); }
   .follow { display: none; }
-  .step { min-height: 0; padding: 0 0 80px; max-width: none; }
+  .step { min-height: 0; padding: 0 0 64px; max-width: none; }
   .step:last-child { padding-bottom: 0; }
   .js .story .step { opacity: 1; }
   .step .shot { display: block; width: 100%; margin-top: 20px; }
-  .step .shot .phone { width: min(300px, 76vw); }
+  .step .shot .phone { width: min(280px, 72vw); }
+  /* Each step shows the top of its screen and lets it fade, like the hero, so three steps fit in far less scroll. */
+  .step .shot { max-height: 400px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 68%, transparent); mask-image: linear-gradient(#000 68%, transparent); }
   .trio { grid-template-columns: minmax(0, 1fr); gap: 22px; max-width: 30em; }
 }
 @media (max-width: 640px) {
@@ -380,7 +476,17 @@ a.bar-note { text-decoration: none; color: var(--text); }
   .dock.on { transform: none; }
   .actions { width: 100%; }
   .actions .btn, .actions .store { width: 100%; }
-  .stage { height: 470px; }
+  .stage { height: 440px; margin-top: 22px; }
+  .bar { height: 64px; }
+  .hero { padding-top: 14px; }
+  .hero-copy { gap: 16px; }
+  .hbox { height: 60px; padding: 0 6px 0 20px; }
+  .hbox > span, .hbox input { font-size: 21px; }
+  .hbox .btn { min-height: 48px; padding: 0 20px; font-size: 16px; }
+  .hstep .emf { height: 56px; }
+  .sec { padding: 84px 0; }
+  .closer { padding: 96px 0 84px; }
+  .faq summary { padding: 18px 2px; }
   .controls { gap: 10px; }
   .stepper button { width: 46px; }
   .stepper output { font-size: 21px; }
@@ -388,7 +494,8 @@ a.bar-note { text-decoration: none; color: var(--text); }
   .side .v { font-size: 34px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dock { transition: opacity 200ms ease; transform: translate(-50%, 0); }
+  .dock { transition: opacity 200ms ease; }
+  .float, .scr .ath, .scr .tst, .scr .cta { transition: none; }
   .seg.ready .lit, .step, .follow .phone img { transition: none; }
   .btn:active, .stepper button:active { transform: none; }
   .rec { transition: opacity 200ms ease; }
@@ -405,7 +512,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       GYSE
     </a>
     <p class="bar-note" data-store="note"><i aria-hidden="true"></i>Coming soon to iPhone</p>
-    <nav aria-label="Site"><a class="wide" href="#how">How it works</a><a href="#friends">Friends</a><a href="/support">Support</a></nav>
+    <nav aria-label="Site"><a class="wide" href="#how">How it works</a><a href="#faq">FAQ</a><a href="/support">Support</a></nav>
   </div>
 </header>
 
@@ -413,23 +520,54 @@ a.bar-note { text-decoration: none; color: var(--text); }
   <section class="hero" aria-labelledby="hero-h">
     <div class="wrap hero-copy">
       <h1 id="hero-h">Your strength,<br>as an index.</h1>
-      <p class="lead">GYSE is a workout tracker that turns your lifts into a visual stock chart of your strength. It starts at 100 and climbs as you get stronger.</p>
+      <p class="lead">GYSE turns your lifts into a stock chart of your strength. It starts at 100 and climbs as you get stronger.</p>
+      <div class="hrsv" data-rsv="hero" data-prelaunch>
+        <form novalidate>
+          <div class="hbox"><span aria-hidden="true">$</span><input data-f="tk" type="text" aria-label="The ticker you want" aria-describedby="hmsg" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="YOU" enterkeyhint="go"><button class="btn" type="submit" data-f="next" disabled>Reserve</button></div>
+          <p class="msg" id="hmsg" data-f="msg" aria-live="polite">Coming soon to iPhone. Pick your ticker.</p>
+          <div class="hstep" data-f="step" hidden>
+            <input class="emf" data-f="em" type="email" aria-label="Email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@example.com" required>
+            <input class="hp" data-f="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="btn" type="submit" data-f="go" disabled>Reserve your ticker</button>
+            <p class="fine" data-f="fine" aria-live="polite">One ticker per email. We use your email only to confirm and hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
+          </div>
+        </form>
+        <div class="rsv-done" data-f="done" tabindex="-1" hidden>
+          <p class="rd-t"><b class="num" data-f="rdt">$YOU</b> <span data-f="rds">is reserved.</span></p>
+          <p class="rd-b" data-f="rdp" hidden>We sent a link to <b data-f="rdpe">your email</b>. Open it within 48 hours to confirm, or the ticker is released.</p>
+          <p class="rd-b">To claim it, sign up in GYSE with <b data-f="rde">your email</b> within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.</p>
+        </div>
+      </div>
       <div class="actions">
-        <a class="btn" href="#ticker" data-reserve>Reserve your ticker</a>
         <span class="store" data-store="badge"><svg viewBox="0 0 18 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="1.8" y="1" width="14.4" height="22" rx="4"/><rect x="6.2" y="3.4" width="5.6" height="1.7" rx=".85" fill="currentColor" stroke="none"/></svg><span><span class="soft">Coming soon on the</span> App Store</span></span>
       </div>
     </div>
-    <div class="stage">
+    <div class="stage" id="stage">
       <div class="glow" aria-hidden="true"></div>
-      <div class="ghost num" aria-hidden="true">122.23</div>
+      <div class="ghost num" id="ghost" aria-hidden="true">100.00</div>
       <svg class="line" id="hline" viewBox="0 0 1440 360" preserveAspectRatio="none" aria-hidden="true"></svg>
       <div class="floats" aria-hidden="true">
-        <div class="float f1" data-depth=".22"><span class="rec-i"><svg viewBox="0 0 16 16"><path d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z" fill="currentColor"/></svg></span><span><b>New record</b>Bench press · 87.5 kg × 8</span></div>
-        <div class="float f2" data-depth=".34"><span class="av">M</span><span><b class="num">$MINA</b>Watching your index</span><span class="fv"><b class="num">103.57</b><em>+3.6%</em></span></div>
+        <div class="float f1" data-depth=".22"><span class="rec-i"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z" fill="currentColor"/></svg></span><span><b>New record</b>Bench press · 87.5 kg × 8</span></div>
+        <div class="float f2" data-depth=".34"><span class="av">M</span><span><b class="num">$MINA</b>Follows you</span><span class="fv"><b class="num">103.57</b><em>+3.6%</em></span></div>
         <div class="float f3" data-depth=".12"><svg class="tg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.6"/><circle cx="8" cy="8" r="2"/></svg><span>Next target <b>87.5 kg × 9</b></span><em>+2.6%</em></div>
       </div>
-      <figure class="phone">
-        <img src="/assets/screens/index-demo.webp" width="900" height="1957" alt="The GYSE index screen: $YOU at 122.23, up 22.2% since day one, with the line climbing from 100" fetchpriority="high">
+      <figure class="phone" id="hphone" role="img" aria-label="The GYSE index screen: your ticker at 122.23, up 22.2% since day one, with the line climbing from 100">
+        <noscript><img src="/assets/screens/index-demo.webp" width="900" height="1957" alt=""></noscript>
+        <div class="scr" aria-hidden="true">
+          <div class="sb"><span>9:41</span><svg viewBox="0 0 80 16" fill="currentColor"><rect x="0" y="10" width="4" height="6" rx="1"/><rect x="6.5" y="7" width="4" height="9" rx="1"/><rect x="13" y="4" width="4" height="12" rx="1"/><rect x="19.5" y="1" width="4" height="15" rx="1"/><path d="M38 2.5a12 12 0 0 1 8.6 3.6L38 15.5 29.4 6.1A12 12 0 0 1 38 2.5z"/><rect x="53.5" y="2.5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="55.5" y="4.5" width="18" height="7" rx="2"/><rect x="77.2" y="6" width="2" height="4" rx="1" fill-opacity=".5"/></svg></div>
+          <div class="pad">
+            <div class="tp"><b><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#1F1C24"/><path d="M7.5 18.5l4.6-5.6 3.8 2.8 5-6.9M17.7 8.8h3.2V12" fill="none" stroke="#A78BFA" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>GYSE</b><svg viewBox="0 0 17 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 12V1.5M5 4.5 8.5 1 12 4.5M5.5 8H3a1.5 1.5 0 0 0-1.5 1.5v8A1.5 1.5 0 0 0 3 19h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14 8h-2.5"/></svg></div>
+            <div class="tk"><b class="num" data-tk>$YOU</b><span class="ath" id="hath"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0l1.9 6.1L16 8l-6.1 1.9L8 16l-1.9-6.1L0 8l6.1-1.9z" fill="currentColor"/></svg><span>All-time high</span></span></div>
+            <div class="lb">Strength index</div>
+            <div class="big num" id="hbig">100.00</div>
+            <div class="chg"><svg class="tri" viewBox="0 0 10 10"><path d="M5 1.5 9.2 8.5H.8z" fill="currentColor"/></svg><b id="hpct">+0.0%</b><b id="habs">+0.00</b><span>since you started</span></div>
+            <svg class="hc" id="hch" viewBox="0 0 450 275"></svg>
+            <div class="rg"><span>1W</span><span>1M</span><span>3M</span><span>1Y</span><span class="on">ALL</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 5h9M15 5h3M2 10h3M9 10h9M2 15h9M15 15h3"/><circle cx="13" cy="5" r="2"/><circle cx="7" cy="10" r="2"/><circle cx="13" cy="15" r="2"/></svg></div>
+            <div class="cta" id="hcta"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg>Update today's sets</div>
+            <div class="ss"><div><b>11</b><span>sessions in 4 weeks</span><em>▲ 14-week run</em></div><div class="gr"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i></div></div>
+          </div>
+          <div class="tst" id="htoast"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg><span>Bench press <b>87.5 kg × 8</b></span></div>
+        </div>
       </figure>
     </div>
   </section>
@@ -447,7 +585,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
           <span class="n" aria-hidden="true">2</span>
           <h2>Every exercise is a position.</h2>
           <p class="lead">Each lift feeds one of five sectors: chest, back, legs, shoulders and arms. Together they move one index that started at 100.</p>
-          <figure class="shot"><div class="phone"><img src="/assets/screens/positions.webp" width="900" height="1957" loading="lazy" alt="The Positions list: bench press up 5.3%, and the other exercises in your index"></div></figure>
+          <figure class="shot"><div class="phone"><img src="/assets/screens/positions.webp" width="900" height="1957" loading="lazy" alt="The Sectors map and the Exercises list: bench press up 27.4%, back squat up 26.9%, each exercise with its own line"></div></figure>
         </li>
         <li class="step" data-i="2">
           <span class="n" aria-hidden="true">3</span>
@@ -593,27 +731,29 @@ a.bar-note { text-decoration: none; color: var(--text); }
     <div class="wrap claim">
       <div>
         <h2 id="tk-h" data-launch="Every account is a ticker.">Reserve your ticker.</h2>
-        <p class="lead" data-launch="Pick 1 to 8 letters. Friends find you by it, it's on every card you share, and you can change it once a week.">Every account is a ticker of 1 to 8 letters. Friends find you by it and it's on every card you share. Pick yours now and we'll hold it for you until launch.</p>
-        <form class="tkfield" id="reserve" novalidate>
-          <label for="tk" data-launch="Try yours">Your ticker</label>
-          <div class="tkbox"><span aria-hidden="true">$</span><input id="tk" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="YOU" aria-describedby="tkmsg"><span class="cnt" id="tkcnt">0 / 8</span></div>
-          <p class="msg" id="tkmsg" aria-live="polite">Letters A to Z.</p>
-          <div class="rsv" data-prelaunch>
-            <label for="em">Email</label>
-            <input class="emf" id="em" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@example.com" required>
-            <input class="hp" id="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <button class="btn" id="rsvb" type="submit" disabled>Reserve your ticker</button>
-            <p class="fine" id="rsvmsg" aria-live="polite">One ticker per email. We use your email only to confirm and hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
+        <p class="lead" data-launch="Pick 1 to 8 letters. People find you by it, it's on every card you share, and you can change it once a week.">Every account is a ticker of 1 to 8 letters. People find you by it and it's on every card you share. Pick yours now and we'll hold it for you until launch.</p>
+        <div data-rsv="page">
+          <form class="tkfield" novalidate>
+            <label for="tk" data-launch="Try yours">Your ticker</label>
+            <div class="tkbox"><span aria-hidden="true">$</span><input id="tk" data-f="tk" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" placeholder="YOU" aria-describedby="tkmsg"><span class="cnt" data-f="cnt">0 / 8</span></div>
+            <p class="msg" id="tkmsg" data-f="msg" aria-live="polite">Letters A to Z.</p>
+            <div class="rsv" data-prelaunch>
+              <label for="em">Email</label>
+              <input class="emf" id="em" data-f="em" type="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="you@example.com" required>
+              <input class="hp" data-f="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <button class="btn" data-f="go" type="submit" disabled>Reserve your ticker</button>
+              <p class="fine" data-f="fine" aria-live="polite">One ticker per email. We use your email only to confirm and hold your ticker and to tell you when GYSE launches. <a class="link" href="/privacy#reservations">Privacy</a></p>
+            </div>
+          </form>
+          <div class="rsv-done" data-f="done" tabindex="-1" hidden>
+            <p class="rd-t"><b class="num" data-f="rdt">$YOU</b> <span data-f="rds">is reserved.</span></p>
+            <p class="rd-b" data-f="rdp" hidden>We sent a link to <b data-f="rdpe">your email</b>. Open it within 48 hours to confirm, or the ticker is released.</p>
+            <p class="rd-b">To claim it, sign up in GYSE with <b data-f="rde">your email</b> within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.</p>
           </div>
-        </form>
-        <div class="rsv-done" id="rsvdone" tabindex="-1" hidden>
-          <p class="rd-t"><b class="num" id="rdt">$YOU</b> <span id="rds">is reserved.</span></p>
-          <p class="rd-b" id="rdp" hidden>We sent a link to <b id="rdpe">your email</b>. Open it within 48 hours to confirm, or the ticker is released.</p>
-          <p class="rd-b">To claim it, sign up in GYSE with <b id="rde">your email</b> within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.</p>
         </div>
       </div>
-      <div class="story-card" id="story" role="img" aria-label="A weekly story card: $YOU closed the week at 117.32">
-        <div class="r1"><span class="stk" id="stk">$YOU</span><span class="sd">November 6, 2026</span></div>
+            <div class="story-card" id="story" role="img" aria-label="A weekly story card: $YOU closed the week at 117.32">
+        <div class="r1"><span class="stk" data-tk>$YOU</span><span class="sd">November 6, 2026</span></div>
         <div class="sw">Week of Nov 2 – Nov 8</div>
         <div class="sv num">117.32</div>
         <div class="sc up" id="swc"></div>
@@ -633,6 +773,21 @@ a.bar-note { text-decoration: none; color: var(--text); }
         <p><b>You choose who sees it.</b>Make your profile private and only followers you approve see your sessions.</p>
       </div>
       <p class="plain-links"><a class="link" href="/privacy">Privacy Policy</a><a class="link" href="/terms">Terms of Use</a></p>
+    </div>
+  </section>
+
+  <section class="sec" id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="faq-h">Questions.</h2></div>
+      <div class="faq">
+        <details><summary>Is GYSE free?</summary><p>Yes. Logging, the index, following people and sharing are free. GYSE Plus is optional: it adds candle charts, moving averages, your own exercises and a third market holiday.</p></details>
+        <details><summary>Which phones does it run on?</summary><p>iPhone, with iOS 18 or later. There is no Android, iPad or Apple Watch app.</p></details>
+        <details data-prelaunch><summary>When does it launch?</summary><p>Soon. There is no date yet. Reserve a ticker and we'll email you once, when it's out.</p></details>
+        <details data-prelaunch><summary>What does reserving a ticker do?</summary><p>It holds that ticker for your email address. We send one email with a link; open it within 48 hours to confirm. After launch, sign up in the app with the same email within 30 days and the ticker is yours. One ticker per email.</p></details>
+        <details><summary>How is the index calculated?</summary><p>Each exercise is measured by its estimated one-rep max, compared with your own first day. Sets of 3 to 10 reps count. Together your exercises move one index that starts at 100. <a class="link" href="/support#index">How the index works</a></p></details>
+        <details><summary>Who can see my training?</summary><p>Anyone can find your ticker and see your name and photo, your index with its recent line, and how many people follow you and how many you follow. You choose a public or private profile when you sign up. With a private profile, only followers you approve see your exercises and sessions. <a class="link" href="/privacy#visible">Privacy Policy</a></p></details>
+        <details><summary>Does it track running or cardio?</summary><p>No. GYSE is for strength training.</p></details>
+      </div>
     </div>
   </section>
 
@@ -658,6 +813,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
   <div class="wrap">
     <span>© 2026 GYSE (지와이에스이) · Jungwoo Kim · KR business reg. 642-03-03840</span>
     <nav aria-label="Legal"><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></nav>
+    <nav class="langs" aria-label="Language"><a href="/" lang="en" hreflang="en" aria-current="page">English</a><a href="/ko/" lang="ko" hreflang="ko">한국어</a><a href="/es/" lang="es" hreflang="es">Español</a></nav>
   </div>
   <div class="mega num" aria-hidden="true">GYSE</div>
 </footer>
@@ -667,6 +823,45 @@ a.bar-note { text-decoration: none; color: var(--text); }
   'use strict';
   document.documentElement.classList.add('js');
   const $ = id => document.getElementById(id);
+
+  // Every word this script writes. English is here; /ko/ and /es/ bring their own in <script type="application/json" id="i18n">.
+  const LANG = document.documentElement.lang || 'en';
+  const T = Object.assign({
+    checkEmail: 'Check your email', reserved: 'Reserved',
+    weekOf: 'Week of {d}', r7: 'past week', r30: 'past month', r91: 'past 3 months', r365: 'past year', r0: 'all time',
+    calendar: 'Training calendar: {n} sessions over two years, a {run}-week run, best run {best} weeks',
+    bench: 'Bench press', benchS: 'Bench', squat: 'Back squat', squatS: 'Squat', ohp: 'Overhead press', ohpS: 'Overhead',
+    liftIndex: '{name} index', unchanged: 'Unchanged since the last close', sinceClose: 'since the last close',
+    reps: 'reps', lastTime: 'Last time', counts: 'Sets of 3 to 10 reps count', countsNot: 'Only sets of 3 to 10 reps move the index',
+    began: 'where you began', thisWeek: 'this week',
+    above: '{n} points above day one', aboveSub: 'Everyone starts at 100. The only line you race is your own.',
+    more: '{n} kg more on bench than day one', moreSub: 'Top set on bench press, 5 reps, each week.',
+    download: 'Download on the App Store', nowOn: 'Now on the App Store', outNow: 'GYSE is out now on the App Store for iPhone.',
+    reserving: 'Reserving…', reserveT: 'Reserve {t}', reserve: 'Reserve your ticker',
+    cardLabel: 'A weekly story card: {t} closed the week at 117.32',
+    available: '{t} is available.', taken: '{t} is taken. Try another.', notAllowed: "{t} isn't allowed. Try another.",
+    justTaken: '{t} was just taken. Try another.', lettersOnly: 'Tickers use English letters A–Z only.',
+    almost: 'is almost yours.', isReserved: 'is reserved.',
+    emailUsed: 'This email has already reserved a ticker. Each email can hold one.', badEmail: 'Check your email address.',
+    rateLimited: 'Too many reservations from this network. Try again in an hour.', failed: "Couldn't reserve it right now. Try again in a moment.",
+  }, (() => { try { return JSON.parse($('i18n').textContent); } catch (e) { return {}; } })());
+  const tt = (k, v) => T[k].replace(/\{(\w+)\}/g, (all, n) => v[n]);
+  // Dates in the reader's language. In English they read "Nov 7, 2026", "Nov 2026" and "Nov 7".
+  const fmtDate = (x, o) => x.toLocaleDateString(LANG, Object.assign({ timeZone: 'UTC' }, o));
+  const MD = { month: 'short', day: 'numeric' }, MY = { month: 'short', year: 'numeric' };
+
+  // A reader whose browser prefers another of the page's three languages gets a link to it in the header. Nobody is redirected.
+  {
+    const pages = { en: ['English', '/'], ko: ['한국어', '/ko/'], es: ['Español', '/es/'] };
+    const want = (navigator.languages || [navigator.language || 'en']).map(l => l.slice(0, 2).toLowerCase()).find(l => pages[l]) || 'en';
+    const nav = document.querySelector('.bar nav');
+    if (want !== LANG.slice(0, 2) && nav) {
+      const a = document.createElement('a');
+      a.href = pages[want][1]; a.lang = want; a.hreflang = want; a.textContent = pages[want][0];
+      nav.querySelector('[href="#faq"]').classList.add('wide');   // on a phone the language link takes the FAQ link's place
+      nav.prepend(a);
+    }
+  }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const C = { violet: '#A78BFA', muted: '#8F899B', down: '#E6A2B4' };
   const TRI_UP = '<svg class="tri" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1.5 9.2 8.5H.8z" fill="currentColor"/></svg>';
@@ -726,7 +921,76 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const pts = v.map((y, i) => [i / (v.length - 1) * 1440, 330 - (y - lo) / (hi - lo) * 300]);
     $('hline').innerHTML = `<defs><linearGradient id="hg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#8B5CF6" stop-opacity="0"/><stop offset=".35" stop-color="#8B5CF6" stop-opacity=".55"/><stop offset="1" stop-color="#A78BFA" stop-opacity="1"/></linearGradient></defs>
       <path d="${smooth(pts)}" fill="none" stroke="url(#hg)" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
-    if (!reduce) $('hline').animate([{ clipPath: 'inset(-20px 100% -20px 0)' }, { clipPath: 'inset(-20px 0% -20px 0)' }], { duration: 1600, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' });
+    if (!reduce) $('hline').animate([{ clipPath: 'inset(-20px 100% -20px 0)' }, { clipPath: 'inset(-20px 0% -20px 0)' }], { duration: 2600, delay: 450, easing: 'cubic-bezier(.22,.8,.24,1)', fill: 'backwards' });
+  }
+
+  /* ---------- Hero phone: the app's Index tab, drawn here. It starts at 100, climbs with its line, then one more set goes in ---------- */
+  {
+    const hist = sample(46).map(v => 100 + (v - 100) * (21.61 / 17.32));   // the example's history, scaled to end at 121.61
+    const series = [...hist, 122.23];                                      // then today's set: a new all-time high
+    const pts = series.map((v, i) => [i / (series.length - 1) * 420, 221 - (v - 100) * 9.5]), full = smooth(pts);
+    const svg = $('hch'), big = $('hbig'), pc = $('hpct'), ab = $('habs'), ghost = $('ghost'), ath = $('hath'), toast = $('htoast'), cta = $('hcta');
+    const floats = [...document.querySelectorAll('.float')];
+    svg.innerHTML = `<defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".34"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient><clipPath id="hcc"><rect x="-6" y="-10" width="0" height="270"/></clipPath></defs>
+      <path d="M0 126H420M0 31H420" stroke="rgba(255,255,255,.06)" fill="none"/><path d="M0 221H420" stroke="rgba(255,255,255,.22)" stroke-dasharray="2 4" fill="none"/>
+      <g fill="${C.muted}" font-size="13"><text x="428" y="35.5">120</text><text x="428" y="130.5">110</text><text x="428" y="225.5">100</text>${[[144, 8], [276, 9], [408, 10]].map(([x, m]) => `<text x="${x}" y="268" text-anchor="middle">${fmtDate(new Date(Date.UTC(2026, m, 1)), MD)}</text>`).join('')}</g>
+      <g clip-path="url(#hcc)"><path d="${full} L420 244 L0 244 Z" fill="url(#hcg)"/><path id="hcl" d="${full}" fill="none" stroke="${C.violet}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <circle id="hcd" r="4.6" fill="${C.violet}"/>`;
+    const line = svg.querySelector('#hcl'), dot = svg.querySelector('#hcd'), clip = svg.querySelector('#hcc rect'), L = line.getTotalLength();
+    let named = '';
+    // Everything on the screen follows one point on the line: the number is the height of the dot.
+    const at = p => {
+      const pt = line.getPointAtLength(L * p), v = 100 + (221 - pt.y) / 9.5;
+      clip.setAttribute('width', (pt.x + 6).toFixed(1));
+      dot.setAttribute('cx', pt.x.toFixed(1)); dot.setAttribute('cy', pt.y.toFixed(1));
+      big.textContent = fmtIdx(v); pc.textContent = `+${((v / 100 - 1) * 100).toFixed(1)}%`; ab.textContent = `+${fmtIdx(Math.max(0, v - 100))}`;
+      if (!named) ghost.textContent = fmtIdx(v);
+    };
+    let lo = 0, hi = 1;   // where the history ends along the line's length
+    for (let i = 0; i < 22; i++) { const m = (lo + hi) / 2; if (line.getPointAtLength(L * m).x < pts[pts.length - 2][0]) lo = m; else hi = m; }
+    const tween = (from, to, dur, ease, done) => {
+      const t0 = performance.now();
+      const step = now => { const k = Math.min(1, (now - t0) / dur); at(from + (to - from) * ease(k)); if (k < 1) requestAnimationFrame(step); else if (done) done(); };
+      requestAnimationFrame(step);
+    };
+    if (reduce) { at(1); ath.classList.add('on'); floats.forEach(f => f.classList.add('in')); }
+    else {
+      at(0);
+      setTimeout(() => floats[1].classList.add('in'), 1100);                 // someone follows you
+      setTimeout(() => tween(0, hi, 2600, bezier(.22, .8, .24, 1), () => setTimeout(() => {
+        cta.classList.add('press'); toast.classList.add('on');               // today's set goes in…
+        setTimeout(() => cta.classList.remove('press'), 240);
+        setTimeout(() => tween(hi, 1, 900, easeIO, () => {                   // …and the index ticks to a new high
+          ath.classList.add('on'); floats[0].classList.add('in');
+          setTimeout(() => floats[2].classList.add('in'), 520);
+        }), 420);
+        setTimeout(() => toast.classList.remove('on'), 3200);
+      }, 650)), 450);
+    }
+    // The ticker you type shows in the phone and, large, behind it.
+    document.addEventListener('gyse:ticker', e => {
+      named = e.detail;
+      ghost.textContent = named ? '$' + named : big.textContent;
+      ghost.style.setProperty('--gs', named ? Math.min(1, 6.4 / (named.length + 1.4)).toFixed(3) : 1);
+    });
+    document.addEventListener('gyse:reserved', e => { ath.lastElementChild.textContent = e.detail.pending ? T.checkEmail : T.reserved; ath.classList.add('on'); });
+
+    // With a mouse, the phone leans a little toward the pointer.
+    if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const stage = $('stage'), phone = $('hphone'), hero = document.querySelector('.hero');
+      let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+      const lean = () => {
+        cx += (tx - cx) * .1; cy += (ty - cy) * .1;
+        phone.style.transform = `perspective(1400px) rotateX(${(-cy * 4).toFixed(2)}deg) rotateY(${(cx * 6).toFixed(2)}deg)`;
+        raf = Math.abs(tx - cx) + Math.abs(ty - cy) > .003 ? requestAnimationFrame(lean) : 0;
+      };
+      const aim = (x, y) => { tx = x; ty = y; if (!raf) raf = requestAnimationFrame(lean); };
+      hero.addEventListener('pointermove', e => {
+        const r = stage.getBoundingClientRect();
+        aim(Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / (r.width / 2))), Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / r.height)));
+      });
+      hero.addEventListener('pointerleave', () => aim(0, 0));
+    }
   }
 
   /* ---------- Floating cards drift at their own depth as the hero scrolls away ---------- */
@@ -740,7 +1004,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
   /* ---------- Dock: shows once the hero's button is gone, hides near the page's own buttons ---------- */
   {
     const dock = $('dock'), link = dock.querySelector('a'), seen = new Map();
-    const targets = [document.querySelector('.hero .actions'), $('ticker'), document.querySelector('.closer')];
+    const targets = [document.querySelector('.hero-copy'), $('ticker'), document.querySelector('.closer')];
     const update = () => {
       const show = !seen.get(targets[0]) && !seen.get(targets[1]) && !seen.get(targets[2]) && scrollY > 200;
       dock.classList.toggle('on', show); dock.setAttribute('aria-hidden', !show); link.tabIndex = show ? 0 : -1;
@@ -762,9 +1026,9 @@ a.bar-note { text-decoration: none; color: var(--text); }
   {
     const PD = [0,2,4,7,9,11,14,16,18,21,23,25,28,30,35,37,39,42,44,49,51,53,56,58,60,63,65,67,70,72,77,79,81,84,86,88,95,98,100,105,107,109,112,114,116,119,121,123,126,128,130,133,135,137,138,140,142,144,147,149,154,163,165,168,170,172,175,177,179,180,182,184,186,187,189,191,196,198,200,203,205,207,210,212,217,219,221,224,226,228,229,231,235,238,240,242,245,250,273,275,277,280,282,284,285,287,289,291,294,296,298,301,303,305,308,310,312,315,317,319,322,324,326,327,329,331,336,338,341,343,345,347,350,352,354,357,359,364,368,369,371,373,375,378,380,382,385,387,389,392,394,396,399,401,403,420,422,424,427,429,431,436,438,441,443,445,448,452,455,460,476,478,480,481,483,485,487,490,492,494,497,499,501,504,506,511,513,515,518,520,522,527,529,532,534,536,539,543,548,550,553,555,557,560,562,564,567,571,572,574,576,578,579,581,583,585,588,590,595,597,599,602,604,606,607,609,611,613,616,618,620,623,625,628,630,632,634,637,639,641,644,646,648,649,653,655,658,660,662,665,667,669,672,674,676,679,681,683,686,688,690,693,704,705,707,709,711,714,716,723,725], PV = [100.0,99.25,99.75,99.22,100.03,101.03,101.44,102.34,101.87,102.53,103.16,104.14,105.35,105.79,106.21,106.66,106.96,107.22,108.9,110.11,108.97,109.41,109.76,110.39,110.99,112.15,111.76,111.48,112.28,112.04,113.03,114.44,114.33,115.42,115.67,116.78,116.96,117.43,118.16,117.78,118.71,118.11,118.6,117.26,118.02,119.54,121.12,121.32,120.83,120.92,121.89,122.23,122.68,123.95,124.05,123.24,124.06,124.29,124.7,124.01,123.79,124.76,124.67,124.69,124.94,124.39,125.38,125.43,126.17,127.86,128.26,126.66,127.6,129.06,129.04,128.69,128.43,129.56,130.23,130.99,130.4,131.21,130.62,130.89,130.93,131.58,131.14,130.55,130.44,130.07,130.04,129.91,130.6,131.33,132.51,132.68,132.13,132.38,132.48,131.05,132.07,131.76,130.77,130.37,128.66,129.49,129.32,130.75,131.54,132.02,132.18,134.1,133.78,133.52,133.49,134.0,134.44,134.59,134.34,134.07,134.79,136.12,135.72,135.59,135.24,135.54,136.0,135.45,135.55,136.39,136.97,137.05,137.64,138.32,138.21,137.41,138.14,138.59,138.93,139.09,138.73,137.95,137.72,136.97,138.0,138.5,138.27,138.25,138.79,139.93,140.09,138.91,139.06,139.16,139.12,140.39,141.24,140.75,140.95,140.86,139.28,140.17,140.93,140.22,141.73,143.73,145.27,145.48,144.85,142.96,140.52,139.51,138.43,139.62,138.97,138.49,139.17,139.5,140.08,141.09,140.91,143.11,143.3,143.16,143.6,144.88,144.96,144.86,145.8,147.23,147.97,147.2,147.0,146.2,145.77,146.88,147.07,148.15,147.69,148.26,148.37,149.29,150.25,149.57,149.76,150.07,150.52,152.31,150.92,151.97,151.66,152.69,150.53,151.11,150.14,150.28,150.34,151.92,152.48,150.86,150.26,150.88,152.65,151.19,152.33,153.36,153.1,151.3,153.57,152.66,152.62,155.86,154.22,154.48,154.4,153.69,152.24,153.26,152.98,153.7,153.79,152.17,152.37,150.82,153.06,151.53,153.31,150.75,150.02,151.13,149.19,150.36,150.75,150.73,151.17,151.16,152.59,153.55,153.51,153.49,154.35,154.59,154.13,153.48,153.05,152.71,152.0,152.34,151.06,152.31,151.67];
     const DAY = 864e5, T0 = Date.UTC(2024, 10, 11), TN = PD[PD.length - 1];
-    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const dt = d => new Date(T0 + d * DAY);
-    const fmtDay = d => `${MON[dt(d).getUTCMonth()]} ${dt(d).getUTCDate()}, ${dt(d).getUTCFullYear()}`;
+    const MON = Array.from({ length: 12 }, (_, i) => fmtDate(new Date(Date.UTC(2024, i, 1)), { month: 'short' }));
+    const fmtDay = d => fmtDate(dt(d), { month: 'short', day: 'numeric', year: 'numeric' });
     const plot = $('pplot'), svg = $('psvg');
     const st = { range: 0, style: 'line', period: 'day', sma: false, ema: false, sel: null };
     const ATH = []; PV.reduce((m, v, i) => { if (i && v > m) ATH[i] = true; return Math.max(m, v); }, PV[0]);
@@ -792,7 +1056,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       return d;
     };
     const niceStep = span => { const raw = span / 4, e = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / e; return (f < 1.5 ? 1 : f < 3 ? 2 : f < 3.5 ? 2.5 : f < 7.5 ? 5 : 10) * e; };
-    const label = { 7: 'past week', 30: 'past month', 91: 'past 3 months', 365: 'past year', 0: 'all time' };
+    const label = { 7: T.r7, 30: T.r30, 91: T.r91, 365: T.r365, 0: T.r0 };
     let view = null;
 
     function layout() {
@@ -824,7 +1088,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       const step = niceStep(L.yhi - L.ylo);
       for (let y = Math.ceil(L.ylo / step) * step; y <= L.yhi; y += step) g += `<line x1="0" x2="${W - padR}" y1="${f1(Y(y))}" y2="${f1(Y(y))}" stroke="rgba(255,255,255,.06)"/><text x="${W}" y="${f1(Y(y) + 4)}" text-anchor="end" fill="#8F899B" font-size="12" style="font-family:var(--num);font-stretch:125%">${+y.toFixed(1)}</text>`;
       const span = L.x1 - L.x0, long = span > 120;
-      for (let k = 0; k < 3; k++) { const d = L.x0 + span * (k * 2 + 1) / 6, x = dt(d); g += `<text x="${f1(X(d))}" y="${H - 6}" text-anchor="middle" fill="#8F899B" font-size="12">${long ? MON[x.getUTCMonth()] + ' ' + x.getUTCFullYear() : MON[x.getUTCMonth()] + ' ' + x.getUTCDate()}</text>`; }
+      for (let k = 0; k < 3; k++) { const d = L.x0 + span * (k * 2 + 1) / 6, x = dt(d); g += `<text x="${f1(X(d))}" y="${H - 6}" text-anchor="middle" fill="#8F899B" font-size="12">${fmtDate(x, long ? MY : MD)}</text>`; }
       if (!st.range && Y(100) < H - padB) g += `<line x1="0" x2="${W - padR}" y1="${f1(Y(100))}" y2="${f1(Y(100))}" stroke="rgba(143,137,155,.55)" stroke-dasharray="2 4"/>`;
       let marks = '';
       if (st.style === 'line') {
@@ -856,7 +1120,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
       if (i != null) {
         const c = st.style === 'candles' ? L.cs[i] : null;
         at = c ? c.i : i;
-        when = c ? (st.period === 'month' ? `${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCFullYear()}` : st.period === 'week' ? `Week of ${MON[dt(c.b).getUTCMonth()]} ${dt(c.b).getUTCDate()}` : fmtDay(c.b)) : fmtDay(PD[i]);
+        when = c ? (st.period === 'month' ? fmtDate(dt(c.b), MY) : st.period === 'week' ? tt('weekOf', { d: fmtDate(dt(c.b), MD) }) : fmtDay(c.b)) : fmtDay(PD[i]);
         const x = c ? L.cx(c) : L.X(PD[i]);
         el.innerHTML = `<line x1="${f1(x)}" x2="${f1(x)}" y1="0" y2="${L.H - L.padB}" stroke="rgba(143,137,155,.5)"/>` + (c ? '' : `<circle cx="${f1(x)}" cy="${f1(L.Y(PV[i]))}" r="5.5" fill="#A78BFA" stroke="#1C1A20" stroke-width="3"/>`);
       } else if (st.style === 'line') {
@@ -907,7 +1171,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
     if (weeksOn.has(curWeek)) { run++; earned++; if (earned % 4 === 0) banked = Math.min(2, banked + 1); best = Math.max(best, run); }
     $('sn').textContent = PD.length; $('sr').textContent = run; $('sb').textContent = best; $('sh').textContent = banked;
     const grid = $('sgrid');
-    grid.setAttribute('aria-label', `Training calendar: ${PD.length} sessions over two years, a ${run}-week run, best run ${best} weeks`);
+    grid.setAttribute('aria-label', tt('calendar', { n: PD.length, run, best }));
     const drawGrid = () => {
       const fit = Math.max(8, Math.floor((grid.clientWidth + 3) / 14)), first = Math.max(0, curWeek - fit + 1);
       let html = '', lastMonth = -1;
@@ -927,9 +1191,9 @@ a.bar-note { text-decoration: none; color: var(--text); }
 
   /* ---------- Try a set: e1RM = w × (1 + r/30); index = 100 × e1RM / day-one e1RM ---------- */
   const lifts = {
-    bench: { name: 'Bench press', short: 'Bench', step: 2.5, history: [[80,5],[80,6],[82.5,5],[82.5,6],[85,5]], start: [87.5,5] },
-    squat: { name: 'Back squat', short: 'Squat', step: 2.5, history: [[110,5],[112.5,5],[115,5],[117.5,5],[120,5]], start: [122.5,5] },
-    ohp:   { name: 'Overhead press', short: 'Overhead', step: 2.5, history: [[50,6],[50,7],[52.5,6],[52.5,7],[55,5]], start: [55,6] },
+    bench: { name: T.bench, short: T.benchS, step: 2.5, history: [[80,5],[80,6],[82.5,5],[82.5,6],[85,5]], start: [87.5,5] },
+    squat: { name: T.squat, short: T.squatS, step: 2.5, history: [[110,5],[112.5,5],[115,5],[117.5,5],[120,5]], start: [122.5,5] },
+    ohp:   { name: T.ohp, short: T.ohpS, step: 2.5, history: [[50,6],[50,7],[52.5,6],[52.5,7],[55,5]], start: [55,6] },
   };
   const e1 = (w, r) => w * (1 + r / 30);
   let key = 'bench', w = lifts.bench.start[0], r = lifts.bench.start[1];
@@ -947,16 +1211,16 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const last = closes[closes.length - 1], counts = r >= 3 && r <= 10;
     const now = counts ? 100 * e1(w, r) / base : last, ch = now / last - 1, t = trend(ch);
     const [lw, lr] = L.history[L.history.length - 1];
-    $('bex').textContent = `${L.name} index`;
+    $('bex').textContent = tt('liftIndex', { name: L.name });
     $('bidx').textContent = fmtIdx(now);
     const d = $('bdelta'); d.className = `delta ${t}`;
-    d.innerHTML = t === 'flat' ? 'Unchanged since the last close' : `${tri(ch)}${pct(ch)} since the last close`;
+    d.innerHTML = t === 'flat' ? T.unchanged : `${tri(ch)}${pct(ch)} ${T.sinceClose}`;
     $('w').innerHTML = `${fmtNum(w)}<small>kg</small>`;
-    $('r').innerHTML = `${r}<small>reps</small>`;
+    $('r').innerHTML = `${r}<small>${T.reps}</small>`;
     $('rec').hidden = !(counts && now > Math.max(...closes) + 1e-9);
-    $('last').innerHTML = `Last time <b>${fmtNum(lw)} kg × ${lr}</b>`;
+    $('last').innerHTML = `${T.lastTime} <b>${fmtNum(lw)} kg × ${lr}</b>`;
     const n = $('note'); n.className = counts ? '' : 'warn';
-    n.textContent = counts ? 'Sets of 3 to 10 reps count' : 'Only sets of 3 to 10 reps move the index';
+    n.textContent = counts ? T.counts : T.countsNot;
     chart([...closes, now], counts);
   }
   function chart(v, counts) {
@@ -1001,13 +1265,13 @@ a.bar-note { text-decoration: none; color: var(--text); }
     if (m === 'idx') {
       $('hv1').textContent = fmtIdx(a); $('hv2').textContent = fmtIdx(b);
       const c = a / 100 - 1; $('hc1').className = `c fade ${trend(c)}`; $('hc1').innerHTML = tri(c) + pct(c);
-      $('hc2').className = 'c fade flat'; $('hc2').textContent = 'where you began';
-      $('verdict').innerHTML = `${fmtIdx(a - b)} points above day one<span>Everyone starts at 100. The only line you race is your own.</span>`;
+      $('hc2').className = 'c fade flat'; $('hc2').textContent = T.began;
+      $('verdict').innerHTML = `${tt('above', { n: fmtIdx(a - b) })}<span>${T.aboveSub}</span>`;
     } else {
       $('hv1').innerHTML = kg(a); $('hv2').innerHTML = kg(b);
-      $('hc1').className = 'c fade flat'; $('hc1').textContent = 'this week';
-      $('hc2').className = 'c fade flat'; $('hc2').textContent = 'where you began';
-      $('verdict').innerHTML = `${fmtNum(a - b)} kg more on bench than day one<span>Top set on bench press, 5 reps, each week.</span>`;
+      $('hc1').className = 'c fade flat'; $('hc1').textContent = T.thisWeek;
+      $('hc2').className = 'c fade flat'; $('hc2').textContent = T.began;
+      $('verdict').innerHTML = `${tt('more', { n: fmtNum(a - b) })}<span>${T.moreSub}</span>`;
     }
   }
   function setMode(m, animate) {
@@ -1035,7 +1299,7 @@ a.bar-note { text-decoration: none; color: var(--text); }
     const phone = document.querySelector('.store svg').outerHTML;
     document.querySelectorAll('[data-store="badge"]').forEach(el => {
       const a = document.createElement('a');
-      a.className = 'btn'; a.href = url; a.innerHTML = phone + 'Download on the App Store';
+      a.className = 'btn'; a.href = url; a.innerHTML = phone + T.download;
       el.replaceWith(a);
     });
     document.querySelectorAll('[data-try]').forEach(a => a.classList.add('quiet'));
@@ -1045,84 +1309,102 @@ a.bar-note { text-decoration: none; color: var(--text); }
     if (window.gyseLaunched) window.gyseLaunched();
     document.querySelectorAll('[data-store="note"]').forEach(el => {
       const a = document.createElement('a');
-      a.className = 'bar-note'; a.href = url; a.innerHTML = '<i aria-hidden="true"></i>Now on the App Store';
+      a.className = 'bar-note'; a.href = url; a.innerHTML = '<i aria-hidden="true"></i>' + T.nowOn;
       el.replaceWith(a);
     });
-    document.querySelectorAll('[data-store="line"]').forEach(el => { el.textContent = 'GYSE is out now on the App Store for iPhone.'; });
-    document.querySelectorAll('[data-store="dock"]').forEach(a => { a.href = url; a.textContent = 'Download on the App Store'; });
+    document.querySelectorAll('[data-store="line"]').forEach(el => { el.textContent = T.outNow; });
+    document.querySelectorAll('[data-store="dock"]').forEach(a => { a.href = url; a.textContent = T.download; });
   }).catch(() => {});
 
   /* ---------- Ticker and story card ---------- */
   {
     const wk = D.findIndex(d => d >= 294), wc = V[V.length - 1] / V[wk - 1] - 1;
-    $('swc').innerHTML = `${tri(wc)}${pct(wc)} this week`;
+    $('swc').innerHTML = `${tri(wc)}${pct(wc)} ${T.thisWeek}`;
     const v = sample(9), lo = Math.min(...v) - 2, hi = Math.max(...v) + .4;
     const pts = v.map((y, i) => [i / (v.length - 1) * 300, 200 - (y - lo) / (hi - lo) * 200]), p = smooth(pts);
     $('schart').innerHTML = `<defs><linearGradient id="sf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8B5CF6" stop-opacity=".38"/><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient></defs>
       <path d="${p} L300 200 L0 200 Z" fill="url(#sf)"/><path d="${p}" fill="none" stroke="${C.violet}" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
-    const tk = $('tk'), msg = $('tkmsg'), base = msg.textContent;
-    const em = $('em'), btn = $('rsvb'), fine = $('rsvmsg'), fineBase = fine.innerHTML;
-    // Before launch the ticker you type is checked live and can be reserved (the `waitlist` function on GYSE's Supabase).
+    // One ticker, two forms (the hero and this section) that stay in step. Before launch the ticker is checked live and can be
+    // reserved (the `waitlist` function on GYSE's Supabase). "pending" means held for 48 hours until the emailed link is opened.
     const WAITLIST = 'https://lggthlqzohwxnammtzxg.supabase.co/functions/v1/waitlist';
     const ask = body => fetch(WAITLIST, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       .then(r => r.json()).catch(() => ({ status: 'error' }));
-    let live = !document.querySelector('[data-prelaunch]').hidden, state = 'empty', seq = 0, timer = 0, busy = false;
-    const say = (text, kind) => { msg.textContent = text; msg.className = 'msg' + (kind ? ' ' + kind : ''); };
-    const mailOK = () => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim());
+    const roots = [...document.querySelectorAll('[data-rsv]')], shows = [...document.querySelectorAll('[data-tk]')];
+    const part = (r, k) => r.querySelector(`[data-f="${k}"]`);
+    const each = (k, fn) => roots.forEach(r => { const el = part(r, k); if (el) fn(el, r); });
+    each('msg', el => { el.dataset.base = el.textContent; });
+    each('fine', el => { el.dataset.base = el.innerHTML; });
+    const S = { t: '', mail: '', state: 'empty', live: true, busy: false, seq: 0, timer: 0 };
+    const blocked = () => S.state === 'taken' || S.state === 'not_allowed';
+    const mailOK = () => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(S.mail);
+    const say = (text, kind) => each('msg', el => { el.textContent = text || el.dataset.base; el.className = 'msg' + (kind ? ' ' + kind : ''); });
     const sync = () => {
-      const t = tk.value;
-      btn.textContent = t ? `Reserve $${t}` : 'Reserve your ticker';
-      btn.disabled = busy || !t || state === 'taken' || state === 'not_allowed' || !mailOK();
+      each('tk', el => { if (el.value !== S.t) el.value = S.t; });
+      each('em', el => { if (el !== document.activeElement && el.value.trim() !== S.mail) el.value = S.mail; });
+      each('cnt', el => { el.textContent = `${S.t.length} / 8`; });
+      each('next', (el, r) => { el.hidden = !part(r, 'step').hidden; el.disabled = !S.t || blocked(); });
+      each('go', el => { el.textContent = S.busy ? T.reserving : S.t ? tt('reserveT', { t: '$' + S.t }) : T.reserve; el.disabled = S.busy || !S.t || blocked() || !mailOK(); });
+      shows.forEach(el => { el.textContent = '$' + (S.t || 'YOU'); el.toggleAttribute('data-long', S.t.length > 6); });
+      $('story').setAttribute('aria-label', tt('cardLabel', { t: '$' + (S.t || 'YOU') }));
     };
     const check = () => {
-      const t = tk.value, mine = ++seq;
-      clearTimeout(timer);
-      if (!t || !live) { state = 'empty'; sync(); return; }
-      state = 'checking'; sync();
-      timer = setTimeout(() => ask({ action: 'check', ticker: t }).then(r => {
-        if (mine !== seq) return;
-        state = r.status === 'available' || r.status === 'taken' || r.status === 'not_allowed' ? r.status : 'unknown';
-        if (state === 'available') say(`$${t} is available.`, 'ok');
-        else if (state === 'taken') say(`$${t} is taken. Try another.`, 'warn');
-        else if (state === 'not_allowed') say(`$${t} isn't allowed. Try another.`, 'warn');
-        else say(base);
+      const t = S.t, mine = ++S.seq;
+      clearTimeout(S.timer);
+      if (!t || !S.live) { S.state = 'empty'; sync(); return; }
+      S.state = 'checking'; sync();
+      S.timer = setTimeout(() => ask({ action: 'check', ticker: t }).then(r => {
+        if (mine !== S.seq) return;
+        S.state = r.status === 'available' || r.status === 'taken' || r.status === 'not_allowed' ? r.status : 'unknown';
+        if (S.state === 'available') say(tt('available', { t: '$' + t }), 'ok');
+        else if (S.state === 'taken') say(tt('taken', { t: '$' + t }), 'warn');
+        else if (S.state === 'not_allowed') say(tt('notAllowed', { t: '$' + t }), 'warn');
+        else say('');
         sync();
       }), 350);
     };
-    tk.addEventListener('input', () => {
+    each('tk', tk => tk.addEventListener('input', () => {
       const raw = tk.value, clean = raw.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8), bad = clean !== raw.toUpperCase();
-      say(bad ? 'Tickers use English letters A–Z only.' : base, bad ? 'warn' : '');
       if (tk.value !== clean) { const at = Math.max(0, tk.selectionStart - (raw.length - clean.length)); tk.value = clean; tk.setSelectionRange(at, at); }
-      $('stk').textContent = '$' + (clean || 'YOU');
-      $('tkcnt').textContent = `${clean.length} / 8`;
-      $('story').setAttribute('aria-label', `A weekly story card: $${clean || 'YOU'} closed the week at 117.32`);
+      S.t = clean;
+      say(bad ? T.lettersOnly : '', bad ? 'warn' : '');
+      document.dispatchEvent(new CustomEvent('gyse:ticker', { detail: clean }));
       check();
-    });
-    em.addEventListener('input', () => { fine.innerHTML = fineBase; fine.classList.remove('warn'); sync(); });
-    $('reserve').addEventListener('submit', e => {
+    }));
+    each('em', em => em.addEventListener('input', () => {
+      S.mail = em.value.trim();
+      each('fine', el => { el.innerHTML = el.dataset.base; el.classList.remove('warn'); });
+      sync();
+    }));
+    roots.forEach(r => r.querySelector('form').addEventListener('submit', e => {
       e.preventDefault();
-      const t = tk.value, mail = em.value.trim();
-      if (!live || busy || !t || !mailOK()) return;
-      busy = true; sync(); btn.textContent = 'Reserving…';
-      ask({ action: 'reserve', ticker: t, email: mail, website: $('hp').value, confirm: true }).then(r => {
-        busy = false;
-        const oops = text => { fine.textContent = text; fine.classList.add('warn'); sync(); };
-        if (r.status === 'reserved' || r.status === 'pending') {
-          // "pending": held for 48 hours until the emailed link is opened.
-          const pending = r.status === 'pending';
-          $('rds').textContent = pending ? 'is almost yours.' : 'is reserved.';
-          $('rdp').hidden = !pending; $('rdpe').textContent = mail;
-          $('rdt').textContent = '$' + (r.ticker ? r.ticker.toUpperCase() : t); $('rde').textContent = mail;
-          $('reserve').hidden = true; $('rsvdone').hidden = false; $('rsvdone').focus();
-        } else if (r.status === 'taken') { state = 'taken'; say(`$${t} was just taken. Try another.`, 'warn'); sync(); }
-        else if (r.status === 'not_allowed') { state = 'not_allowed'; say(`$${t} isn't allowed. Try another.`, 'warn'); sync(); }
-        else if (r.status === 'email_used') oops('This email has already reserved a ticker. Each email can hold one.');
-        else if (r.status === 'bad_email') oops('Check your email address.');
-        else if (r.status === 'rate_limited') oops('Too many reservations from this network. Try again in an hour.');
-        else oops("Couldn't reserve it right now. Try again in a moment.");
+      const step = part(r, 'step'), em = part(r, 'em'), t = S.t, mail = S.mail;
+      if (!S.live || S.busy || !t || blocked()) return;
+      if (step && step.hidden) { step.hidden = false; sync(); em.focus(); return; }   // the hero asks for the email second
+      if (!mailOK()) { em.focus(); return; }
+      S.busy = true; sync();
+      ask({ action: 'reserve', ticker: t, email: mail, website: part(r, 'hp').value, confirm: true }).then(res => {
+        S.busy = false;
+        const oops = text => each('fine', el => { el.textContent = text; el.classList.add('warn'); });
+        if (res.status === 'reserved' || res.status === 'pending') {
+          const pending = res.status === 'pending', sym = '$' + (res.ticker ? res.ticker.toUpperCase() : t);
+          each('rdt', el => { el.textContent = sym; });
+          each('rds', el => { el.textContent = pending ? T.almost : T.isReserved; });
+          each('rdp', el => { el.hidden = !pending; });
+          each('rdpe', el => { el.textContent = mail; });
+          each('rde', el => { el.textContent = mail; });
+          roots.forEach(x => { x.querySelector('form').hidden = true; part(x, 'done').hidden = false; });
+          part(r, 'done').focus({ preventScroll: true });
+          document.dispatchEvent(new CustomEvent('gyse:reserved', { detail: { pending } }));
+        } else if (res.status === 'taken') { S.state = 'taken'; say(tt('justTaken', { t: '$' + t }), 'warn'); }
+        else if (res.status === 'not_allowed') { S.state = 'not_allowed'; say(tt('notAllowed', { t: '$' + t }), 'warn'); }
+        else if (res.status === 'email_used') oops(T.emailUsed);
+        else if (res.status === 'bad_email') oops(T.badEmail);
+        else if (res.status === 'rate_limited') oops(T.rateLimited);
+        else oops(T.failed);
+        sync();
       });
-    });
-    window.gyseLaunched = () => { live = false; clearTimeout(timer); seq++; say(base); };
+    }));
+    window.gyseLaunched = () => { S.live = false; clearTimeout(S.timer); S.seq++; say(''); sync(); };
     sync();
   }
 })();
