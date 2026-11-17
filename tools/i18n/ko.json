@@ -23,7 +23,7 @@
   "is reserved.": "예약됐어요.",
   "We sent a link to": "확인 링크를 보냈어요:",
   "your email": "이메일",
-  ". Open it within 48 hours to confirm, or the ticker is released.": ". 48시간 안에 링크를 열어 확인해 주세요. 그러지 않으면 티커 예약이 풀려요.",
+  ". Open it within 48 hours to confirm, or the ticker is released. Can't find it? Check your spam folder.": ". 48시간 안에 링크를 열어 확인해 주세요. 그러지 않으면 티커 예약이 풀려요. 메일이 안 보이면 스팸함도 확인해 주세요.",
   "To claim it, sign up in GYSE with": "티커를 받으려면 출시 후 30일 안에 이 이메일로 GYSE에 가입하세요:",
   "within 30 days of launch. With Sign in with Apple, choose Share My Email so the address matches.": ". Apple로 로그인할 때는 주소가 일치하도록 '나의 이메일 공유하기'를 선택하세요.",
   "New record": "신기록",
