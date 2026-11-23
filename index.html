@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-oB5pNEaHdVBX1psXehnQ0mH1ZEU3j7s4Tn60KrtDaZU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-avmP1XnhkefwQ/QduEvCuj22+02/T4T09qkqGTBSEYI='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · Your strength, as an index</title>
 <meta name="description" content="GYSE is a workout tracker for iPhone that turns your lifts into a stock-style chart of your strength. It starts at 100 and climbs as you get stronger.">
@@ -13,7 +13,6 @@
 <link rel="canonical" href="https://gyse.app/">
 <link rel="alternate" hreflang="en" href="https://gyse.app/">
 <link rel="alternate" hreflang="ko" href="https://gyse.app/ko/">
-<link rel="alternate" hreflang="es" href="https://gyse.app/es/">
 <link rel="alternate" hreflang="x-default" href="https://gyse.app/">
 <meta property="og:image" content="https://gyse.app/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -813,7 +812,7 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
   <div class="wrap">
     <span>© 2026 GYSE (지와이에스이) · Jungwoo Kim · KR business reg. 642-03-03840</span>
     <nav aria-label="Legal"><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></nav>
-    <nav class="langs" aria-label="Language"><a href="/" lang="en" hreflang="en" aria-current="page">English</a><a href="/ko/" lang="ko" hreflang="ko">한국어</a><a href="/es/" lang="es" hreflang="es">Español</a></nav>
+    <nav class="langs" aria-label="Language"><a href="/" lang="en" hreflang="en" aria-current="page">English</a><a href="/ko/" lang="ko" hreflang="ko">한국어</a></nav>
   </div>
   <div class="mega num" aria-hidden="true">GYSE</div>
 </footer>
@@ -824,7 +823,7 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
   document.documentElement.classList.add('js');
   const $ = id => document.getElementById(id);
 
-  // Every word this script writes. English is here; /ko/ and /es/ bring their own in <script type="application/json" id="i18n">.
+  // Every word this script writes. English is here; /ko/ brings its own in <script type="application/json" id="i18n">.
   const LANG = document.documentElement.lang || 'en';
   const T = Object.assign({
     checkEmail: 'Check your email', reserved: 'Reserved',
@@ -850,9 +849,9 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
   const fmtDate = (x, o) => x.toLocaleDateString(LANG, Object.assign({ timeZone: 'UTC' }, o));
   const MD = { month: 'short', day: 'numeric' }, MY = { month: 'short', year: 'numeric' };
 
-  // A reader whose browser prefers another of the page's three languages gets a link to it in the header. Nobody is redirected.
+  // A reader whose browser prefers the page's other language gets a link to it in the header. Nobody is redirected.
   {
-    const pages = { en: ['English', '/'], ko: ['한국어', '/ko/'], es: ['Español', '/es/'] };
+    const pages = { en: ['English', '/'], ko: ['한국어', '/ko/'] };
     const want = (navigator.languages || [navigator.language || 'en']).map(l => l.slice(0, 2).toLowerCase()).find(l => pages[l]) || 'en';
     const nav = document.querySelector('.bar nav');
     if (want !== LANG.slice(0, 2) && nav) {
@@ -867,7 +866,7 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
   // No cookie, nothing kept on the device and no identifier; each thing counts once per page load.
   // A browser that sends Global Privacy Control or Do Not Track is not counted at all.
   const count = (() => {
-    const page = { en: '/', ko: '/ko/', es: '/es/' }[LANG.slice(0, 2)];
+    const page = { en: '/', ko: '/ko/' }[LANG.slice(0, 2)];
     if (!page || navigator.globalPrivacyControl || navigator.doNotTrack === '1' || navigator.webdriver) return () => {};
     const COUNT = 'https://lggthlqzohwxnammtzxg.supabase.co/functions/v1/count';
     const seen = new Set(), queue = [];

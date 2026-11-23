@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Builds /ko/index.html and /es/index.html from /index.html.
+"""Builds /ko/index.html from /index.html.
 
 The English page is the only one edited by hand. After changing it, run:
 
     python3 tools/i18n/build.py
 
-Each language has one file here (ko.json, es.json):
+Each language has one file here (ko.json):
   "text"  English words on the page (text and alt/aria-label/placeholder/data-launch/meta content) -> translation
   "raw"   [english html, translated html, times it appears] for the few places where the word order has to change
   "js"    the words the page's script writes (the keys of T in index.html's script)
@@ -14,18 +14,18 @@ App screens in a language go in assets/screens/<lang>/ under the same file names
 (log-demo.webp, positions.webp, week-card.webp); the build points that language's page at them.
 
 The build stops if anything on the page has no translation, so a new English sentence cannot ship untranslated.
-The script itself is identical on all three pages, so they share one Content-Security-Policy hash.
+The script itself is identical on both pages, so they share one Content-Security-Policy hash.
 """
 import base64, hashlib, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 HERE = pathlib.Path(__file__).resolve().parent
 SITE = 'https://gyse.app'
-LANGS = ('ko', 'es')
+LANGS = ('ko',)
 
 # Words that read the same in every language.
 KEEP = {'GYSE', '$YOU', '$MINA', '$ALEX', 'M', 'PLUS', 'SMA 10', 'EMA 20', '87.5 kg × 8', '87.5 kg × 9', 'YOU',
-        'you@example.com', 'support@gyse.app', 'English', '한국어', 'Español'}
+        'you@example.com', 'support@gyse.app', 'English', '한국어'}
 ATTRS = ('alt', 'aria-label', 'placeholder', 'data-launch', 'content')
 TOKEN = re.compile(r'<!--.*?-->|<script\b.*?</script>|<style\b.*?</style>|<[^>]+>', re.S)
 LETTER = re.compile(r'[A-Za-zÀ-ɏㄱ-힣]')
