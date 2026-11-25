@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-o6Q0123j37efjgyEaVkr7WYc5Vf97R1N4EdHymcpm+c='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-J1IRRQW+JyDMFVdDuyzE0bA4EYCJC+1/nIpu2itvTQk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://lggthlqzohwxnammtzxg.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>GYSE · 나의 근력을 지수로</title>
 <meta name="description" content="GYSE는 운동 기록을 내 근력의 주식 차트로 보여 주는 iPhone 운동 기록 앱이에요. 100에서 시작해, 강해질수록 올라가요.">
@@ -125,13 +125,16 @@ p { margin: 0; }
 .hstep .emf { border-radius: 999px; height: 60px; padding: 0 26px; }
 .hstep .btn { width: 100%; }
 .hrsv .rsv-done { margin: 0; max-width: none; text-align: left; }
-.hero .actions:not(:has(.btn)) { display: none; }   /* before launch the field above is the action; at launch the badge here becomes the download button */
+.hero .actions:not(:has(.btn, .badge)) { display: none; }   /* before launch the field above is the action; at launch the badge here becomes the download button */
 .actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 6px; }
 /* App Store badge: "coming soon" until assets/store.json has the app's link, then a download link. */
 .store { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 22px 0 18px; border-radius: 999px; white-space: nowrap;
          background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: var(--text); font-size: 16px; font-weight: 500; text-decoration: none; }
 .store svg { width: 16px; height: 22px; flex: none; color: var(--lilac); }
 .store .soft { color: var(--body); }
+.badge { display: inline-flex; border-radius: 10px; transition: transform .15s ease; }
+.badge img { display: block; height: 54px; width: auto; }
+.badge:hover { transform: translateY(-1px); }
 .btn svg { width: 16px; height: 22px; margin-right: 10px; flex: none; }
 .btn.quiet { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 @media (hover: hover) and (pointer: fine) { .btn.quiet:hover { background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); } }
@@ -1367,10 +1370,13 @@ html:lang(ko) h2 { line-height: 1.2; letter-spacing: -.03em; }
   fetch('/assets/store.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(cfg => {
     const url = cfg && cfg.appStoreUrl;
     if (typeof url !== 'string' || !/^https:\/\/apps\.apple\.com\/[\w\-./?=&%]+$/.test(url)) return;
-    const phone = document.querySelector('.store svg').outerHTML;
+    const badge = '/assets/app-store-' + (document.documentElement.lang === 'ko' ? 'ko' : 'en') + '.svg';
     document.querySelectorAll('[data-store="badge"]').forEach(el => {
       const a = document.createElement('a');
-      a.className = 'btn'; a.href = url; a.innerHTML = phone + T.download;
+      a.className = 'badge'; a.href = url;
+      const img = document.createElement('img');
+      img.src = badge; img.alt = T.download; img.height = 54;
+      a.append(img);
       el.replaceWith(a);
     });
     document.querySelectorAll('[data-try]').forEach(a => a.classList.add('quiet'));
